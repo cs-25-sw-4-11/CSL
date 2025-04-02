@@ -93,6 +93,13 @@ public interface ICSLVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitDoublePlusOp([NotNull] CSLParser.DoublePlusOpContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>ComplementOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitComplementOp([NotNull] CSLParser.ComplementOpContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>UnionOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// </summary>
@@ -148,70 +155,4 @@ public interface ICSLVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitSubtractOp([NotNull] CSLParser.SubtractOpContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.literal"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLiteral([NotNull] CSLParser.LiteralContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.duration"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDuration([NotNull] CSLParser.DurationContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDatetime([NotNull] CSLParser.DatetimeContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.clock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitClock([NotNull] CSLParser.ClockContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.hour"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitHour([NotNull] CSLParser.HourContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.minutes"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitMinutes([NotNull] CSLParser.MinutesContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.date"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDate([NotNull] CSLParser.DateContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.dd"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDd([NotNull] CSLParser.DdContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.mm"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitMm([NotNull] CSLParser.MmContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.yyyy"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitYyyy([NotNull] CSLParser.YyyyContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="CSLParser.daysofweek"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitDaysofweek([NotNull] CSLParser.DaysofweekContext context);
 }

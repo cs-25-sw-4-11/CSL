@@ -135,6 +135,18 @@ public interface ICSLListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitDoublePlusOp([NotNull] CSLParser.DoublePlusOpContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>ComplementOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterComplementOp([NotNull] CSLParser.ComplementOpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ComplementOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitComplementOp([NotNull] CSLParser.ComplementOpContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>UnionOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// </summary>
@@ -230,114 +242,4 @@ public interface ICSLListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitSubtractOp([NotNull] CSLParser.SubtractOpContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.literal"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterLiteral([NotNull] CSLParser.LiteralContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.literal"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitLiteral([NotNull] CSLParser.LiteralContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.duration"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterDuration([NotNull] CSLParser.DurationContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.duration"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitDuration([NotNull] CSLParser.DurationContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterDatetime([NotNull] CSLParser.DatetimeContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitDatetime([NotNull] CSLParser.DatetimeContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.clock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterClock([NotNull] CSLParser.ClockContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.clock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitClock([NotNull] CSLParser.ClockContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.hour"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterHour([NotNull] CSLParser.HourContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.hour"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitHour([NotNull] CSLParser.HourContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.minutes"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterMinutes([NotNull] CSLParser.MinutesContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.minutes"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitMinutes([NotNull] CSLParser.MinutesContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.date"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterDate([NotNull] CSLParser.DateContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.date"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitDate([NotNull] CSLParser.DateContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.dd"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterDd([NotNull] CSLParser.DdContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.dd"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitDd([NotNull] CSLParser.DdContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.mm"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterMm([NotNull] CSLParser.MmContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.mm"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitMm([NotNull] CSLParser.MmContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.yyyy"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterYyyy([NotNull] CSLParser.YyyyContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.yyyy"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitYyyy([NotNull] CSLParser.YyyyContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.daysofweek"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterDaysofweek([NotNull] CSLParser.DaysofweekContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.daysofweek"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitDaysofweek([NotNull] CSLParser.DaysofweekContext context);
 }
