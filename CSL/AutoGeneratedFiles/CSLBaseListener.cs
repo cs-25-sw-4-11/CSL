@@ -158,6 +158,20 @@ public partial class CSLBaseListener : ICSLListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitDoublePlusOp([NotNull] CSLParser.DoublePlusOpContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>ComplementOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterComplementOp([NotNull] CSLParser.ComplementOpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>ComplementOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitComplementOp([NotNull] CSLParser.ComplementOpContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>UnionOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -269,138 +283,6 @@ public partial class CSLBaseListener : ICSLListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitSubtractOp([NotNull] CSLParser.SubtractOpContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.literal"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLiteral([NotNull] CSLParser.LiteralContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.literal"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLiteral([NotNull] CSLParser.LiteralContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.duration"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDuration([NotNull] CSLParser.DurationContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.duration"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDuration([NotNull] CSLParser.DurationContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDatetime([NotNull] CSLParser.DatetimeContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDatetime([NotNull] CSLParser.DatetimeContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.clock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterClock([NotNull] CSLParser.ClockContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.clock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitClock([NotNull] CSLParser.ClockContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.hour"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterHour([NotNull] CSLParser.HourContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.hour"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitHour([NotNull] CSLParser.HourContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.minutes"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterMinutes([NotNull] CSLParser.MinutesContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.minutes"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitMinutes([NotNull] CSLParser.MinutesContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.date"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDate([NotNull] CSLParser.DateContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.date"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDate([NotNull] CSLParser.DateContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.dd"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDd([NotNull] CSLParser.DdContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.dd"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDd([NotNull] CSLParser.DdContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.mm"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterMm([NotNull] CSLParser.MmContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.mm"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitMm([NotNull] CSLParser.MmContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.yyyy"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterYyyy([NotNull] CSLParser.YyyyContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.yyyy"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitYyyy([NotNull] CSLParser.YyyyContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.daysofweek"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDaysofweek([NotNull] CSLParser.DaysofweekContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.daysofweek"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDaysofweek([NotNull] CSLParser.DaysofweekContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>
