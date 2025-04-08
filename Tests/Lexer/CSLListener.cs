@@ -254,4 +254,44 @@ public interface ICSLListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitSubtractOp([NotNull] CSLParser.SubtractOpContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.literal"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLiteral([NotNull] CSLParser.LiteralContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.literal"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLiteral([NotNull] CSLParser.LiteralContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.duration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterDuration([NotNull] CSLParser.DurationContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.duration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitDuration([NotNull] CSLParser.DurationContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.datetime"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterDatetime([NotNull] CSLParser.DatetimeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.datetime"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitDatetime([NotNull] CSLParser.DatetimeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.clock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterClock([NotNull] CSLParser.ClockContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.clock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitClock([NotNull] CSLParser.ClockContext context);
 }
