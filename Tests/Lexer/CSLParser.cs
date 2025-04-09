@@ -36,11 +36,11 @@ public partial class CSLParser : Parser {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, THILDE=7, COMPLEMENT=8, 
+		T__0=1, T__1=2, T__2=3, T__3=4, EQUAL=5, SEMICOLON=6, THILDE=7, COMPLEMENT=8, 
 		PLUSPLUS=9, PLUS=10, MINUS=11, IN=12, SBEFORE=13, SAFTER=14, BEFORE=15, 
 		AFTER=16, STAR=17, INTERSECTION=18, UNION=19, SUBJECT=20, DESCRIPTION=21, 
 		TIMEUNITS=22, COLON=23, DATE=24, DAYSOFWEEK=25, INT=26, IDENTIFIER=27, 
-		WS=28;
+		LINE_COMMENT=28, BLOCK_COMMENT=29, WS=30;
 	public const int
 		RULE_prog = 0, RULE_stat = 1, RULE_expr = 2, RULE_literal = 3, RULE_duration = 4, 
 		RULE_datetime = 5, RULE_clock = 6;
@@ -49,15 +49,16 @@ public partial class CSLParser : Parser {
 	};
 
 	private static readonly string[] _LiteralNames = {
-		null, "'='", "';'", "'('", "')'", "'['", "']'", "'~'", "'Complement'", 
+		null, "'('", "')'", "'['", "']'", "'='", "';'", "'~'", "'Complement'", 
 		"'++'", "'+'", "'-'", "'in'", "'<<'", "'>>'", "'<'", "'>'", "'*'", "'Intersect'", 
 		"'Union'", null, null, null, "':'"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, null, null, null, null, null, null, "THILDE", "COMPLEMENT", "PLUSPLUS", 
-		"PLUS", "MINUS", "IN", "SBEFORE", "SAFTER", "BEFORE", "AFTER", "STAR", 
-		"INTERSECTION", "UNION", "SUBJECT", "DESCRIPTION", "TIMEUNITS", "COLON", 
-		"DATE", "DAYSOFWEEK", "INT", "IDENTIFIER", "WS"
+		null, null, null, null, null, "EQUAL", "SEMICOLON", "THILDE", "COMPLEMENT", 
+		"PLUSPLUS", "PLUS", "MINUS", "IN", "SBEFORE", "SAFTER", "BEFORE", "AFTER", 
+		"STAR", "INTERSECTION", "UNION", "SUBJECT", "DESCRIPTION", "TIMEUNITS", 
+		"COLON", "DATE", "DAYSOFWEEK", "INT", "IDENTIFIER", "LINE_COMMENT", "BLOCK_COMMENT", 
+		"WS"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -132,7 +133,7 @@ public partial class CSLParser : Parser {
 			State = 18;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 254804264L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 254804234L) != 0)) {
 				{
 				State = 16;
 				ErrorHandler.Sync(this);
@@ -170,9 +171,11 @@ public partial class CSLParser : Parser {
 
 	public partial class StatContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode IDENTIFIER() { return GetToken(CSLParser.IDENTIFIER, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode EQUAL() { return GetToken(CSLParser.EQUAL, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
 			return GetRuleContext<ExprContext>(0);
 		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SEMICOLON() { return GetToken(CSLParser.SEMICOLON, 0); }
 		public StatContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -200,11 +203,11 @@ public partial class CSLParser : Parser {
 			State = 21;
 			Match(IDENTIFIER);
 			State = 22;
-			Match(T__0);
+			Match(EQUAL);
 			State = 23;
 			expr(0);
 			State = 24;
-			Match(T__1);
+			Match(SEMICOLON);
 			}
 		}
 		catch (RecognitionException re) {
@@ -569,31 +572,31 @@ public partial class CSLParser : Parser {
 			State = 39;
 			ErrorHandler.Sync(this);
 			switch (TokenStream.LA(1)) {
-			case T__2:
+			case T__0:
 				{
 				_localctx = new ParenExprContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
 
 				State = 27;
-				Match(T__2);
+				Match(T__0);
 				State = 28;
 				expr(0);
 				State = 29;
-				Match(T__3);
+				Match(T__1);
 				}
 				break;
-			case T__4:
+			case T__2:
 				{
 				_localctx = new HideExprContext(_localctx);
 				Context = _localctx;
 				_prevctx = _localctx;
 				State = 31;
-				Match(T__4);
+				Match(T__2);
 				State = 32;
 				expr(0);
 				State = 33;
-				Match(T__5);
+				Match(T__3);
 				}
 				break;
 			case COMPLEMENT:
@@ -1074,7 +1077,7 @@ public partial class CSLParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,28,102,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,1,0,
+		4,1,30,102,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,1,0,
 		1,0,5,0,17,8,0,10,0,12,0,20,9,0,1,1,1,1,1,1,1,1,1,1,1,2,1,2,1,2,1,2,1,
 		2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,3,2,40,8,2,1,2,1,2,1,2,1,2,1,2,1,2,1,
 		2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,
@@ -1084,9 +1087,9 @@ public partial class CSLParser : Parser {
 		0,0,4,39,1,0,0,0,6,89,1,0,0,0,8,91,1,0,0,0,10,94,1,0,0,0,12,97,1,0,0,0,
 		14,17,3,2,1,0,15,17,3,4,2,0,16,14,1,0,0,0,16,15,1,0,0,0,17,20,1,0,0,0,
 		18,16,1,0,0,0,18,19,1,0,0,0,19,1,1,0,0,0,20,18,1,0,0,0,21,22,5,27,0,0,
-		22,23,5,1,0,0,23,24,3,4,2,0,24,25,5,2,0,0,25,3,1,0,0,0,26,27,6,2,-1,0,
-		27,28,5,3,0,0,28,29,3,4,2,0,29,30,5,4,0,0,30,40,1,0,0,0,31,32,5,5,0,0,
-		32,33,3,4,2,0,33,34,5,6,0,0,34,40,1,0,0,0,35,36,5,8,0,0,36,40,3,4,2,14,
+		22,23,5,5,0,0,23,24,3,4,2,0,24,25,5,6,0,0,25,3,1,0,0,0,26,27,6,2,-1,0,
+		27,28,5,1,0,0,28,29,3,4,2,0,29,30,5,2,0,0,30,40,1,0,0,0,31,32,5,3,0,0,
+		32,33,3,4,2,0,33,34,5,4,0,0,34,40,1,0,0,0,35,36,5,8,0,0,36,40,3,4,2,14,
 		37,40,3,6,3,0,38,40,5,27,0,0,39,26,1,0,0,0,39,31,1,0,0,0,39,35,1,0,0,0,
 		39,37,1,0,0,0,39,38,1,0,0,0,40,79,1,0,0,0,41,42,10,15,0,0,42,43,5,7,0,
 		0,43,78,3,4,2,16,44,45,10,13,0,0,45,46,5,9,0,0,46,78,3,4,2,14,47,48,10,

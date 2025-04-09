@@ -108,6 +108,44 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.TIMEUNITS, "w"),
                 }
             },
+            // Wrong grammar no use of ' inside subject
+            new object[]
+            {
+                "'Day's'",
+                new List<ExpectedToken>
+                {
+                    new ExpectedToken(CSLLexer.SUBJECT, "'Day'"),
+                    new ExpectedToken(CSLLexer.Eof, "<EOF>")                
+                }
+            },
+            // Identifier and Stat test
+            new object[]
+            {
+                "WorkWeek = 7:00~16:00 ++ Monday ++ Tuesday ++ Wednesday ++ Thursday ++ Friday;",
+                new List<ExpectedToken>
+                {
+                    new ExpectedToken(CSLLexer.IDENTIFIER, "WorkWeek"),
+                    new ExpectedToken(CSLLexer.EQUAL, "="),
+                    new ExpectedToken(CSLLexer.INT, "7"),
+                    new ExpectedToken(CSLLexer.COLON, ":"),
+                    new ExpectedToken(CSLLexer.INT, "00"),
+                    new ExpectedToken(CSLLexer.THILDE, "~"),
+                    new ExpectedToken(CSLLexer.INT, "16"),
+                    new ExpectedToken(CSLLexer.COLON, ":"),
+                    new ExpectedToken(CSLLexer.INT, "00"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Monday"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Tuesday"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Wednesday"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Thursday"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Friday"),                  
+                }
+            },
+            
             /*
             new object[]
             {
@@ -119,7 +157,6 @@ public class LexerTests
                 }
             },
             */
-            // More test here ...
         };
 
     [Theory]
@@ -201,7 +238,7 @@ public class LexerTests
     }
     [Theory]
     [InlineData("'a' + 'b' ~ 'c'")]
-    [InlineData("'a' < 'b' ~ 'c'")]
+    [InlineData("'Dinner' ++ 30 min ++ Monday ++ 18:00 << [30 min] << 'Meds' ++ 5 min ++ Monday")]
     public void TestPrecedence(string input)
     {
         PrecedenceTestListener listener = MakePrecedenceList(input);
@@ -216,11 +253,11 @@ public class LexerTests
 
             if (higherIndex == -1)
             {
-                Console.WriteLine($"{higherOp} not found in parse tree. Skipping test for {higherOp} vs {lowerOp}.");
+                //Console.WriteLine($"{higherOp} not found in parse tree. Skipping test for {higherOp} vs {lowerOp}.");
             }
             else if (lowerIndex == -1)
             {
-                Console.WriteLine($"{lowerOp} not found in parse tree. Skipping test for {higherOp} vs {lowerOp}.");
+                //Console.WriteLine($"{lowerOp} not found in parse tree. Skipping test for {higherOp} vs {lowerOp}.");
             }
             else
             {
