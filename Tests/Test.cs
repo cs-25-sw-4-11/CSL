@@ -146,7 +146,25 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.SEMICOLON, ";")                  
                 }
             },
-            
+            // Testing Identifiers names
+            new object[]
+            {
+                "ADWdsadjlawWADJ897931987gjfsjf8fhe8_4356347856uwifeWDA ++ _Succes ++ 0fail ++ _0Suc ++ _0",
+                new List<ExpectedToken>
+                {
+                    new ExpectedToken(CSLLexer.IDENTIFIER, "ADWdsadjlawWADJ897931987gjfsjf8fhe8_4356347856uwifeWDA"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    new ExpectedToken(CSLLexer.IDENTIFIER, "_Succes"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    // Opserve the user indented to have a id called 0fail, but that is not allowed in the grammer and is seen as a int and id
+                    new ExpectedToken(CSLLexer.INT, "0"),
+                    new ExpectedToken(CSLLexer.IDENTIFIER, "fail"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    new ExpectedToken(CSLLexer.IDENTIFIER, "_0Suc"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
+                    new ExpectedToken(CSLLexer.IDENTIFIER, "_0"),                         
+                }
+            },
             /*
             new object[]
             {
