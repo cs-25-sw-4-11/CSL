@@ -142,7 +142,8 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
                     new ExpectedToken(CSLLexer.DAYSOFWEEK, "Thursday"),
                     new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
-                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Friday"),                  
+                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Friday"),
+                    new ExpectedToken(CSLLexer.SEMICOLON, ";")                  
                 }
             },
             
