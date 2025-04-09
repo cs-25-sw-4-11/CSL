@@ -165,6 +165,17 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.IDENTIFIER, "_0"),                         
                 }
             },
+            // Comment test
+            new object[]
+            {
+                "// This is a comment should not get a token \n 'Token' \n /* Comment \n Still comment \n Surpise still comment */\n 'Token'",
+                new List<ExpectedToken>
+                {
+                    new ExpectedToken(CSLLexer.SUBJECT, "'Token'"),
+                    new ExpectedToken(CSLLexer.SUBJECT, "'Token'"),                
+                }
+            },
+            
             /*
             new object[]
             {
