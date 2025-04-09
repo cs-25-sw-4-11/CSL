@@ -269,6 +269,7 @@ public class LexerTests
     [Theory]
     [InlineData("'a' + 'b' ~ 'c'")]
     [InlineData("'Dinner' ++ 30 min ++ Monday ++ 18:00 << [30 min] << 'Meds' ++ 5 min ++ Monday")]
+    [InlineData("'Dinner' ++ 30 min ++ Complent Monday ++ 18:00 << [30 min] << 'Meds' ++ 5 min ++ Complent Monday Union Friday Intersect Sunday ++ (15min - 3 sec + 1w ++ 12/12/1212~12/12/1212)*7w < 'Relax' > 'Chat' >> 'Sleep' in 'day' ")]
     public void TestPrecedence(string input)
     {
         PrecedenceTestListener listener = MakePrecedenceList(input);
