@@ -49,9 +49,9 @@ public partial class CSLParser : Parser {
 	};
 
 	private static readonly string[] _LiteralNames = {
-		null, "'('", "')'", "'['", "']'", "'='", "';'", "'~'", "'Complement'", 
-		"'++'", "'+'", "'-'", "'in'", "'<<'", "'>>'", "'<'", "'>'", "'*'", "'Intersect'", 
-		"'Union'", null, null, null, "':'"
+		null, "'('", "')'", "'['", "']'", "'='", "';'", "'~'", "'!'", "'++'", 
+		"'+'", "'-'", "'in'", "'<<'", "'>>'", "'<'", "'>'", "'*'", "'&&'", "'||'", 
+		null, null, null, "':'"
 	};
 	private static readonly string[] _SymbolicNames = {
 		null, null, null, null, null, "EQUAL", "SEMICOLON", "THILDE", "COMPLEMENT", 

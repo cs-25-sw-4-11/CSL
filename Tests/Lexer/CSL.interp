@@ -7,7 +7,7 @@ null
 '='
 ';'
 '~'
-'Complement'
+'!'
 '++'
 '+'
 '-'
@@ -17,8 +17,8 @@ null
 '<'
 '>'
 '*'
-'Intersect'
-'Union'
+'&&'
+'||'
 null
 null
 null

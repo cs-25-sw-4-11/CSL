@@ -42,14 +42,14 @@ public class LexerTests
             // Testing Operations
             new object[]
             {
-                "'Subject' ~ 'Subject' ++ Complement 'Subject' + 'Subject' - 'Subject' in 'Subject' << 'Subject' >> 'Subject' < 'Subject' > 'Subject' * 'Subject' Intersect 'Subject' Union 'Subject'  ",
+                "'Subject' ~ 'Subject' ++ !'Subject' + 'Subject' - 'Subject' in 'Subject' << 'Subject' >> 'Subject' < 'Subject' > 'Subject' * 'Subject' && 'Subject' || 'Subject'  ",
                 new List<ExpectedToken>
                 {
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.THILDE, "~"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
-                    new ExpectedToken(CSLLexer.COMPLEMENT, "Complement"),
+                    new ExpectedToken(CSLLexer.COMPLEMENT, "!"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.PLUS, "+"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
@@ -67,9 +67,9 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.STAR, "*"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
-                    new ExpectedToken(CSLLexer.INTERSECTION, "Intersect"),
+                    new ExpectedToken(CSLLexer.INTERSECTION, "&&"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
-                    new ExpectedToken(CSLLexer.UNION, "Union"),
+                    new ExpectedToken(CSLLexer.UNION, "||"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
 
                 }
@@ -115,6 +115,7 @@ public class LexerTests
                 new List<ExpectedToken>
                 {
                     new ExpectedToken(CSLLexer.SUBJECT, "'Day'"),
+                    new ExpectedToken(CSLLexer.IDENTIFIER, "s"),
                     new ExpectedToken(CSLLexer.Eof, "<EOF>")                
                 }
             },
@@ -252,202 +253,301 @@ public class LexerTests
         Assert.True(allTokensCorrect, string.Join(Environment.NewLine, errors));
     }
 
-
-    public PrecedenceTestListener MakePrecedenceList(string input)
+    // Helper method to parse an expression and return the parse tree
+    private static CSLParser.ExprContext ParseExpression(string input)
     {
         ICharStream stream = CharStreams.fromString(input);
         CSLLexer lexer = new CSLLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         CSLParser parser = new CSLParser(tokens);
-
-        // Get the parse tree
-        IParseTree tree = parser.expr();
-        PrecedenceTestListener listener = new();
-        ParseTreeWalker.Default.Walk(listener, tree);
-        return listener;
+        return parser.expr();
     }
+
     [Theory]
-    [InlineData("'a' + 'b' ~ 'c'")]
-    [InlineData("'Dinner' ++ 30 min ++ Monday ++ 18:00 << [30 min] << 'Meds' ++ 5 min ++ Monday")]
-    [InlineData("'Dinner' ++ 30 min ++ Complent Monday ++ 18:00 << [30 min] << 'Meds' ++ 5 min ++ Complent Monday Union Friday Intersect Sunday ++ (15min - 3 sec + 1w ++ 12/12/1212~12/12/1212)*7w < 'Relax' > 'Chat' >> 'Sleep' in 'day' ")]
-    public void TestPrecedence(string input)
+    // Combinations with ParenExpr
+    [InlineData("(a) ~ b", "ParenExpr", "TildeOp")]
+    [InlineData("(a) ++ b", "ParenExpr", "DoublePlusOp")]
+    [InlineData("(a) + b", "ParenExpr", "AddOp")]
+    [InlineData("(a) - b", "ParenExpr", "SubtractOp")]
+    [InlineData("(a) in b", "ParenExpr", "InOp")]
+    [InlineData("(a) << b", "ParenExpr", "StrictlyBeforeOp")]
+    [InlineData("(a) >> b", "ParenExpr", "StrictlyAfterOp")]
+    [InlineData("(a) < b", "ParenExpr", "BeforeOp")]
+    [InlineData("(a) > b", "ParenExpr", "AfterOp")]
+    [InlineData("(a) * b", "ParenExpr", "RecursiveOp")]
+    [InlineData("(a) && b", "ParenExpr", "IntersectOp")]
+    [InlineData("(a) || b", "ParenExpr", "UnionOp")]
+    [InlineData("a ~ (b)", "ParenExpr", "TildeOp")]
+    [InlineData("a ++ (b)", "ParenExpr", "DoublePlusOp")]
+    [InlineData("a + (b)", "ParenExpr", "AddOp")]
+    [InlineData("a - (b)", "ParenExpr", "SubtractOp")]
+    [InlineData("a in (b)", "ParenExpr", "InOp")]
+    [InlineData("a << (b)", "ParenExpr", "StrictlyBeforeOp")]
+    [InlineData("a >> (b)", "ParenExpr", "StrictlyAfterOp")]
+    [InlineData("a < (b)", "ParenExpr", "BeforeOp")]
+    [InlineData("a > (b)", "ParenExpr", "AfterOp")]
+    [InlineData("a * (b)", "ParenExpr", "RecursiveOp")]
+    [InlineData("a && (b)", "ParenExpr", "IntersectOp")]
+    [InlineData("a || (b)", "ParenExpr", "UnionOp")]
+    // Combinations with HideExpr
+    [InlineData("[a] ~ b", "HideExpr", "TildeOp")]
+    [InlineData("[a] ++ b", "HideExpr", "DoublePlusOp")]
+    [InlineData("[a] + b", "HideExpr", "AddOp")]
+    [InlineData("[a] - b", "HideExpr", "SubtractOp")]
+    [InlineData("[a] in b", "HideExpr", "InOp")]
+    [InlineData("[a] << b", "HideExpr", "StrictlyBeforeOp")]
+    [InlineData("[a] >> b", "HideExpr", "StrictlyAfterOp")]
+    [InlineData("[a] < b", "HideExpr", "BeforeOp")]
+    [InlineData("[a] > b", "HideExpr", "AfterOp")]
+    [InlineData("[a] * b", "HideExpr", "RecursiveOp")]
+    [InlineData("[a] && b", "HideExpr", "IntersectOp")]
+    [InlineData("[a] || b", "HideExpr", "UnionOp")]
+    [InlineData("a ~ [b]", "HideExpr", "TildeOp")]
+    [InlineData("a ++ [b]", "HideExpr", "DoublePlusOp")]
+    [InlineData("a + [b]", "HideExpr", "AddOp")]
+    [InlineData("a - [b]",  "HideExpr", "SubtractOp")]
+    [InlineData("a in [b]", "HideExpr", "InOp")]
+    [InlineData("a << [b]", "HideExpr", "StrictlyBeforeOp")]
+    [InlineData("a >> [b]", "HideExpr", "StrictlyAfterOp")]
+    [InlineData("a < [b]", "HideExpr", "BeforeOp")]
+    [InlineData("a > [b]", "HideExpr", "AfterOp")]
+    [InlineData("a * [b]", "HideExpr", "RecursiveOp")]
+    [InlineData("a && [b]", "HideExpr", "IntersectOp")]
+    [InlineData("a || [b]", "HideExpr", "UnionOp")]
+    // Combinations with ComplementOp
+    [InlineData("!a ~ b", "TildeOp", "ComplementOp")]
+    [InlineData("!a ++ b", "ComplementOp", "DoublePlusOp")]
+    [InlineData("!a + b", "ComplementOp", "AddOp")]
+    [InlineData("!a - b", "ComplementOp", "SubtractOp")]
+    [InlineData("!a in b", "ComplementOp", "InOp")]
+    [InlineData("!a << b", "ComplementOp", "StrictlyBeforeOp")]
+    [InlineData("!a >> b", "ComplementOp", "StrictlyAfterOp")]
+    [InlineData("!a < b", "ComplementOp", "BeforeOp")]
+    [InlineData("!a > b", "ComplementOp", "AfterOp")]
+    [InlineData("!a * b", "ComplementOp", "RecursiveOp")]
+    [InlineData("!a && b", "ComplementOp", "IntersectOp")]
+    [InlineData("!a || b", "ComplementOp", "UnionOp")]
+    [InlineData("!(a ~ b)", "ParenExpr", "ComplementOp")]
+    // TildeOp combinations
+    [InlineData("a ~ b ++ c", "TildeOp", "DoublePlusOp")]
+    [InlineData("a ~ b + c", "TildeOp", "AddOp")]
+    [InlineData("a ~ b - c", "TildeOp", "SubtractOp")]
+    [InlineData("a ~ b in c", "TildeOp", "InOp")]
+    [InlineData("a ~ b << c", "TildeOp", "StrictlyBeforeOp")]
+    [InlineData("a ~ b >> c", "TildeOp", "StrictlyAfterOp")]
+    [InlineData("a ~ b < c", "TildeOp", "BeforeOp")]
+    [InlineData("a ~ b > c", "TildeOp", "AfterOp")]
+    [InlineData("a ~ b * c", "TildeOp", "RecursiveOp")]
+    [InlineData("a ~ b && c", "TildeOp", "IntersectOp")]
+    [InlineData("a ~ b || c", "TildeOp", "UnionOp")]
+    // DoublePlusOp combinations
+    [InlineData("a ++ b ~ c", "TildeOp", "DoublePlusOp")]
+    [InlineData("a ++ b + c", "DoublePlusOp", "AddOp")]
+    [InlineData("a ++ b - c", "DoublePlusOp", "SubtractOp")]
+    [InlineData("a ++ b in c", "DoublePlusOp", "InOp")]
+    [InlineData("a ++ b << c", "DoublePlusOp", "StrictlyBeforeOp")]
+    [InlineData("a ++ b >> c", "DoublePlusOp", "StrictlyAfterOp")]
+    [InlineData("a ++ b < c", "DoublePlusOp", "BeforeOp")]
+    [InlineData("a ++ b > c", "DoublePlusOp", "AfterOp")]
+    [InlineData("a ++ b * c", "DoublePlusOp", "RecursiveOp")]
+    [InlineData("a ++ b && c", "DoublePlusOp", "IntersectOp")]
+    [InlineData("a ++ b || c", "DoublePlusOp", "UnionOp")]
+    // AddOp combinations
+    [InlineData("a + b ~ c", "TildeOp", "AddOp")]
+    [InlineData("a + b ++ c", "DoublePlusOp", "AddOp")]
+    [InlineData("a + b - c", "AddOp", "SubtractOp")]
+    [InlineData("a + b in c", "AddOp", "InOp")]
+    [InlineData("a + b << c", "AddOp", "StrictlyBeforeOp")]
+    [InlineData("a + b >> c", "AddOp", "StrictlyAfterOp")]
+    [InlineData("a + b < c", "AddOp", "BeforeOp")]
+    [InlineData("a + b > c", "AddOp", "AfterOp")]
+    [InlineData("a + b * c", "AddOp", "RecursiveOp")]
+    [InlineData("a + b && c", "AddOp", "IntersectOp")]
+    [InlineData("a + b || c", "AddOp", "UnionOp")]
+    // SubtractOp combinations
+    [InlineData("a - b ~ c", "TildeOp", "SubtractOp")]
+    [InlineData("a - b ++ c", "DoublePlusOp", "SubtractOp")]
+    [InlineData("a - b + c", "AddOp", "SubtractOp")]
+    [InlineData("a - b in c", "SubtractOp", "InOp")]
+    [InlineData("a - b << c", "SubtractOp", "StrictlyBeforeOp")]
+    [InlineData("a - b >> c", "SubtractOp", "StrictlyAfterOp")]
+    [InlineData("a - b < c", "SubtractOp", "BeforeOp")]
+    [InlineData("a - b > c", "SubtractOp", "AfterOp")]
+    [InlineData("a - b * c", "SubtractOp", "RecursiveOp")]
+    [InlineData("a - b && c", "SubtractOp", "IntersectOp")]
+    [InlineData("a - b || c", "SubtractOp", "UnionOp")]
+    // InOp combinations
+    [InlineData("a in b ~ c", "TildeOp", "InOp")]
+    [InlineData("a in b ++ c", "DoublePlusOp", "InOp")]
+    [InlineData("a in b + c", "AddOp", "InOp" )]
+    [InlineData("a in b - c", "SubtractOp", "InOp")]
+    [InlineData("a in b << c", "InOp", "StrictlyBeforeOp")]
+    [InlineData("a in b >> c", "InOp", "StrictlyAfterOp")]
+    [InlineData("a in b < c", "InOp", "BeforeOp")]
+    [InlineData("a in b > c", "InOp", "AfterOp")]
+    [InlineData("a in b * c", "InOp", "RecursiveOp")]
+    [InlineData("a in b && c", "InOp", "IntersectOp")]
+    [InlineData("a in b || c", "InOp", "UnionOp")]
+    // StrictlyBeforeOp combinations
+    [InlineData("a << b ~ c", "TildeOp", "StrictlyBeforeOp")]
+    [InlineData("a << b ++ c", "DoublePlusOp", "StrictlyBeforeOp")]
+    [InlineData("a << b + c", "AddOp", "StrictlyBeforeOp")]
+    [InlineData("a << b - c", "SubtractOp", "StrictlyBeforeOp")]
+    [InlineData("a << b in c", "InOp", "StrictlyBeforeOp")]
+    [InlineData("a << b >> c", "StrictlyBeforeOp", "StrictlyAfterOp")]
+    [InlineData("a << b < c", "StrictlyBeforeOp", "BeforeOp")]
+    [InlineData("a << b > c", "StrictlyBeforeOp", "AfterOp")]
+    [InlineData("a << b * c", "StrictlyBeforeOp", "RecursiveOp")]
+    [InlineData("a << b && c", "StrictlyBeforeOp", "IntersectOp")]
+    [InlineData("a << b || c", "StrictlyBeforeOp", "UnionOp")]
+    // StrictlyAfterOp combinations
+    [InlineData("a >> b ~ c", "TildeOp", "StrictlyAfterOp")]
+    [InlineData("a >> b ++ c", "DoublePlusOp", "StrictlyAfterOp")]
+    [InlineData("a >> b + c", "AddOp", "StrictlyAfterOp")]
+    [InlineData("a >> b - c", "SubtractOp", "StrictlyAfterOp")]
+    [InlineData("a >> b in c", "InOp", "StrictlyAfterOp")]
+    [InlineData("a >> b << c", "StrictlyBeforeOp", "StrictlyAfterOp")]
+    [InlineData("a >> b < c", "StrictlyAfterOp", "BeforeOp")]
+    [InlineData("a >> b > c", "StrictlyAfterOp", "AfterOp")]
+    [InlineData("a >> b * c", "StrictlyAfterOp", "RecursiveOp")]
+    [InlineData("a >> b && c", "StrictlyAfterOp", "IntersectOp")]
+    [InlineData("a >> b || c", "StrictlyAfterOp", "UnionOp")]
+    // BeforeOp combinations
+    [InlineData("a < b ~ c", "TildeOp", "BeforeOp")]
+    [InlineData("a < b ++ c", "DoublePlusOp", "BeforeOp")]
+    [InlineData("a < b + c", "AddOp", "BeforeOp")]
+    [InlineData("a < b - c", "SubtractOp", "BeforeOp")]
+    [InlineData("a < b in c", "InOp", "BeforeOp")]
+    [InlineData("a < b << c", "StrictlyBeforeOp", "BeforeOp")]
+    [InlineData("a < b >> c", "StrictlyAfterOp", "BeforeOp")]
+    [InlineData("a < b > c", "BeforeOp", "AfterOp")]
+    [InlineData("a < b * c", "BeforeOp", "RecursiveOp")]
+    [InlineData("a < b && c", "BeforeOp", "IntersectOp")]
+    [InlineData("a < b || c", "BeforeOp", "UnionOp")]
+    // AfterOp combinations
+    [InlineData("a > b ~ c",  "TildeOp", "AfterOp")]
+    [InlineData("a > b ++ c",  "DoublePlusOp", "AfterOp")]
+    [InlineData("a > b + c",  "AddOp", "AfterOp")]
+    [InlineData("a > b - c",  "SubtractOp", "AfterOp")]
+    [InlineData("a > b in c",  "InOp", "AfterOp")]
+    [InlineData("a > b << c",  "StrictlyBeforeOp", "AfterOp")]
+    [InlineData("a > b >> c",  "StrictlyAfterOp", "AfterOp")]
+    [InlineData("a > b < c",  "BeforeOp", "AfterOp")]
+    [InlineData("a > b * c", "AfterOp", "RecursiveOp")]
+    [InlineData("a > b && c", "AfterOp", "IntersectOp")]
+    [InlineData("a > b || c", "AfterOp", "UnionOp")]
+    // RecursiveOp combinations
+    [InlineData("a * b ~ c",  "TildeOp", "RecursiveOp")]
+    [InlineData("a * b ++ c",  "DoublePlusOp", "RecursiveOp")]
+    [InlineData("a * b + c",  "AddOp", "RecursiveOp")]
+    [InlineData("a * b - c",  "SubtractOp", "RecursiveOp")]
+    [InlineData("a * b in c",  "InOp", "RecursiveOp")]
+    [InlineData("a * b << c",  "StrictlyBeforeOp", "RecursiveOp")]
+    [InlineData("a * b >> c",  "StrictlyAfterOp", "RecursiveOp")]
+    [InlineData("a * b < c",  "BeforeOp", "RecursiveOp")]
+    [InlineData("a * b > c",  "AfterOp", "RecursiveOp")]
+    [InlineData("a * b && c", "RecursiveOp", "IntersectOp")]
+    [InlineData("a * b || c", "RecursiveOp", "UnionOp")]
+    // IntersectOp combinations
+    [InlineData("a && b ~ c",  "TildeOp", "IntersectOp")]
+    [InlineData("a && b ++ c",  "DoublePlusOp", "IntersectOp")]
+    [InlineData("a && b + c",  "AddOp", "IntersectOp")]
+    [InlineData("a && b - c",  "SubtractOp", "IntersectOp")]
+    [InlineData("a && b in c",  "InOp", "IntersectOp")]
+    [InlineData("a && b << c",  "StrictlyBeforeOp", "IntersectOp")]
+    [InlineData("a && b >> c",  "StrictlyAfterOp", "IntersectOp")]
+    [InlineData("a && b < c",  "BeforeOp", "IntersectOp")]
+    [InlineData("a && b > c",  "AfterOp", "IntersectOp")]
+    [InlineData("a && b * c",  "RecursiveOp", "IntersectOp")]
+    [InlineData("a && b || c", "IntersectOp", "UnionOp")]
+    // UnionOp combinations
+    [InlineData("a || b ~ c",  "TildeOp", "UnionOp")]
+    [InlineData("a || b ++ c",  "DoublePlusOp", "UnionOp")]
+    [InlineData("a || b + c",  "AddOp", "UnionOp")]
+    [InlineData("a || b - c",  "SubtractOp", "UnionOp")]
+    [InlineData("a || b in c",  "InOp", "UnionOp")]
+    [InlineData("a || b << c",  "StrictlyBeforeOp", "UnionOp")]
+    [InlineData("a || b >> c",  "StrictlyAfterOp", "UnionOp")]
+    [InlineData("a || b < c",  "BeforeOp", "UnionOp")]
+    [InlineData("a || b > c", "AfterOp", "UnionOp")]
+    [InlineData("a || b * c", "RecursiveOp", "UnionOp")]
+    [InlineData("a || b && c", "IntersectOp", "UnionOp")]
+    // Additional complex combinations
+    [InlineData("(a + b) * c", "ParenExpr", "RecursiveOp")]
+    [InlineData("a + (b * c)", "ParenExpr", "AddOp")]
+    [InlineData("[a + b] && c", "HideExpr", "IntersectOp")]
+    [InlineData("a || [b && c]", "HideExpr", "UnionOp" )]
+
+    public void TestOperatorPrecedence(string expression, string higherPrecedenceOp, string lowerPrecedenceOp)
     {
-        PrecedenceTestListener listener = MakePrecedenceList(input);
-        var operations = listener.Operations;
-        Console.WriteLine(string.Join(" -> ", operations));
-
-        // Helper function to assert operator precedence
-        void AssertPrecedence(string higherOp, string lowerOp)
+        // Parse the expression
+        var exprContext = ParseExpression(expression);
+        
+        // Convert context type name to operation name
+        string GetOperationName(CSLParser.ExprContext ctx)
         {
-            int higherIndex = operations.IndexOf(higherOp);
-            int lowerIndex = operations.IndexOf(lowerOp);
-
-            if (higherIndex == -1)
-            {
-                //Console.WriteLine($"{higherOp} not found in parse tree. Skipping test for {higherOp} vs {lowerOp}.");
-            }
-            else if (lowerIndex == -1)
-            {
-                //Console.WriteLine($"{lowerOp} not found in parse tree. Skipping test for {higherOp} vs {lowerOp}.");
-            }
-            else
-            {
-                Assert.True(higherIndex < lowerIndex, $"{higherOp} should be processed before {lowerOp}");
-            }
+            string typeName = ctx.GetType().Name;
+            // Remove "Context" suffix if it exists
+            if (typeName.EndsWith("Context"))
+                typeName = typeName.Substring(0, typeName.Length - 7);
+            return typeName;
         }
 
-        // Test 1: Ensure TildeOp has higher precedence than AddOp
-        AssertPrecedence("TildeOp", "AddOp");
-
-        // Test 2: Ensure ComplementOp has higher precedence than AddOp
-        AssertPrecedence("ComplementOp", "AddOp");
-
-        // Test 3: Ensure DoublePlusOp has higher precedence than AddOp
-        AssertPrecedence("DoublePlusOp", "AddOp");
-
-        // Test 4: Ensure AddOp has higher precedence than SubtractOp
-        AssertPrecedence("AddOp", "SubtractOp");
-
-        // Test 5: Ensure SubtractOp has higher precedence than InOp
-        AssertPrecedence("SubtractOp", "InOp");
-
-        // Test 6: Ensure InOp has higher precedence than SBEFORE
-        AssertPrecedence("InOp", "SBEFORE");
-
-        // Test 7: Ensure SBEFORE has higher precedence than SAFTER
-        AssertPrecedence("SBEFORE", "SAFTER");
-
-        // Test 8: Ensure SAFTER has higher precedence than BeforeOp
-        AssertPrecedence("SAFTER", "BEFORE");
-
-        // Test 9: Ensure BeforeOp has higher precedence than AfterOp
-        AssertPrecedence("BEFORE", "AFTER");
-
-        // Test 10: Ensure AddOp has higher precedence than RecursiveOp
-        AssertPrecedence("AddOp", "RecursiveOp");
-
-        // Test 11: Ensure RecursiveOp has higher precedence than IntersectOp
-        AssertPrecedence("RecursiveOp", "IntersectOp");
-
-        // Test 12: Ensure IntersectOp has higher precedence than UnionOp
-        AssertPrecedence("IntersectOp", "UnionOp");
-
-        // Test 13: Ensure TildeOp has higher precedence than ComplementOp
-        AssertPrecedence("TildeOp", "ComplementOp");
-
-        // Test 14: Ensure TildeOp has higher precedence than DoublePlusOp
-        AssertPrecedence("TildeOp", "DoublePlusOp");
-
-        // Test 15: Ensure ComplementOp has higher precedence than DoublePlusOp
-        AssertPrecedence("ComplementOp", "DoublePlusOp");
-
-        // Test 16: Ensure TildeOp has higher precedence than SubtractOp
-        AssertPrecedence("TildeOp", "SubtractOp");
-
-        // Test 17: Ensure TildeOp has higher precedence than InOp
-        AssertPrecedence("TildeOp", "InOp");
-
-        // Test 18: Ensure TildeOp has higher precedence than SBEFORE
-        AssertPrecedence("TildeOp", "SBEFORE");
-
-        // Test 19: Ensure TildeOp has higher precedence than SAFTER
-        AssertPrecedence("TildeOp", "SAFTER");
-
-        // Test 20: Ensure TildeOp has higher precedence than BeforeOp
-        AssertPrecedence("TildeOp", "BEFORE");
-
-        // Test 21: Ensure TildeOp has higher precedence than AfterOp
-        AssertPrecedence("TildeOp", "AFTER");
-
-        // Test 22: Ensure DoublePlusOp has higher precedence than SubtractOp
-        AssertPrecedence("DoublePlusOp", "SubtractOp");
-
-        // Test 23: Ensure DoublePlusOp has higher precedence than InOp
-        AssertPrecedence("DoublePlusOp", "InOp");
-
-        // Test 24: Ensure DoublePlusOp has higher precedence than SBEFORE
-        AssertPrecedence("DoublePlusOp", "SBEFORE");
-
-        // Test 25: Ensure DoublePlusOp has higher precedence than SAFTER
-        AssertPrecedence("DoublePlusOp", "SAFTER");
-
-        // Test 26: Ensure DoublePlusOp has higher precedence than BeforeOp
-        AssertPrecedence("DoublePlusOp", "BEFORE");
-
-        // Test 27: Ensure DoublePlusOp has higher precedence than AfterOp
-        AssertPrecedence("DoublePlusOp", "AFTER");
-
-        // Test 28: Ensure ComplementOp has higher precedence than SubtractOp
-        AssertPrecedence("ComplementOp", "SubtractOp");
-
-        // Test 29: Ensure ComplementOp has higher precedence than InOp
-        AssertPrecedence("ComplementOp", "InOp");
-
-        // Test 30: Ensure ComplementOp has higher precedence than SBEFORE
-        AssertPrecedence("ComplementOp", "SBEFORE");
-
-        // Test 31: Ensure ComplementOp has higher precedence than SAFTER
-        AssertPrecedence("ComplementOp", "SAFTER");
-
-        // Test 32: Ensure ComplementOp has higher precedence than BeforeOp
-        AssertPrecedence("ComplementOp", "BEFORE");
-
-        // Test 33: Ensure ComplementOp has higher precedence than AfterOp
-        AssertPrecedence("ComplementOp", "AFTER");
-
-        // Test 34: Ensure AddOp has higher precedence than InOp
-        AssertPrecedence("AddOp", "InOp");
-
-        // Test 35: Ensure AddOp has higher precedence than SBEFORE
-        AssertPrecedence("AddOp", "SBEFORE");
-
-        // Test 36: Ensure AddOp has higher precedence than SAFTER
-        AssertPrecedence("AddOp", "SAFTER");
-
-        // Test 37: Ensure AddOp has higher precedence than BeforeOp
-        AssertPrecedence("AddOp", "BEFORE");
-
-        // Test 38: Ensure AddOp has higher precedence than AfterOp
-        AssertPrecedence("AddOp", "AFTER");
-
-        // Test 39: Ensure InOp has higher precedence than SBEFORE
-        AssertPrecedence("InOp", "SBEFORE");
-
-        // Test 40: Ensure InOp has higher precedence than SAFTER
-        AssertPrecedence("InOp", "SAFTER");
-
-        // Test 41: Ensure InOp has higher precedence than BeforeOp
-        AssertPrecedence("InOp", "BEFORE");
-
-        // Test 42: Ensure InOp has higher precedence than AfterOp
-        AssertPrecedence("InOp", "AFTER");
-
-        // Test 43: Ensure SBEFORE has higher precedence than SAFTER
-        AssertPrecedence("SBEFORE", "SAFTER");
-
-        // Test 44: Ensure SBEFORE has higher precedence than BeforeOp
-        AssertPrecedence("SBEFORE", "BEFORE");
-
-        // Test 45: Ensure SBEFORE has higher precedence than AfterOp
-        AssertPrecedence("SBEFORE", "AFTER");
-
-        // Test 46: Ensure SAFTER has higher precedence than BeforeOp
-        AssertPrecedence("SAFTER", "BEFORE");
-
-        // Test 47: Ensure SAFTER has higher precedence than AfterOp
-        AssertPrecedence("SAFTER", "AFTER");
-
-        // Test 48: Ensure BeforeOp has higher precedence than AfterOp
-        AssertPrecedence("BEFORE", "AFTER");
-
-        // Test 49: Ensure RecursiveOp has higher precedence than IntersectOp
-        AssertPrecedence("RecursiveOp", "IntersectOp");
-
-        // Test 50: Ensure RecursiveOp has higher precedence than UnionOp
-        AssertPrecedence("RecursiveOp", "UnionOp");
-
-        // Test 51: Ensure IntersectOp has higher precedence than UnionOp
-        AssertPrecedence("IntersectOp", "UnionOp");
-
+        // Extract all the operations from the tree
+        List<string> operations = ExtractOperations(exprContext);
+        Console.WriteLine($"Expression: {expression}, Operations: {string.Join(", ", operations)}");
+        
+        // The higher precedence op should be evaluated first (appear earlier in the list)
+        int highIndex = operations.IndexOf(higherPrecedenceOp);
+        int lowIndex = operations.IndexOf(lowerPrecedenceOp);
+        
+        Assert.True(highIndex >= 0, $"Higher precedence operation '{higherPrecedenceOp}' not found");
+        Assert.True(lowIndex >= 0, $"Lower precedence operation '{lowerPrecedenceOp}' not found");
+        Assert.True(highIndex < lowIndex, 
+            $"'{higherPrecedenceOp}' should be evaluated before '{lowerPrecedenceOp}' but was found at index {highIndex} vs {lowIndex}");
+    }
+    
+    // Extract operations in execution order (depth-first post-order traversal)
+    private List<string> ExtractOperations(CSLParser.ExprContext context)
+    {
+        var operations = new List<string>();
+        ExtractOperationsRecursive(context, operations);
+        return operations;
+    }
+    
+    private void ExtractOperationsRecursive(CSLParser.ExprContext context, List<string> operations)
+    {
+        // Skip literal and identifier expressions
+        if (context is CSLParser.LiteralExprContext || context is CSLParser.IdentifierExprContext)
+            return;
+            
+        // For unary operators, process the operand first
+        if (context is CSLParser.ComplementOpContext)
+        {
+            var complementOp = (CSLParser.ComplementOpContext)context;
+            ExtractOperationsRecursive(complementOp.expr(), operations);
+            operations.Add("ComplementOp");
+            return;
+        }
+        
+        // For binary operators, process both operands first
+        // This simulates the execution order - operands are evaluated before the operator
+        var property = context.GetType().GetMethod("expr", new Type[] { typeof(int) });
+        if (property != null)
+        {
+            var left = (CSLParser.ExprContext)property.Invoke(context, new object[] { 0 });
+            if (left != null)
+                ExtractOperationsRecursive(left, operations);
+                
+            if (property.Invoke(context, new object[] { 1 }) is CSLParser.ExprContext right)
+                ExtractOperationsRecursive(right, operations);
+        }
+        
+        // Add this operation to the list after processing its operands
+        string typeName = context.GetType().Name;
+        if (typeName.EndsWith("Context"))
+            typeName = typeName.Substring(0, typeName.Length - 7);
+            
+        operations.Add(typeName);
     }
 }

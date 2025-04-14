@@ -22,7 +22,7 @@ public class PrecedenceTestListener : CSLBaseListener
 
     public override void EnterTildeOp([NotNull] CSLParser.TildeOpContext context)
     {
-        Operations.Add("ThildeOp");
+        Operations.Add("TildeOp");
     }
 
     public override void EnterComplementOp([NotNull] CSLParser.ComplementOpContext context)
@@ -52,7 +52,7 @@ public class PrecedenceTestListener : CSLBaseListener
 
     public override void EnterStrictlyBeforeOp([NotNull] CSLParser.StrictlyBeforeOpContext context)
     {
-        Operations.Add("StrictlyeforeOp");
+        Operations.Add("StrictlyBeforeOp");
     }
 
     public override void EnterStrictlyAfterOp([NotNull] CSLParser.StrictlyAfterOpContext context)
