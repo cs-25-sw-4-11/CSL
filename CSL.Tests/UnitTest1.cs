@@ -18,9 +18,9 @@ public class TestDuration
     [TestCase("5 hr", 5 * Duration.MinuteFactor)]
     [TestCase("2 d", 2 * Duration.DayFactor)]
     [TestCase("3 w", 10 * Duration.WeekFactor)]
-    public void TestLiteralsMinuteParam(string text, int minutes)
+    public void TestLiteralsMinuteParam(string input, int minutes)
     {
-        var stream = CharStreams.fromString(text);
+        var stream = CharStreams.fromString(input);
 
         var lexer = new CSLLexer(stream);
         var tokens = new CommonTokenStream(lexer);
@@ -38,9 +38,9 @@ public class TestDuration
 
     [TestCase("2 mth", 2 * Duration.MonthFactor)]
     [TestCase("1 y", 1 * Duration.YearFactor)]
-    public void TestLiteralMonthParam()
+    public void TestLiteralMonthParam(string input, int months)
     {
-        var stream = CharStreams.fromString(text);
+        var stream = CharStreams.fromString(input);
 
         var lexer = new CSLLexer(stream);
         var tokens = new CommonTokenStream(lexer);
