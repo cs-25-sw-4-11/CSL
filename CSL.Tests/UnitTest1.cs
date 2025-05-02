@@ -36,7 +36,8 @@ public class TestDuration
         Assert.That(result.Minutes, Is.EqualTo(minutes));
     }
 
-    [Test]
+    [TestCase("2 mth", 2 * Duration.MonthFactor)]
+    [TestCase("1 yr", 1 * Duration.YearFactor)]
     public void TestLiteralMonthParam()
     {
     }
