@@ -26,11 +26,11 @@ public class DurationVisitor : CSLBaseVisitor<Duration>
         return unit switch
         {
             "min" => Duration.FromMinutes(value),
-            "hours" => Duration.FromHours(value),
-            "days" => Duration.FromDays(value),
+            "h" => Duration.FromHours(value),
+            "d" => Duration.FromDays(value),
             "w" => Duration.FromWeeks(value),
-            "months" => Duration.FromMonths(value),
-            "years" => Duration.FromYears(value),
+            "mth" => Duration.FromMonths(value),
+            "y" => Duration.FromYears(value),
             _ => throw new InvalidLiteralCompilerException($"Duration: Invalid unit used {unit}")
         };
     }

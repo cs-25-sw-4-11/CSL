@@ -37,7 +37,7 @@ public class TestDuration
     }
 
     [TestCase("2 mth", 2 * Duration.MonthFactor)]
-    [TestCase("1 yr", 1 * Duration.YearFactor)]
+    [TestCase("1 y", 1 * Duration.YearFactor)]
     public void TestLiteralMonthParam()
     {
         var stream = CharStreams.fromString(text);
