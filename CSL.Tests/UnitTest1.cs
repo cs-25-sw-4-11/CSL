@@ -15,9 +15,9 @@ public class TestDuration
     }
 
     [TestCase("10 min", 10 * Duration.MinuteFactor)]
-    [TestCase("5 hr", 5 * Duration.MinuteFactor)]
+    [TestCase("5 hr", 5 * Duration.HourFactor)]
     [TestCase("2 d", 2 * Duration.DayFactor)]
-    [TestCase("3 w", 10 * Duration.WeekFactor)]
+    [TestCase("3 w", 3 * Duration.WeekFactor)]
     public void TestLiteralsMinuteParam(string input, int minutes)
     {
         var stream = CharStreams.fromString(input);
