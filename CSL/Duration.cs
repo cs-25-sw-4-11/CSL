@@ -34,5 +34,5 @@ public class Duration
 
     public const int MonthFactor = 1;
 
-    public const int YearFactor = 12 * WeekFactor;
+    public const int YearFactor = 12 * MonthFactor;
 }
