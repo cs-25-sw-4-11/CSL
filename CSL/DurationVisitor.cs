@@ -1,3 +1,5 @@
+using CSL.Exceptions;
+
 namespace CSL;
 
 using Antlr4.Runtime.Misc;
@@ -6,9 +8,30 @@ public class DurationVisitor : CSLBaseVisitor<Duration>
 {
     public override Duration VisitDuration(CSLParser.DurationContext context)
     {
-        var exprCtx = context.children.First();
-        var text = exprCtx.GetText();
+        if (context.children.Count != 2)
+        {
+            throw new InvalidLiteralCompilerException("Duration: Invalid syntax, wrong amount of children");
+        }
 
-        return base.VisitDuration(context);
+        var valueRaw = context.children[0].GetText();
+
+        int value;
+        if (!int.TryParse(valueRaw, out value))
+        {
+            throw new InvalidLiteralCompilerException("Duration: Not a number given as value");
+        }
+
+        var unit = context.children[1].GetText();
+
+        return unit switch
+        {
+            "min" => Duration.FromMinutes(value),
+            "hours" => Duration.FromHours(value),
+            "days" => Duration.FromDays(value),
+            "w" => Duration.FromWeeks(value),
+            "months" => Duration.FromMonths(value),
+            "years" => Duration.FromYears(value),
+            _ => throw new InvalidLiteralCompilerException($"Duration: Invalid unit used {unit}")
+        };
     }
 }
