@@ -40,5 +40,19 @@ public class TestDuration
     [TestCase("1 yr", 1 * Duration.YearFactor)]
     public void TestLiteralMonthParam()
     {
+        var stream = CharStreams.fromString(text);
+
+        var lexer = new CSLLexer(stream);
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new CSLParser(tokens);
+
+        var tree = parser.prog();
+
+        // Create and use the visitor
+        var visitor = new DurationVisitor();
+        var result = visitor.Visit(tree);
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Months, Is.EqualTo(months));
     }
 }
