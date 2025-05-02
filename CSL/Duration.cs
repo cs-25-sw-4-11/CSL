@@ -2,9 +2,9 @@ namespace CSL;
 
 public class Duration
 {
-    public int Minutes { get; init; }
+    public int Minutes { get; }
 
-    public int Months { get; init; }
+    public int Months { get; }
 
     public Duration(int minutes, int months)
     {
