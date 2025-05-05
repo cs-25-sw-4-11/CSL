@@ -39,12 +39,12 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
             // Validate hour and minute values
             if (hour < 0 || hour > 23)
             {
-                throw new InvalidLiteralCompilerException($"Clock: Hour value {hour} outside valid range (0-23)");
+                throw new InvalidLiteralCompilerException($"{nameof(Clock)}: Hour value {hour} outside valid range (0-23)");
             }
 
             if (minute < 0 || minute > 59)
             {
-                throw new InvalidLiteralCompilerException($"Clock: Minute value {minute} outside valid range (0-59)");
+                throw new InvalidLiteralCompilerException($"{nameof(Clock)}: Minute value {minute} outside valid range (0-59)");
             }
 
             return new Clock(hour, minute);
@@ -53,11 +53,6 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
         {
             // Re-throw our custom exceptions
             throw;
-        }
-        catch (Exception ex)
-        {
-            // Convert any other exceptions to our custom type
-            throw new Exception($"Clock: Error processing input: {ex.Message}", ex);
         }
     }
     
