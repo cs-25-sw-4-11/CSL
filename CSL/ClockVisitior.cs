@@ -44,7 +44,7 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
 
             if (minute < 0 || minute > 59)
             {
-                throw new InvalidLiteralCompilerException($"Clock: Minute value {minute} outside valid range (0-59)");
+                throw new InvalidLiteralCompilerException($"{nameof(Clock)}: Minute value {minute} outside valid range (0-59)");
             }
 
             return new Clock(hour, minute);
