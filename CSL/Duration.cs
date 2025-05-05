@@ -2,9 +2,9 @@ namespace CSL;
 
 public class Duration
 {
-    public int Minutes { get; init; }
+    public int Minutes { get; }
 
-    public int Months { get; init; }
+    public int Months { get; }
 
     public Duration(int minutes, int months)
     {
@@ -34,5 +34,5 @@ public class Duration
 
     public const int MonthFactor = 1;
 
-    public const int YearFactor = 12 * WeekFactor;
+    public const int YearFactor = 12 * MonthFactor;
 }

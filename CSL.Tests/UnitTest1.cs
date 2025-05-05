@@ -15,12 +15,12 @@ public class TestDuration
     }
 
     [TestCase("10 min", 10 * Duration.MinuteFactor)]
-    [TestCase("5 hours", 5 * Duration.MinuteFactor)]
-    [TestCase("2 days", 2 * Duration.DayFactor)]
-    [TestCase("3 weeks", 10 * Duration.WeekFactor)]
-    public void TestLiteralsMinuteParam(string text, int minutes)
+    [TestCase("5 h", 5 * Duration.HourFactor)]
+    [TestCase("2 d", 2 * Duration.DayFactor)]
+    [TestCase("3 w", 3 * Duration.WeekFactor)]
+    public void TestLiteralsMinuteParam(string input, int minutes)
     {
-        var stream = CharStreams.fromString(text);
+        var stream = CharStreams.fromString(input);
 
         var lexer = new CSLLexer(stream);
         var tokens = new CommonTokenStream(lexer);
@@ -36,8 +36,23 @@ public class TestDuration
         Assert.That(result.Minutes, Is.EqualTo(minutes));
     }
 
-    [Test]
-    public void TestLiteralMinutesSimple()
+    [TestCase("2 mth", 2 * Duration.MonthFactor)]
+    [TestCase("1 y", 1 * Duration.YearFactor)]
+    public void TestLiteralMonthParam(string input, int months)
     {
+        var stream = CharStreams.fromString(input);
+
+        var lexer = new CSLLexer(stream);
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new CSLParser(tokens);
+
+        var tree = parser.prog();
+
+        // Create and use the visitor
+        var visitor = new DurationVisitor();
+        var result = visitor.Visit(tree);
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Months, Is.EqualTo(months));
     }
 }
