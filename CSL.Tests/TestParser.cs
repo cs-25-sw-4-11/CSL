@@ -15,30 +15,19 @@ namespace CSL
             string entityName = "Input")
             where TContext : ParserRuleContext
         {
-            try
-            {
-                var stream = CharStreams.fromString(input);
-                var lexer = new CSLLexer(stream);
-                lexer.RemoveErrorListeners();
-                lexer.AddErrorListener(new CSLLexerErrorListener());
+            var stream = CharStreams.fromString(input);
+            var lexer = new CSLLexer(stream);
+            lexer.RemoveErrorListeners();
+            lexer.AddErrorListener(new CSLLexerErrorListener());
                 
-                var tokens = new CommonTokenStream(lexer);
-                var parser = new CSLParser(tokens);
-                parser.RemoveErrorListeners();
-                parser.AddErrorListener(new CSLParserErrorListener());
+            var tokens = new CommonTokenStream(lexer);
+            var parser = new CSLParser(tokens);
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(new CSLParserErrorListener());
                 
-                var tree = parserRuleSelector(parser);
-                var visitor = visitorFactory();
-                return visitorMethod(visitor, tree);
-            }
-            catch (CompilerException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"{entityName}: Error parsing input '{input}': {ex.Message}", ex);
-            }
+            var tree = parserRuleSelector(parser);
+            var visitor = visitorFactory();
+            return visitorMethod(visitor, tree);
         }
     }
     
