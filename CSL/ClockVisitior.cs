@@ -54,11 +54,6 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
             // Re-throw our custom exceptions
             throw;
         }
-        catch (Exception ex)
-        {
-            // Convert any other exceptions to our custom type
-            throw new Exception($"Clock: Error processing input: {ex.Message}", ex);
-        }
     }
     
     // Override the default visit behavior to catch any parsing errors
