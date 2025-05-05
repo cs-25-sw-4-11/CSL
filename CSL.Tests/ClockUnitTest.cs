@@ -15,19 +15,11 @@ public class ClockTests
     [TestCase("23:59", 23, 59)]
     public void TestLiteralClock(string input, int hours, int minutes)
     {
-        var stream = CharStreams.fromString(input);
-        var lexer = new CSLLexer(stream);
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new CSLParser(tokens);
-        var tree = parser.prog();
+        var clock = ClockParser.ParseClock(input);
         
-        // Create and use the visitor
-        var visitor = new ClockVisitor();
-        var result = visitor.Visit(tree);
-        
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.Hours, Is.EqualTo(hours));
-        Assert.That(result.Minutes, Is.EqualTo(minutes));
+        Assert.That(clock, Is.Not.Null);
+        Assert.That(clock.Hours, Is.EqualTo(hours));
+        Assert.That(clock.Minutes, Is.EqualTo(minutes));
     }
     
     [TestCase("24:00")] // Hour too large
@@ -39,15 +31,6 @@ public class ClockTests
     [TestCase("12-30")] // Wrong separator
     public void TestInvalidClockLiterals(string input)
     {
-        var stream = CharStreams.fromString(input);
-        var lexer = new CSLLexer(stream);
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new CSLParser(tokens);
-        var tree = parser.prog();
-        
-        // Create and use the visitor
-        var visitor = new ClockVisitor();
-        
-        Assert.Throws<InvalidLiteralCompilerException>(() => visitor.Visit(tree));
+        Assert.Throws<InvalidLiteralCompilerException>(() => ClockParser.ParseClock(input));
     }
-}   
+}
