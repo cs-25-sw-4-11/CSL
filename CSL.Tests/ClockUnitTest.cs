@@ -28,7 +28,11 @@ public class ClockTests
     [TestCase("12:-5")] // Negative minute
     [TestCase("a:30")]  // Non-numeric hour
     [TestCase("12:b")]  // Non-numeric minute
-    [TestCase("12-30")] // Wrong separator
+    [TestCase("12+30")] // Wrong separator
+    [TestCase("50/30")] 
+    [TestCase("!12::30")] 
+    [TestCase("what the sigma")]
+    [TestCase("12-30")]
     public void TestInvalidClockLiterals(string input)
     {
         Assert.Throws<InvalidLiteralCompilerException>(() => ClockParser.ParseClock(input));
