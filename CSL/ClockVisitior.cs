@@ -11,7 +11,7 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
     {
         try 
         {
-            if (context == null || context.children == null || context.children.Count != 3)
+            if (context.children.Count != 3)
             {
                 throw new InvalidLiteralCompilerException($"{nameof(Clock)}: Invalid syntax, expected format is 'hour:minute'");
             }
@@ -22,18 +22,18 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
 
             if (colon != ":")
             {
-                throw new InvalidLiteralCompilerException("Clock: Invalid separator, expected ':'");
+                throw new InvalidLiteralCompilerException($"{nameof(Clock)}: Invalid separator, expected ':'");
             }
 
             // Try to parse with more specific error handling
             if (!int.TryParse(hourRaw, out int hour))
             {
-                throw new InvalidLiteralCompilerException($"Clock: Not a number given as hour: '{hourRaw}'");
+                throw new InvalidLiteralCompilerException($"{nameof(Clock)}: Not a number given as hour: '{hourRaw}'");
             }
 
             if (!int.TryParse(minuteRaw, out int minute))
             {
-                throw new InvalidLiteralCompilerException($"Clock: Not a number given as minute: '{minuteRaw}'");
+                throw new InvalidLiteralCompilerException($"{nameof(Clock)}: Not a number given as minute: '{minuteRaw}'");
             }
 
             // Validate hour and minute values
@@ -49,7 +49,7 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
 
             return new Clock(hour, minute);
         }
-        catch (InvalidLiteralCompilerException)
+        catch (CompilerException)
         {
             // Re-throw our custom exceptions
             throw;
@@ -57,7 +57,7 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
         catch (Exception ex)
         {
             // Convert any other exceptions to our custom type
-            throw new InvalidLiteralCompilerException($"Clock: Error processing input: {ex.Message}", ex);
+            throw new Exception($"Clock: Error processing input: {ex.Message}", ex);
         }
     }
     
@@ -68,15 +68,14 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
         {
             return base.Visit(tree);
         }
-        catch (InvalidLiteralCompilerException)
+        catch (CompilerException)
         {
-            // Re-throw our custom exceptions
             throw;
         }
         catch (Exception ex)
         {
             // Convert any other exceptions to our custom type
-            throw new InvalidLiteralCompilerException($"Error visiting parse tree: {ex.Message}", ex);
+            throw new Exception($"Error visiting parse tree: {ex.Message}", ex);
         }
     }
 }

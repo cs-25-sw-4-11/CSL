@@ -15,11 +15,6 @@ namespace CSL
             string entityName = "Input")
             where TContext : ParserRuleContext
         {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                throw new InvalidLiteralCompilerException($"{entityName}: Input is null or empty");
-            }
-            
             try
             {
                 var stream = CharStreams.fromString(input);
@@ -36,13 +31,13 @@ namespace CSL
                 var visitor = visitorFactory();
                 return visitorMethod(visitor, tree);
             }
-            catch (InvalidLiteralCompilerException)
+            catch (CompilerException)
             {
                 throw;
             }
             catch (Exception ex)
             {
-                throw new InvalidLiteralCompilerException($"{entityName}: Error parsing input '{input}': {ex.Message}", ex);
+                throw new Exception($"{entityName}: Error parsing input '{input}': {ex.Message}", ex);
             }
         }
     }
