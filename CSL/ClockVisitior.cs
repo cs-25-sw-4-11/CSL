@@ -13,7 +13,7 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
         {
             if (context == null || context.children == null || context.children.Count != 3)
             {
-                throw new InvalidLiteralCompilerException("Clock: Invalid syntax, expected format is 'hour:minute'");
+                throw new InvalidLiteralCompilerException($"{nameof(Clock)}: Invalid syntax, expected format is 'hour:minute'");
             }
 
             var hourRaw = context.children[0].GetText();
