@@ -15,7 +15,7 @@ public class TestDuration
     }
 
     [TestCase("10 min", 10 * Duration.MinuteFactor)]
-    [TestCase("5 hr", 5 * Duration.HourFactor)]
+    [TestCase("5 h", 5 * Duration.HourFactor)]
     [TestCase("2 d", 2 * Duration.DayFactor)]
     [TestCase("3 w", 3 * Duration.WeekFactor)]
     public void TestLiteralsMinuteParam(string input, int minutes)
