@@ -72,10 +72,5 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
         {
             throw;
         }
-        catch (Exception ex)
-        {
-            // Convert any other exceptions to our custom type
-            throw new Exception($"Error visiting parse tree: {ex.Message}", ex);
-        }
     }
 }
