@@ -71,4 +71,18 @@ namespace CSL
             );
         }
     }
+
+    public static class DateParser
+    {
+        public static Date ParseDate(string input)
+        {
+            return GenericParser.Parse<Date, DateVisitor, CSLParser.LiteralContext>(
+                input, 
+                () => new DateVisitor(), 
+                parser => parser.literal(),
+                (visitor, tree) => visitor.VisitLiteral(tree),
+                "Date"
+            );
+        }
+    }
 }
