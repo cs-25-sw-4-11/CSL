@@ -9,7 +9,7 @@ public class SubjectVisitor : CSLBaseVisitor<Subject>
 {
     public override Subject VisitLiteral(CSLParser.LiteralContext context)
     {
-        if (context.SUBJECT() == null)
+        if (context.SUBJECT() is null)
         {
             throw new InvalidLiteralCompilerException($"{nameof(Subject)}: Missing subject content");
         }
@@ -22,11 +22,6 @@ public class SubjectVisitor : CSLBaseVisitor<Subject>
         }
 
         string text = rawText.Substring(1, rawText.Length - 2);
-
-        if (string.IsNullOrEmpty(text))
-        {
-            throw new InvalidLiteralCompilerException($"{nameof(Subject)}: Empty subject is not allowed");
-        }
 
         return new Subject(text);
     }
