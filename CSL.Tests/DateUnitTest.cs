@@ -18,8 +18,6 @@ public class DateTests
     [TestCase("1/1/1", 1, 1, 1)]           // Minimum valid date
     [TestCase("28/2/2100", 28, 2, 2100)]   // Valid non-leap century year
     [TestCase("30/04/2022", 30, 4, 2022)]  // 30-day month
-
-
     public void TestDateLiteral(string input, int days, int months, int years)
     {
         var date = DateParser.ParseDate(input);
