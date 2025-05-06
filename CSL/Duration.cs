@@ -1,16 +1,10 @@
 namespace CSL;
 
-public class Duration
+public readonly struct Duration(int minutes, int months)
 {
-    public int Minutes { get; }
+    public int Minutes { get; } = minutes;
 
-    public int Months { get; }
-
-    public Duration(int minutes, int months)
-    {
-        Minutes = minutes;
-        Months = months;
-    }
+    public int Months { get; } = months;
 
     public static Duration FromMinutes(int minutes) => new Duration(minutes, 0);
 

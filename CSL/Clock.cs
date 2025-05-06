@@ -1,14 +1,7 @@
 namespace CSL;
 
-public class Clock 
+public readonly struct Clock(int hours, int minutes)
 {
-    public int Hours { get; }
-    public int Minutes { get; }
-
-    public Clock (int hours, int minutes)
-    {
-        Hours = hours;
-        Minutes = minutes;
-    }
-
+    public int Hours { get; } = hours;
+    public int Minutes { get; } = minutes;
 }

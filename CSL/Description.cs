@@ -1,11 +1,6 @@
 namespace CSL;
 
-public class Description
+public readonly struct Description(string text)
 {
-    public string Text { get; }
-
-    public Description(string text)
-    {
-        Text = text;
-    }
+    public string Text { get; } = text;
 }
