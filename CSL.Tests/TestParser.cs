@@ -44,4 +44,18 @@ namespace CSL
             );
         }
     }
+
+    public static class DescriptionParser
+    {
+        public static Description ParseDescription(string input)
+        {
+            return GenericParser.Parse<Description, DescriptionVisitor, CSLParser.LiteralContext>(
+                input,
+                () => new DescriptionVisitor(),
+                parser => parser.literal(),
+                (visitor, tree) => visitor.VisitLiteral(tree),
+                "Description"
+            );
+        }
+    }
 }
