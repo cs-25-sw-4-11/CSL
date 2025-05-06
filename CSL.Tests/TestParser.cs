@@ -44,4 +44,18 @@ namespace CSL
             );
         }
     }
+
+    public static class DurationParser
+    {
+        public static Duration ParseDuration(string input)
+        {
+            return GenericParser.Parse<Duration, DurationVisitor, CSLParser.DurationContext>(
+                input,
+                () => new DurationVisitor(),
+                parser => parser.duration(),
+                (visitor, tree) => visitor.VisitDuration(tree),
+                "Duration"
+            );
+        }
+    }
 }
