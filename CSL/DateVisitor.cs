@@ -10,7 +10,7 @@ public class DateVisitor : CSLBaseVisitor<Date>
 {
     public override Date VisitLiteral(CSLParser.LiteralContext context)
     {
-        if (context.DATE() == null)
+        if (context.DATE() is null)
         {
             throw new InvalidLiteralCompilerException($"{nameof(Date)}: Missing date content");
         }
