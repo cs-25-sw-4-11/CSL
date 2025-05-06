@@ -23,7 +23,7 @@ public class SubjectVisitor : CSLBaseVisitor<Subject>
 
         string text = rawText.Substring(1, rawText.Length - 2);
 
-        if (text is "")
+        if (text == "")
         {
             throw new InvalidLiteralCompilerException($"{nameof(Subject)}: Empty subject is not allowed");
         }
