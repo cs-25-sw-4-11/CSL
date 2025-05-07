@@ -32,7 +32,7 @@ class Program
         var tree = parser.prog();
 
         // Create and use the visitor
-        var visitor = new CSLCustomVisitor();
+        var visitor = new EventVisitor();
         var result = visitor.Visit(tree);
 
         Console.WriteLine($"Input: {input}");
