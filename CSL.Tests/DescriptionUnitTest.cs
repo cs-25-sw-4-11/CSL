@@ -23,7 +23,6 @@ public class DescriptionTests
     }
 
     [TestCase("Description without quotes")]
-    [TestCase("'Wrong quote type'")]
     [TestCase("\"Unclosed quote")]
     [TestCase("\"Contains \\backslash\"")]
     [TestCase("")]

@@ -7,7 +7,7 @@ using Antlr4.Runtime.Tree;
 
 public class SubjectVisitor : CSLBaseVisitor<Subject>
 {
-    public override Subject VisitLiteral(CSLParser.LiteralContext context)
+    public override Subject VisitSubject(CSLParser.SubjectContext context)
     {
         if (context.SUBJECT() is null)
         {

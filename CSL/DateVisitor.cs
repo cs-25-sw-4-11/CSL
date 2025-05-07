@@ -8,7 +8,7 @@ using System;
 
 public class DateVisitor : CSLBaseVisitor<Date>
 {
-    public override Date VisitLiteral(CSLParser.LiteralContext context)
+    public override Date VisitDate(CSLParser.DateContext context)
     {
         if (context.DATE() is null)
         {

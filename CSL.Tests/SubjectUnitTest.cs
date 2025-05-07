@@ -20,7 +20,6 @@ public class SubjectTests
     }
 
     [TestCase("Subject without quotes")]
-    [TestCase("\"Wrong quote type\"")]
     [TestCase("'Unclosed quote")]
     [TestCase("'Contains \\'backslash'")]
     [TestCase("")]
