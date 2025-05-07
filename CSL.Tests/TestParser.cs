@@ -62,11 +62,11 @@ namespace CSL
     {
         public static Description ParseDescription(string input)
         {
-            return GenericParser.Parse<Description, DescriptionVisitor, CSLParser.LiteralContext>(
+            return GenericParser.Parse<Description, DescriptionVisitor, CSLParser.DescriptionContext>(
                 input,
                 () => new DescriptionVisitor(),
-                parser => parser.literal(),
-                (visitor, tree) => visitor.VisitLiteral(tree),
+                parser => parser.description(),
+                (visitor, tree) => visitor.VisitDescription(tree),
                 "Description"
             );
         }
@@ -76,11 +76,11 @@ namespace CSL
     {
         public static Date ParseDate(string input)
         {
-            return GenericParser.Parse<Date, DateVisitor, CSLParser.LiteralContext>(
+            return GenericParser.Parse<Date, DateVisitor, CSLParser.DateContext>(
                 input, 
                 () => new DateVisitor(), 
-                parser => parser.literal(),
-                (visitor, tree) => visitor.VisitLiteral(tree),
+                parser => parser.date(),
+                (visitor, tree) => visitor.VisitDate(tree),
                 "Date"
             );
         }
@@ -90,11 +90,11 @@ namespace CSL
     {
         public static Subject ParseSubject(string input)
         {
-            return GenericParser.Parse<Subject, SubjectVisitor, CSLParser.LiteralContext>(
+            return GenericParser.Parse<Subject, SubjectVisitor, CSLParser.SubjectContext>(
                 input,
                 () => new SubjectVisitor(),
-                parser => parser.literal(),
-                (visitor, tree) => visitor.VisitLiteral(tree),
+                parser => parser.subject(),
+                (visitor, tree) => visitor.VisitSubject(tree),
                 "Subject"
             );
         }
