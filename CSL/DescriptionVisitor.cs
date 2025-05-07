@@ -7,9 +7,9 @@ using Antlr4.Runtime.Tree;
 
 public class DescriptionVisitor : CSLBaseVisitor<Description>
 {
-    public override Description VisitLiteral(CSLParser.LiteralContext context)
+    public override Description VisitDescription(CSLParser.DescriptionContext context)
     {
-        if (context.DESCRIPTION() == null)
+        if (context.DESCRIPTION() is null)
         {
             throw new InvalidLiteralCompilerException($"{nameof(Description)}: Missing description content");
         }
@@ -23,7 +23,7 @@ public class DescriptionVisitor : CSLBaseVisitor<Description>
 
         string text = rawText.Substring(1, rawText.Length - 2);
 
-        if (string.IsNullOrEmpty(text))
+        if (text == "")
         {
             throw new InvalidLiteralCompilerException($"{nameof(Description)}: Empty description is not allowed");
         }
