@@ -25,6 +25,7 @@ public class DescriptionTests
     [TestCase("Description without quotes")]
     [TestCase("\"Unclosed quote")]
     [TestCase("\"Contains \\backslash\"")]
+    [TestCase("'Wrong quote type'")]
     [TestCase("")]
     public void TestInvalidDescriptionLiterals(string input)
     {

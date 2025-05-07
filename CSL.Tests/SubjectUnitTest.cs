@@ -22,6 +22,7 @@ public class SubjectTests
     [TestCase("Subject without quotes")]
     [TestCase("'Unclosed quote")]
     [TestCase("'Contains \\'backslash'")]
+    [TestCase("\"Wrong quote type\"")]
     [TestCase("")]
     [TestCase("''")]
     public void TestInvalidSubjectLiterals(string input)
