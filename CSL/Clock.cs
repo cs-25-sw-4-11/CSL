@@ -10,5 +10,4 @@ public class Clock
         Hours = hours;
         Minutes = minutes;
     }
-
 }
