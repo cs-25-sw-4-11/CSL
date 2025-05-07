@@ -86,13 +86,6 @@ public interface ICSLVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitDoublePlusOp([NotNull] CSLParser.DoublePlusOpContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>ComplementOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitComplementOp([NotNull] CSLParser.ComplementOpContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>UnionOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// </summary>
@@ -134,6 +127,20 @@ public interface ICSLVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitParenExpr([NotNull] CSLParser.ParenExprContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>SplitOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSplitOp([NotNull] CSLParser.SplitOpContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>SetdiffOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitSetdiffOp([NotNull] CSLParser.SetdiffOpContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>SubtractOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
