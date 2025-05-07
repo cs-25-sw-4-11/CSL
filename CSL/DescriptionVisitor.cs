@@ -7,7 +7,7 @@ using Antlr4.Runtime.Tree;
 
 public class DescriptionVisitor : CSLBaseVisitor<Description>
 {
-    public override Description VisitLiteral(CSLParser.LiteralContext context)
+    public override Description VisitDescription(CSLParser.DescriptionContext context)
     {
         if (context.DESCRIPTION() is null)
         {
