@@ -1,17 +1,7 @@
 namespace CSL;
 
-public class Duration
+public record Duration(int Minutes, int Months)
 {
-    public int Minutes { get; }
-
-    public int Months { get; }
-
-    public Duration(int minutes, int months)
-    {
-        Minutes = minutes;
-        Months = months;
-    }
-
     public static Duration FromMinutes(int minutes) => new Duration(minutes, 0);
 
     public static Duration FromHours(int hours) => FromMinutes(60 * hours);
