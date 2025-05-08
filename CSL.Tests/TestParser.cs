@@ -33,9 +33,9 @@ namespace CSL
     
     public static class ClockParser
     {
-        public static Clock ParseClock(string input)
+        public static Clock? ParseClock(string input)
         {
-            return GenericParser.Parse<Clock, ClockVisitor, CSLParser.ClockContext>(
+            return GenericParser.Parse<Clock?, ClockVisitor, CSLParser.ClockContext>(
                 input,
                 () => new ClockVisitor(),
                 parser => parser.clock(),
@@ -46,9 +46,9 @@ namespace CSL
     }
     public static class DurationParser
     {
-        public static Duration ParseDuration(string input)
+        public static Duration? ParseDuration(string input)
         {
-            return GenericParser.Parse<Duration, DurationVisitor, CSLParser.DurationContext>(
+            return GenericParser.Parse<Duration?, DurationVisitor, CSLParser.DurationContext>(
                 input,
                 () => new DurationVisitor(),
                 parser => parser.duration(),
@@ -60,9 +60,9 @@ namespace CSL
 
     public static class DescriptionParser
     {
-        public static Description ParseDescription(string input)
+        public static Description? ParseDescription(string input)
         {
-            return GenericParser.Parse<Description, DescriptionVisitor, CSLParser.DescriptionContext>(
+            return GenericParser.Parse<Description?, DescriptionVisitor, CSLParser.DescriptionContext>(
                 input,
                 () => new DescriptionVisitor(),
                 parser => parser.description(),
@@ -74,9 +74,9 @@ namespace CSL
 
     public static class DateParser
     {
-        public static Date ParseDate(string input)
+        public static Date? ParseDate(string input)
         {
-            return GenericParser.Parse<Date, DateVisitor, CSLParser.DateContext>(
+            return GenericParser.Parse<Date?, DateVisitor, CSLParser.DateContext>(
                 input, 
                 () => new DateVisitor(), 
                 parser => parser.date(),
@@ -88,9 +88,9 @@ namespace CSL
 
     public static class SubjectParser
     {
-        public static Subject ParseSubject(string input)
+        public static Subject? ParseSubject(string input)
         {
-            return GenericParser.Parse<Subject, SubjectVisitor, CSLParser.SubjectContext>(
+            return GenericParser.Parse<Subject?, SubjectVisitor, CSLParser.SubjectContext>(
                 input,
                 () => new SubjectVisitor(),
                 parser => parser.subject(),

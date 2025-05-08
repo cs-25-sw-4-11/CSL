@@ -5,9 +5,9 @@ namespace CSL;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 
-public class SubjectVisitor : CSLBaseVisitor<Subject>
+public class SubjectVisitor : CSLBaseVisitor<Subject?>
 {
-    public override Subject VisitSubject(CSLParser.SubjectContext context)
+    public override Subject? VisitSubject(CSLParser.SubjectContext context)
     {
         if (context.SUBJECT() is null)
         {
@@ -31,7 +31,7 @@ public class SubjectVisitor : CSLBaseVisitor<Subject>
         return new Subject(text);
     }
 
-    public override Subject Visit(IParseTree tree)
+    public override Subject? Visit(IParseTree tree)
     {
         try
         {

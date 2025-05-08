@@ -23,9 +23,9 @@ public class DateTests
         var date = DateParser.ParseDate(input);
 
         Assert.That(date, Is.Not.Null);
-        Assert.That(date.Days, Is.EqualTo(days));
-        Assert.That(date.Months, Is.EqualTo(months));
-        Assert.That(date.Years, Is.EqualTo(years));
+        Assert.That(date.Value.Days, Is.EqualTo(days));
+        Assert.That(date.Value.Months, Is.EqualTo(months));
+        Assert.That(date.Value.Years, Is.EqualTo(years));
     }
 
     [TestCase("32/05/2025")] // Invalid day

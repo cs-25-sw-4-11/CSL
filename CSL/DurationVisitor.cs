@@ -4,9 +4,9 @@ namespace CSL;
 
 using Antlr4.Runtime.Misc;
 
-public class DurationVisitor : CSLBaseVisitor<Duration>
+public class DurationVisitor : CSLBaseVisitor<Duration?>
 {
-    public override Duration VisitDuration(CSLParser.DurationContext context)
+    public override Duration? VisitDuration(CSLParser.DurationContext context)
     {
         if (context.children.Count != 2)
         {

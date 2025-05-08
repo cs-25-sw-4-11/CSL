@@ -16,7 +16,7 @@ public class SubjectTests
         var subject = SubjectParser.ParseSubject(input);
 
         Assert.That(subject, Is.Not.Null);
-        Assert.That(subject.Text, Is.EqualTo(expectedText));
+        Assert.That(subject.Value.Text, Is.EqualTo(expectedText));
     }
 
     [TestCase("Subject without quotes")]
