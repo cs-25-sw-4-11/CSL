@@ -1,5 +1,7 @@
 namespace CSL.Exceptions;
 
+using CSL.TypeChecker;
+
 public class InvalidTypeCompilerException : CompilerException
 {
     public InvalidTypeCompilerException()
@@ -14,7 +16,7 @@ public class InvalidTypeCompilerException : CompilerException
     {
     }
 
-    public InvalidTypeCompilerException(EventTypes expected, EventTypes actual) : base($"Expected: {expected}, found: {actual}")
+    public InvalidTypeCompilerException(EventTypes[] expected, EventTypes actual) : base($"Expected: {expected}, found: {actual}")
     {
     }
 }
