@@ -16,4 +16,12 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
 
     public override Calendar VisitDescription(CSLParser.DescriptionContext context) =>
         new Event(Description: new DescriptionVisitor().VisitDescription(context));
+
+    public override Calendar VisitDoublePlusOp(CSLParser.DoublePlusOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+        
+        return Event.ConcatOperator((Event)left, (Event)right);        
+    }
 }

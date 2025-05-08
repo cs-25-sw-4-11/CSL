@@ -23,7 +23,7 @@ public class TestDuration
     {
         var duration = DurationParser.ParseDuration(input);
 
-        Assert.That(duration, Is.Not.Null);
+        //Assert.That(duration, Is.Not.Null);
         Assert.That(duration.Minutes, Is.EqualTo(minutes));
     }
 
@@ -33,7 +33,7 @@ public class TestDuration
     {
         var duration = DurationParser.ParseDuration(input);
 
-        Assert.That(duration, Is.Not.Null);
+        //Assert.That(duration, Is.Not.Null);
         Assert.That(duration.Months, Is.EqualTo(months));
     }
 

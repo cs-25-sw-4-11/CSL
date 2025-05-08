@@ -1,3 +1,8 @@
 namespace CSL;
 
-public record Date(int Days, int Months, int Years);
+public readonly struct Date(int days, int months, int years)
+{
+    public int Days { get; } = days;
+    public int Months { get; } = months;
+    public int Years { get; } = years;
+}

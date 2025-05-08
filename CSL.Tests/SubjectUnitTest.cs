@@ -15,7 +15,7 @@ public class SubjectTests
     {
         var subject = SubjectParser.ParseSubject(input);
 
-        Assert.That(subject, Is.Not.Null);
+        //Assert.That(subject, Is.Not.Null);
         Assert.That(subject.Text, Is.EqualTo(expectedText));
     }
 

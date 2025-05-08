@@ -17,7 +17,7 @@ public class ClockTests
     {
         var clock = ClockParser.ParseClock(input);
         
-        Assert.That(clock, Is.Not.Null);
+        //Assert.That(clock, Is.Not.Null);
         Assert.That(clock.Hours, Is.EqualTo(hours));
         Assert.That(clock.Minutes, Is.EqualTo(minutes));
     }

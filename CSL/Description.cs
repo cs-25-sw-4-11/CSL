@@ -1,3 +1,6 @@
 namespace CSL;
 
-public record Description(string Text);
+public readonly struct Description(string text)
+{
+    public string Text { get; } = text;
+}

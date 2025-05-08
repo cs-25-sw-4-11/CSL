@@ -1,3 +1,7 @@
 namespace CSL;
 
-public record Clock(int Hours, int Minutes);
+public readonly struct Clock(int hours, int minutes)
+{
+    public int Hours { get; } = hours;
+    public int Minutes { get; } = minutes;
+}

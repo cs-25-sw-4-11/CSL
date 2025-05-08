@@ -18,7 +18,7 @@ public class DescriptionTests
     {
         var description = DescriptionParser.ParseDescription(input);
 
-        Assert.That(description, Is.Not.Null);
+        //Assert.That(description, Is.Not.Null);
         Assert.That(description.Text, Is.EqualTo(expectedText));
     }
 
