@@ -43,3 +43,19 @@ public record Event(
         );
     }
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="c"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static explicit operator Event(Calendar c)
+    {
+        if (c.Events.Length != 1)
+        {
+            throw new ArgumentException();
+        }
+
+        return c.Events[0];
+    }
+}
