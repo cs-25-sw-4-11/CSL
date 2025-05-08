@@ -30,6 +30,24 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         return EventTypes.Subject;
     }
     
+    public override EventTypes VisitTildeOp(CSLParser.TildeOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+        
+        if (left != EventTypes.DateTime)
+        {
+            throw new InvalidTypeCompilerException([EventTypes.DateTime], left);
+        }
+
+        if (right != EventTypes.DateTime)
+        {
+            throw new InvalidTypeCompilerException([EventTypes.DateTime], right);
+        }
+
+        return EventTypes.DateTime;
+    }
+
     public override EventTypes VisitAddOp(CSLParser.AddOpContext context)
     {
         var left = Visit(context.expr(0));
@@ -57,7 +75,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         if (otherOperand.HasFlag(EventTypes.DateTime) && !otherOperand.HasFlag(EventTypes.Duration))
             return EventTypes.DateTime;
         
-        if (otherOperand.HasFlag(EventTypes.DateTime) && !(otherOperand.HasFlag(EventTypes.Duration)))
+        if (otherOperand.HasFlag(EventTypes.DateTime) && !otherOperand.HasFlag(EventTypes.Duration))
             return EventTypes.DateTime;
 
         if (otherOperand.HasFlag(EventTypes.DateTime) && !otherOperand.HasFlag(EventTypes.Duration))
