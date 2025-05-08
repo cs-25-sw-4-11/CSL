@@ -19,7 +19,7 @@ class Program
         else
         {
             // Default input if no arguments provided
-            input = "";
+            input = "11:00 ++ 11/11/2011 ++ 'Caspers kagespisning'";
             Console.WriteLine("No input provided, using default: " + input);
         }
 
