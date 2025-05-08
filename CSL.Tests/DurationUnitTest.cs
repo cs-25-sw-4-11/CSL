@@ -23,8 +23,8 @@ public class TestDuration
     {
         var duration = DurationParser.ParseDuration(input);
 
-        //Assert.That(duration, Is.Not.Null);
-        Assert.That(duration.Minutes, Is.EqualTo(minutes));
+        Assert.That(duration, Is.Not.Null);
+        Assert.That(duration.Value.Minutes, Is.EqualTo(minutes));
     }
 
     [TestCase("2 mth", 2 * Duration.MonthFactor)]
@@ -33,8 +33,8 @@ public class TestDuration
     {
         var duration = DurationParser.ParseDuration(input);
 
-        //Assert.That(duration, Is.Not.Null);
-        Assert.That(duration.Months, Is.EqualTo(months));
+        Assert.That(duration, Is.Not.Null);
+        Assert.That(duration.Value.Months, Is.EqualTo(months));
     }
 
     

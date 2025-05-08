@@ -5,9 +5,9 @@ namespace CSL;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 
-public class DescriptionVisitor : CSLBaseVisitor<Description>
+public class DescriptionVisitor : CSLBaseVisitor<Description?>
 {
-    public override Description VisitDescription(CSLParser.DescriptionContext context)
+    public override Description? VisitDescription(CSLParser.DescriptionContext context)
     {
         if (context.DESCRIPTION() is null)
         {
@@ -31,7 +31,7 @@ public class DescriptionVisitor : CSLBaseVisitor<Description>
         return new Description(text);
     }
 
-    public override Description Visit(IParseTree tree)
+    public override Description? Visit(IParseTree tree)
     {
         try
         {

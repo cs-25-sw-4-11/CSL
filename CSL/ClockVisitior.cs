@@ -5,9 +5,9 @@ namespace CSL;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime;
 
-public class ClockVisitor : CSLBaseVisitor<Clock>
+public class ClockVisitor : CSLBaseVisitor<Clock?>
 {
-    public override Clock VisitClock(CSLParser.ClockContext context)
+    public override Clock? VisitClock(CSLParser.ClockContext context)
     {
         try 
         {
@@ -57,7 +57,7 @@ public class ClockVisitor : CSLBaseVisitor<Clock>
     }
     
     // Override the default visit behavior to catch any parsing errors
-    public override Clock Visit(Antlr4.Runtime.Tree.IParseTree tree)
+    public override Clock? Visit(Antlr4.Runtime.Tree.IParseTree tree)
     {
         try
         {

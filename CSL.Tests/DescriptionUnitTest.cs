@@ -18,8 +18,8 @@ public class DescriptionTests
     {
         var description = DescriptionParser.ParseDescription(input);
 
-        //Assert.That(description, Is.Not.Null);
-        Assert.That(description.Text, Is.EqualTo(expectedText));
+        Assert.That(description, Is.Not.Null);
+        Assert.That(description.Value.Text, Is.EqualTo(expectedText));
     }
 
     [TestCase("Description without quotes")]

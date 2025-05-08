@@ -6,9 +6,9 @@ using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using System;
 
-public class DateVisitor : CSLBaseVisitor<Date>
+public class DateVisitor : CSLBaseVisitor<Date?>
 {
-    public override Date VisitDate(CSLParser.DateContext context)
+    public override Date? VisitDate(CSLParser.DateContext context)
     {
         if (context.DATE() is null)
         {
@@ -52,7 +52,7 @@ public class DateVisitor : CSLBaseVisitor<Date>
         return new Date(day, month, year);
     }
 
-    public override Date Visit(IParseTree tree)
+    public override Date? Visit(IParseTree tree)
     {
         try
         {
