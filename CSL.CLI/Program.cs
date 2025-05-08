@@ -1,4 +1,6 @@
-﻿namespace CSL.CLI;
+﻿using CSL.TypeChecker;
+
+namespace CSL.CLI;
 
 using Antlr4.Runtime;
 using System;
@@ -19,7 +21,7 @@ class Program
         else
         {
             // Default input if no arguments provided
-            input = "";
+            input = "11:00 ++ 11/11/2011 ++ 'Caspers kagespisning'";
             Console.WriteLine("No input provided, using default: " + input);
         }
 
@@ -31,7 +33,11 @@ class Program
 
         var tree = parser.prog();
 
-        // Create and use the visitor
+        // Type checker
+        var typeVisitor = new TypeCheckerVisitor();
+        typeVisitor.Visit(tree);
+        
+        // Calendar visitor
         var visitor = new EventVisitor();
         var result = visitor.Visit(tree);
 
