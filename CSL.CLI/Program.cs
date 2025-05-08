@@ -32,13 +32,13 @@ class Program
         var parser = new CSLParser(tokens);
 
         var tree = parser.prog();
-
+        
         // Type checker
         var typeVisitor = new TypeCheckerVisitor();
         typeVisitor.Visit(tree);
         
         // Calendar visitor
-        var visitor = new EventVisitor();
+        var visitor = new CalendarVisitor();
         var result = visitor.Visit(tree);
 
         Console.WriteLine($"Input: {input}");
