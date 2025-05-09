@@ -91,12 +91,12 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         // Check for valid other operand
         if (otherOperand.HasFlag(EventTypes.Duration) && !otherOperand.HasFlag(EventTypes.DateTime))
         {
-            return EventTypes.Duration;
+            return otherOperand;
         }
 
         if (otherOperand.HasFlag(EventTypes.DateTime) && !otherOperand.HasFlag(EventTypes.Duration))
         {
-            return EventTypes.DateTime;
+            return otherOperand;
         }
         
         throw new InvalidTypeCompilerException([EventTypes.DateTime, EventTypes.Duration], otherOperand);
