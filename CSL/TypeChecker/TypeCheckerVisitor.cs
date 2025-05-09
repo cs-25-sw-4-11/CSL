@@ -200,4 +200,19 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         
         throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
     }
+
+    public override EventTypes VisitSplitOp([NotNull] CSLParser.SplitOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        if (left == EventTypes.Calendar && right == EventTypes.Calendar)
+        {
+            return EventTypes.Calendar;
+        }
+        
+        throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
+    }
+
+    
 }
