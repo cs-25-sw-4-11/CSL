@@ -22,6 +22,14 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
         
-        return Event.ConcatOperator((Event)left, (Event)right);        
+        return Event.ConcatOperator((Event)left, (Event)right);
+    }
+
+    public override Calendar VisitUnionOp(CSLParser.UnionOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+        
+        return Calendar.UnionOp(left, right);
     }
 }
