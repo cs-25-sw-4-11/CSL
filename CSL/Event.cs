@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace CSL;
 
 public record Event(
@@ -7,6 +9,40 @@ public record Event(
     Duration? Duration = null,
     Description? Description = null)
 {
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append('(');
+
+        if (Subject.HasValue)
+        {
+            sb.Append($"subj:{Subject.Value}, ");
+        }
+
+        if (Date.HasValue)
+        {
+            sb.Append($"date:{Date.Value}, ");
+        }
+
+        if (Clock.HasValue)
+        {
+            sb.Append($"clock:{Clock.Value}, ");
+        }
+
+        if (Duration.HasValue)
+        {
+            sb.Append($"duration:{Duration.Value}, ");
+        }
+
+        if (Description.HasValue)
+        {
+            sb.Append($"description:{Description.Value}, ");
+        }
+
+        sb.Append(")");
+        return sb.ToString();
+    }
+
     public static Event ConcatOperator(Event left, Event right)
     {
         if (left.Subject.HasValue && right.Subject.HasValue)

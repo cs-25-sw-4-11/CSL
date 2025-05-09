@@ -5,7 +5,9 @@ public readonly struct Duration(int minutes, int months)
     public int Minutes { get; } = minutes;
     
     public int Months { get; } = months;
-    
+
+    public override string ToString() => $"{Minutes} min:{Months} months";
+
     public static Duration FromMinutes(int minutes) => new Duration(minutes, 0);
 
     public static Duration FromHours(int hours) => FromMinutes(60 * hours);
