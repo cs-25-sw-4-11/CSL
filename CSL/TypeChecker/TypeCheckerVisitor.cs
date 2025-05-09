@@ -65,7 +65,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
                                                         EventTypes.Duration], left); // NOTE: Expected types are not exhaustive
             }
 
-            if (left.HasFlag(EventTypes.Duration) || right.HasFlag(EventTypes.Duration))
+            if (left == EventTypes.Duration || right == EventTypes.Duration)
             {
                 return EventTypes.Calendar;
             }
