@@ -1,4 +1,5 @@
 using System.Data;
+using System.Globalization;
 using Antlr4.Runtime.Misc;
 using CSL.Exceptions;
 
@@ -53,6 +54,24 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
     {
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
+
+        if (left == EventTypes.Calendar || right == EventTypes.Calendar)
+        {
+            if (left == right)
+            {
+                throw new InvalidTypeCompilerException([EventTypes.Subject |
+                                                        EventTypes.DateTime |
+                                                        EventTypes.Description |
+                                                        EventTypes.Duration], left); // NOTE: Expected types are not exhaustive
+            }
+
+            if (left.HasFlag(EventTypes.Duration) || right.HasFlag(EventTypes.Duration))
+            {
+                return EventTypes.Calendar;
+            }
+
+            throw new InvalidTypeCompilerException([EventTypes.Duration], left == EventTypes.Calendar ? right : left);
+        }
 
         // Check for duration operand
         EventTypes otherOperand;
@@ -133,7 +152,6 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             {
                 return EventTypes.Calendar;
             }
-            
         }
 
         if ((left & right) != 0)
