@@ -21,6 +21,16 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     {
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
+
+        if (left.Events.Length > 1)
+        {
+            return Calendar.ConcatOperator(left, (Event)right);
+        }
+
+        if (right.Events.Length > 1)
+        {
+            return Calendar.ConcatOperator(right, (Event)left);
+        }
         
         return Event.ConcatOperator((Event)left, (Event)right);
     }
