@@ -21,6 +21,8 @@ public class TypeCheckerVisitorTests
     [TestCase("2h - 1h")] //SubtractOp
     [TestCase("02/01/2001 - 1 d")] //SubtractOp
     [TestCase("3h ++ 'abc'")] // DoublePlusOp
+    [TestCase("(\"abc\" || \"cba\") + 1h")] // AddOp calendar + duration
+    
 
     public void TestTypeExpressionsValid(string input)
     {
@@ -42,6 +44,9 @@ public class TypeCheckerVisitorTests
     [TestCase("3d - 01/01/2001")] // SubtractOp
     [TestCase("'abc' - 3h")] // SubtractOp
     [TestCase("3h ++ 3h")] // DoublePlusOp
+    [TestCase("(\"abc\" || \"cba\") + 12:30")] // AddOp calendar + event without duration
+    [TestCase("(\"abc\" || \"cba\") + (\"abc\" || \"cba\")")] // AddOp celendar + calendar
+    
 
     public void TestTypeExpressionsInvalid(string input)
     {

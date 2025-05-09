@@ -164,41 +164,17 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
 
     public override EventTypes VisitUnionOp([NotNull] CSLParser.UnionOpContext context)
     {   
-        var left = Visit(context.expr(0));
-        var right = Visit(context.expr(1));
-
-        if (left == EventTypes.Calendar && right == EventTypes.Calendar)
-        {
-            return EventTypes.Calendar;
-        }
-        
-        throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left); 
+        return EventTypes.Calendar;
     }
 
     public override EventTypes VisitStrictlyAfterOp([NotNull] CSLParser.StrictlyAfterOpContext context)
     {
-        var left = Visit(context.expr(0));
-        var right = Visit(context.expr(1));
-
-        if (left == EventTypes.Calendar && right == EventTypes.Calendar)
-        {
-            return EventTypes.Calendar;
-        }
-        
-        throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left); 
+        return EventTypes.Calendar;
     }
 
     public override EventTypes VisitStrictlyBeforeOp([NotNull] CSLParser.StrictlyBeforeOpContext context)
     {
-        var left = Visit(context.expr(0));
-        var right = Visit(context.expr(1));
-
-        if (left == EventTypes.Calendar && right == EventTypes.Calendar)
-        {
-            return EventTypes.Calendar;
-        }
-        
-        throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
+        return EventTypes.Calendar;
     }
 
     public override EventTypes VisitSplitOp([NotNull] CSLParser.SplitOpContext context)
