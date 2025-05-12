@@ -22,6 +22,7 @@ public class TypeCheckerVisitorTests
     [TestCase("02/01/2001 - 1 d")] //SubtractOp
     [TestCase("3h ++ 'abc'")] // DoublePlusOp
     [TestCase("(\"abc\" || \"cba\") + 1h")] // AddOp calendar + duration
+    [TestCase("(\"abc\" || \"cba\") - 1h")] // SubtractOp calendar - duration
     
 
     public void TestTypeExpressionsValid(string input)
@@ -46,8 +47,9 @@ public class TypeCheckerVisitorTests
     [TestCase("3h ++ 3h")] // DoublePlusOp
     [TestCase("(\"abc\" || \"cba\") + 12:30")] // AddOp calendar + event without duration
     [TestCase("(\"abc\" || \"cba\") + (\"abc\" || \"cba\")")] // AddOp celendar + calendar
+    [TestCase("(\"abc\" || \"cba\") - (\"abc\" || \"cba\")")]
+    [TestCase("1 h - (\"abc\" || \"cba\")")]
     
-
     public void TestTypeExpressionsInvalid(string input)
     {
         var stream = CharStreams.fromString(input);
