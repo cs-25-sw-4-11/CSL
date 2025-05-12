@@ -250,5 +250,42 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
     }
 
+    public override EventTypes VisitRecursiveOp([NotNull] CSLParser.RecursiveOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        if (left == EventTypes.Calendar || right == EventTypes.Calendar)
+        {
+            if (left == right)
+            {
+                throw new InvalidTypeCompilerException([EventTypes.Subject |
+                                                        EventTypes.DateTime |
+                                                        EventTypes.Description |
+                                                        EventTypes.Duration], left); // NOTE: Expected types are not exhaustive
+            }
+            
+            if (left == EventTypes.Duration || right == EventTypes.Duration)
+            {
+                return EventTypes.Calendar;
+            } 
+            else 
+            {
+                throw new InvalidTypeCompilerException([EventTypes.Duration], left == EventTypes.Calendar ? right : left);
+            }
+        }
+
+        if (left == EventTypes.Duration && !right.HasFlag(EventTypes.DateTime))
+        {
+            throw new InvalidTypeCompilerException([EventTypes.DateTime], right);
+        }
+
+        if (!left.HasFlag(EventTypes.DateTime) && right == EventTypes.Duration)
+        {
+            throw new InvalidTypeCompilerException([EventTypes.DateTime], left);
+        }
+        
+        return EventTypes.Calendar;
+    }
     
 }
