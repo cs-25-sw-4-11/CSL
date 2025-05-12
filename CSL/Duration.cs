@@ -31,4 +31,13 @@ public readonly struct Duration(int minutes, int months)
     public const int MonthFactor = 1;
 
     public const int YearFactor = 12 * MonthFactor;
+    
+    public static Duration operator +(Duration left, Duration right)
+    {
+        return new Duration(
+            minutes: left.Minutes + right.Minutes,
+            months: left.Months + right.Months
+            );
+    }
+    
 }

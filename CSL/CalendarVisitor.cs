@@ -32,4 +32,12 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         
         return Calendar.UnionOp(left, right);
     }
+
+    public override Calendar VisitAddOp(CSLParser.AddOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+        
+        return base.VisitAddOp(context);
+    }
 }
