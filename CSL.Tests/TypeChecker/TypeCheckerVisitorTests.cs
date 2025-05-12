@@ -54,7 +54,7 @@ public class TypeCheckerVisitorTests
     [TestCase("3h ++ 3h")] // DoublePlusOp
     [TestCase("(\"abc\" || \"cba\") + 12:30")] // AddOp calendar + event without duration
     [TestCase("(\"abc\" || \"cba\") + (\"abc\" || \"cba\")")] // AddOp celendar + calendar
-        [TestCase("12:30 << (\"abc\" || 02/06/2004)")] // StrictlyBeforeOp datetime << calendar
+    [TestCase("12:30 << (\"abc\" || 02/06/2004)")] // StrictlyBeforeOp datetime << calendar
     [TestCase("02/06/2004 << 12:30")] // StrictlyBeforeOp datetime << datetime
     [TestCase("(\"abc\" || 3h) << \"abc\"")] // StrictlyBeforeOp calender << missing datetime
     [TestCase("\"abc\" << 12:30")] // StrictlyBeforeOp missing duration << datetime
