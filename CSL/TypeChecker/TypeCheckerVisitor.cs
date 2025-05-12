@@ -182,11 +182,58 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
 
     public override EventTypes VisitStrictlyAfterOp([NotNull] CSLParser.StrictlyAfterOpContext context)
     {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        if (left.HasFlag(EventTypes.DateTime))
+        {
+            throw new InvalidTypeCompilerException([EventTypes.Subject |
+                                                    EventTypes.Calendar |
+                                                    EventTypes.Description |
+                                                    EventTypes.Duration], left);
+        }
+
+        if (right == EventTypes.Calendar)
+        {
+            return EventTypes.Calendar;
+        }
+
+        if (!right.HasFlag(EventTypes.DateTime) || !right.HasFlag(EventTypes.Duration))
+        {
+            throw new InvalidTypeCompilerException([EventTypes.DateTime | EventTypes.Duration], right);
+        }
+
         return EventTypes.Calendar;
     }
 
     public override EventTypes VisitStrictlyBeforeOp([NotNull] CSLParser.StrictlyBeforeOpContext context)
     {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        if (left.HasFlag(EventTypes.DateTime))
+        {
+            throw new InvalidTypeCompilerException([EventTypes.Subject |
+                                                    EventTypes.Calendar |
+                                                    EventTypes.Description |
+                                                    EventTypes.Duration], left);
+        }
+
+        if (left == EventTypes.Calendar)
+        {
+            if (right != EventTypes.Calendar && !right.HasFlag(EventTypes.DateTime))
+            {
+                throw new InvalidTypeCompilerException([EventTypes.Calendar | EventTypes.DateTime], right);
+            }
+
+            return EventTypes.Calendar;
+        }
+
+        if (!left.HasFlag(EventTypes.Duration))
+        {
+            throw new InvalidTypeCompilerException([EventTypes.Duration], left);
+        }
+
         return EventTypes.Calendar;
     }
 
