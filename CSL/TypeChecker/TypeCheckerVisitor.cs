@@ -107,6 +107,19 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
 
+        if (right == EventTypes.Calendar)
+        {
+            throw new InvalidTypeCompilerException([EventTypes.Subject |
+                                                    EventTypes.DateTime |
+                                                    EventTypes.Description |
+                                                    EventTypes.Duration], right); // NOTE: Expected types are not exhaustive
+        }
+
+        if (left == EventTypes.Calendar)
+        {
+            return EventTypes.Calendar;
+        }
+
         // Check for duration operand
 
         if (right != EventTypes.Duration)
