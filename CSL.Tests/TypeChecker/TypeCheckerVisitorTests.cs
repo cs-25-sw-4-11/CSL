@@ -22,6 +22,13 @@ public class TypeCheckerVisitorTests
     [TestCase("02/01/2001 - 1 d")] //SubtractOp
     [TestCase("3h ++ 'abc'")] // DoublePlusOp
     [TestCase("(\"abc\" || \"cba\") + 1h")] // AddOp calendar + duration
+    [TestCase("(\"abc\" || 02/06/2004) << (\"abc\" || 02/06/2004)")] // StrictlyBeforeOp 2 calendars
+    [TestCase("(\"abc\" ++ 3h) << (12:30 ++ \"def\")")] // StrictlyBeforeOp contains duration << datetime
+    [TestCase("1h << (01/01/2001 || 12:30)")] // StrictlyBeforeOp datetime << calendar
+    [TestCase("(\"abc\" || 1h) << (01/01/2001 ++ \"def\")")] // StrictlyBeforeOp calender << contains datetime
+    [TestCase("\"abc\" >> (12:30 || 01/01/2001)")] // StrictlyAfterOp event >> calendar
+    [TestCase("1h ++ \"abc\") >> (01/01/2001 ++ 12h)")] // StrictlyAfterOp event >> event
+    [TestCase("(1h || \"abc\") >> (01/01/2001 ++ 12h)")] // StrictlyAfterOp calendar >> event
     
 
     public void TestTypeExpressionsValid(string input)
@@ -46,7 +53,14 @@ public class TypeCheckerVisitorTests
     [TestCase("3h ++ 3h")] // DoublePlusOp
     [TestCase("(\"abc\" || \"cba\") + 12:30")] // AddOp calendar + event without duration
     [TestCase("(\"abc\" || \"cba\") + (\"abc\" || \"cba\")")] // AddOp celendar + calendar
-    
+    [TestCase("12:30 << (\"abc\" || 02/06/2004)")] // StrictlyBeforeOp datetime << calendar
+    [TestCase("02/06/2004 << 12:30")] // StrictlyBeforeOp datetime << datetime
+    [TestCase("(\"abc\" || 3h) << \"abc\"")] // StrictlyBeforeOp calender << missing datetime
+    [TestCase("\"abc\" << 12:30")] // StrictlyBeforeOp missing duration << datetime
+    [TestCase("01/01/2001 >> (1h ++ 12:30)")] // StrictlyAfterOp contains datetime >> event
+    [TestCase("(\"abc\" ++ 1h) >> 01/01/2001")] //StrictlyAfterOp event >> missing duration
+    [TestCase("(\"abc\" || 1h) >> \"abc\" ++ 1h")] //StrictlyAfterOp calendar >> missing datetime
+
 
     public void TestTypeExpressionsInvalid(string input)
     {
