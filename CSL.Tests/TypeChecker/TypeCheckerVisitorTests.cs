@@ -14,7 +14,6 @@ public class TypeCheckerVisitorTests
     [TestCase("1d + 01/01/2001")]
     [TestCase("1d + 10:00")]
     [TestCase("1h + 10:00")]
-    [TestCase("'abc' * 1d")] // RecurrenceOp
     [TestCase("10:00~11:00")] // TildeOp
     [TestCase("01/01/2001~01/02/2001")] // TildeOp
     [TestCase("01/01/2001~10:00")] // TildeOp
@@ -23,6 +22,10 @@ public class TypeCheckerVisitorTests
     [TestCase("3h ++ 'abc'")] // DoublePlusOp
     [TestCase("(\"abc\" || \"cba\") + 1h")] // AddOp calendar + duration
     [TestCase("(\"abc\" || \"cba\") - 1h")] // SubtractOp calendar - duration
+    [TestCase("(\"abc\" || \"cba\") * 1h ")]
+    [TestCase("1h * (\"abc\" || \"cba\")")]
+    [TestCase("08/08/2002 * 1 y")]
+    [TestCase("1 y * 08/08/2002")]
     
 
     public void TestTypeExpressionsValid(string input)
@@ -49,7 +52,13 @@ public class TypeCheckerVisitorTests
     [TestCase("(\"abc\" || \"cba\") + (\"abc\" || \"cba\")")] // AddOp celendar + calendar
     [TestCase("(\"abc\" || \"cba\") - (\"abc\" || \"cba\")")]
     [TestCase("1 h - (\"abc\" || \"cba\")")]
-    
+    [TestCase("(\"abc\" || \"cba\") * (\"abc\" || \"cba\")")]
+    [TestCase("(\"abc\" || \"cba\") * 13:30")]
+    [TestCase("13:30 * (\"abc\" || \"cba\")")]
+    [TestCase("1h * \"abc\" ++ 3h")]
+
+
+ 
     public void TestTypeExpressionsInvalid(string input)
     {
         var stream = CharStreams.fromString(input);
