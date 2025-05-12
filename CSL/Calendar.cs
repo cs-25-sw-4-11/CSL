@@ -10,4 +10,9 @@ public record Calendar(Event[] Events)
     {
         return new Calendar(left.Events.Concat(right.Events).ToArray());
     }
+
+    public bool IsEvent()
+    {
+        return Events.Length == 1;
+    }
 }

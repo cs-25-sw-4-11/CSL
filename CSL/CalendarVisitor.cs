@@ -37,7 +37,15 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     {
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
+
+        if (left.IsEvent() && right.IsEvent())
+        {
+        return Event.AddOperator((Event)left, (Event)right);
+        }
+        else
+        {
+            return base.VisitAddOp(context);
+        }
         
-        return base.VisitAddOp(context);
     }
 }
