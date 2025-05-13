@@ -28,6 +28,7 @@ public class TestDuration
     }
 
     [TestCase("2 mth", 2 * Duration.MonthFactor)]
+    [TestCase("1mth", 1 * Duration.MonthFactor)]
     [TestCase("1 y", 1 * Duration.YearFactor)]
     public void TestLiteralMonthParam(string input, int months)
     {
