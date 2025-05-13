@@ -9,16 +9,16 @@ public record Event(
     Duration? Duration = null,
     Description? Description = null)
 {
-    public DateTime DateTime => new(Date, Clock);
+    public DateClock DateClock => new(Date, Clock);
 
-    public Event(DateTime DateTime,
+    public Event(DateClock DateClock,
         Subject? Subject = null,
         Duration? Duration = null,
         Description? Description = null)
         : this(
             Subject: Subject,
-            Date: DateTime.Date,
-            Clock: DateTime.Clock,
+            Date: DateClock.Date,
+            Clock: DateClock.Clock,
             Duration: Duration,
             Description: Description)
     {
