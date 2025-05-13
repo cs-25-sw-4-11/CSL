@@ -40,11 +40,11 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
 
         if (left.IsEvent() && right.IsEvent())
         {
-        return Event.AddOperator((Event)left, (Event)right);
+            return Event.AddOperator((Event)left, (Event)right);
         }
         else
         {
-            return base.VisitAddOp(context);
+            return Calendar.AddOperator(left, (Event)right);
         }
         
     }

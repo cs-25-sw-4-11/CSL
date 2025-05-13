@@ -108,12 +108,13 @@ public record Event(
     {
         Event otherOperand;
         Event firstOperand;
-        if (left.Duration.HasValue && !left.Subject.HasValue && !left.Description.HasValue && !left.Clock.HasValue && !left.Date.HasValue)
+        //checks if one of the events is only duration and puts it as the first operand
+        if (left is { Duration: not null, Subject: null, Description: null, Clock: null, Date: null })
         {
             firstOperand = left;
             otherOperand = right;
         }
-        else if (right.Duration.HasValue && !right.Subject.HasValue && !right.Description.HasValue && !right.Clock.HasValue && !right.Date.HasValue )
+        else if (right is { Duration: not null, Subject: null, Description: null, Clock: null, Date: null } )
         {
             firstOperand = right;
             otherOperand = left;
@@ -123,7 +124,8 @@ public record Event(
             throw new ArgumentException($"Missing expression with only {nameof(Duration)}");
         }
         
-        if (otherOperand.Duration.HasValue && otherOperand.DateClock is null)
+        // checks if the other operand is a duration, date, dateclock or clock and calculates accordingly 
+        if (otherOperand is { Duration: not null, DateClock: null })
         {
             return new Event(
                 Duration: firstOperand.Duration + otherOperand.Duration
@@ -164,10 +166,7 @@ public record Event(
                 Clock: otherOperand.Clock + firstOperand.Duration
             );
         }
-        
-        
         throw new ArgumentException($"Missing expression with either {nameof(Duration)} or {nameof(Date)} and {nameof(Clock)} ");
-        
     }
 
     /// <summary>
