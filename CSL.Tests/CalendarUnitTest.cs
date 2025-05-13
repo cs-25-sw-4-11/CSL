@@ -23,9 +23,16 @@ public class CalendarUnitTest
         {
             yield return new TestCaseData(
                 "'abc' || 'def'",
-                new Calendar ([
-                    new (Subject: new Subject("abc")), new (Subject: new Subject("def"))
-                ]));
+                new Calendar([
+                    new(Subject: new Subject("abc")), new(Subject: new Subject("def"))
+                ])
+            );
+            yield return new TestCaseData(
+                "mikkel = 'fødsel'; mikkel",
+                new Calendar([
+                    new Event(Subject: "fødsel")
+                ])
+            );
         }
     }
     
