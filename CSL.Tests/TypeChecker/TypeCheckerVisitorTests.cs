@@ -33,7 +33,8 @@ public class TypeCheckerVisitorTests
     [TestCase("1h * (\"abc\" || \"cba\")")]
     [TestCase("08/08/2002 * 1 y")]
     [TestCase("1 y * 08/08/2002")]
-    
+    [TestCase("(\"abc\" || 12:30) \\ (\"abc\" || 01/01/2001)")]
+    [TestCase("(\"abc\" || 12:30) / (\"abc\" || 01/01/2001)")]
 
     public void TestTypeExpressionsValid(string input)
     {
@@ -70,9 +71,12 @@ public class TypeCheckerVisitorTests
     [TestCase("(\"abc\" || \"cba\") * 13:30")]
     [TestCase("13:30 * (\"abc\" || \"cba\")")]
     [TestCase("1h * \"abc\" ++ 3h")]
+    [TestCase("\"abc\" ++ 12:30 / \"abc\" ++ 01/01/2001")]
+    [TestCase("\"abc\" ++ 12:30 \\ \"abc\" ++ 01/01/2001")]
 
 
- 
+
+
     public void TestTypeExpressionsInvalid(string input)
     {
         var stream = CharStreams.fromString(input);
