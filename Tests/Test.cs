@@ -15,14 +15,12 @@ public class LexerTests
             // Testing Basic Tokens
             new object[]
             {
-                "'Sub' + \"Des\" + Monday + 12/34/5678 + 10/10/2000 16:30 + 12:32 + 12min ",
+                "'Sub' + \"Des\" + 12/34/5678 + 10/10/2000 16:30 + 12:32 + 12min ",
                 new List<ExpectedToken>
                 {
                     new ExpectedToken(CSLLexer.SUBJECT, "'Sub'"),
                     new ExpectedToken(CSLLexer.PLUS, "+"),
                     new ExpectedToken(CSLLexer.DESCRIPTION, "\"Des\""),
-                    new ExpectedToken(CSLLexer.PLUS, "+"),
-                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Monday"),
                     new ExpectedToken(CSLLexer.PLUS, "+"),
                     new ExpectedToken(CSLLexer.DATE, "12/34/5678"),
                     new ExpectedToken(CSLLexer.PLUS, "+"),
@@ -42,32 +40,27 @@ public class LexerTests
             // Testing Operations
             new object[]
             {
-                "'Subject' ~ 'Subject' ++ !'Subject' + 'Subject' - 'Subject' in 'Subject' << 'Subject' >> 'Subject' < 'Subject' > 'Subject' * 'Subject' && 'Subject' || 'Subject'  ",
+                "'Subject' ~ 'Subject' ++ 'Subject' + 'Subject' - 'Subject' \\ 'Subject' << 'Subject' >> 'Subject' * 'Subject' / 'Subject' || 'Subject'  ",
                 new List<ExpectedToken>
                 {
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
-                    new ExpectedToken(CSLLexer.THILDE, "~"),
+                    new ExpectedToken(CSLLexer.TILDE, "~"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
-                    new ExpectedToken(CSLLexer.COMPLEMENT, "!"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.PLUS, "+"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.MINUS, "-"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
-                    new ExpectedToken(CSLLexer.IN, "in"),
+                    new ExpectedToken(CSLLexer.SETDIFF, "\\"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.SBEFORE, "<<"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.SAFTER, ">>"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
-                    new ExpectedToken(CSLLexer.BEFORE, "<"),
-                    new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
-                    new ExpectedToken(CSLLexer.AFTER, ">"),
-                    new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.STAR, "*"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
-                    new ExpectedToken(CSLLexer.INTERSECTION, "&&"),
+                    new ExpectedToken(CSLLexer.SPLIT, "/"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
                     new ExpectedToken(CSLLexer.UNION, "||"),
                     new ExpectedToken(CSLLexer.SUBJECT, "'Subject'"),
@@ -77,12 +70,9 @@ public class LexerTests
             // Testing TimeUnits
             new object[]
             {
-                "15sec + 3min + 1h + 4w + 0mth + 3y - 13 sec - 3 y - 4 w",
+                "3min + 1h + 4w + 0mth + 3y - 3 y - 4 w",
                 new List<ExpectedToken>
                 {
-                    new ExpectedToken(CSLLexer.INT, "15"),
-                    new ExpectedToken(CSLLexer.TIMEUNITS, "sec"),
-                    new ExpectedToken(CSLLexer.PLUS, "+"),
                     new ExpectedToken(CSLLexer.INT, "3"),
                     new ExpectedToken(CSLLexer.TIMEUNITS, "min"),
                     new ExpectedToken(CSLLexer.PLUS, "+"),
@@ -97,9 +87,6 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.PLUS, "+"),
                     new ExpectedToken(CSLLexer.INT, "3"),
                     new ExpectedToken(CSLLexer.TIMEUNITS, "y"),
-                    new ExpectedToken(CSLLexer.MINUS, "-"),
-                    new ExpectedToken(CSLLexer.INT, "13"),
-                    new ExpectedToken(CSLLexer.TIMEUNITS, "sec"),
                     new ExpectedToken(CSLLexer.MINUS, "-"),
                     new ExpectedToken(CSLLexer.INT, "3"),
                     new ExpectedToken(CSLLexer.TIMEUNITS, "y"),
@@ -122,7 +109,7 @@ public class LexerTests
             // Identifier and Stat test
             new object[]
             {
-                "WorkWeek = 7:00~16:00 ++ Monday ++ Tuesday ++ Wednesday ++ Thursday ++ Friday;",
+                "WorkWeek = 7:00~16:00;",
                 new List<ExpectedToken>
                 {
                     new ExpectedToken(CSLLexer.IDENTIFIER, "WorkWeek"),
@@ -130,20 +117,10 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.INT, "7"),
                     new ExpectedToken(CSLLexer.COLON, ":"),
                     new ExpectedToken(CSLLexer.INT, "00"),
-                    new ExpectedToken(CSLLexer.THILDE, "~"),
+                    new ExpectedToken(CSLLexer.TILDE, "~"),
                     new ExpectedToken(CSLLexer.INT, "16"),
                     new ExpectedToken(CSLLexer.COLON, ":"),
                     new ExpectedToken(CSLLexer.INT, "00"),
-                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
-                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Monday"),
-                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
-                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Tuesday"),
-                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
-                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Wednesday"),
-                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
-                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Thursday"),
-                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
-                    new ExpectedToken(CSLLexer.DAYSOFWEEK, "Friday"),
                     new ExpectedToken(CSLLexer.SEMICOLON, ";")                  
                 }
             },
@@ -269,214 +246,160 @@ public class LexerTests
     [InlineData("(a) ++ b", "ParenExpr", "DoublePlusOp")]
     [InlineData("(a) + b", "ParenExpr", "AddOp")]
     [InlineData("(a) - b", "ParenExpr", "SubtractOp")]
-    [InlineData("(a) in b", "ParenExpr", "InOp")]
     [InlineData("(a) << b", "ParenExpr", "StrictlyBeforeOp")]
     [InlineData("(a) >> b", "ParenExpr", "StrictlyAfterOp")]
-    [InlineData("(a) < b", "ParenExpr", "BeforeOp")]
-    [InlineData("(a) > b", "ParenExpr", "AfterOp")]
-    [InlineData("(a) * b", "ParenExpr", "RecursiveOp")]
-    [InlineData("(a) && b", "ParenExpr", "IntersectOp")]
+    [InlineData("(a) * b", "ParenExpr", "RecurrenceOp")]
+    [InlineData("(a) / b", "ParenExpr", "SplitOp")]
+    [InlineData("(a) \\ b", "ParenExpr", "SetdiffOp")]
     [InlineData("(a) || b", "ParenExpr", "UnionOp")]
     [InlineData("a ~ (b)", "ParenExpr", "TildeOp")]
     [InlineData("a ++ (b)", "ParenExpr", "DoublePlusOp")]
     [InlineData("a + (b)", "ParenExpr", "AddOp")]
     [InlineData("a - (b)", "ParenExpr", "SubtractOp")]
-    [InlineData("a in (b)", "ParenExpr", "InOp")]
     [InlineData("a << (b)", "ParenExpr", "StrictlyBeforeOp")]
     [InlineData("a >> (b)", "ParenExpr", "StrictlyAfterOp")]
-    [InlineData("a < (b)", "ParenExpr", "BeforeOp")]
-    [InlineData("a > (b)", "ParenExpr", "AfterOp")]
-    [InlineData("a * (b)", "ParenExpr", "RecursiveOp")]
-    [InlineData("a && (b)", "ParenExpr", "IntersectOp")]
+    [InlineData("a * (b)", "ParenExpr", "RecurrenceOp")]
+    [InlineData("a / (b)", "ParenExpr", "SplitOp")]
+    [InlineData("a \\ (b)", "ParenExpr", "SetdiffOp")]
     [InlineData("a || (b)", "ParenExpr", "UnionOp")]
+    
     // Combinations with HideExpr
     [InlineData("[a] ~ b", "HideExpr", "TildeOp")]
     [InlineData("[a] ++ b", "HideExpr", "DoublePlusOp")]
     [InlineData("[a] + b", "HideExpr", "AddOp")]
     [InlineData("[a] - b", "HideExpr", "SubtractOp")]
-    [InlineData("[a] in b", "HideExpr", "InOp")]
     [InlineData("[a] << b", "HideExpr", "StrictlyBeforeOp")]
     [InlineData("[a] >> b", "HideExpr", "StrictlyAfterOp")]
-    [InlineData("[a] < b", "HideExpr", "BeforeOp")]
-    [InlineData("[a] > b", "HideExpr", "AfterOp")]
-    [InlineData("[a] * b", "HideExpr", "RecursiveOp")]
-    [InlineData("[a] && b", "HideExpr", "IntersectOp")]
+    [InlineData("[a] * b", "HideExpr", "RecurrenceOp")]
+    [InlineData("[a] / b", "HideExpr", "SplitOp")]
+    [InlineData("[a] \\ b", "HideExpr", "SetdiffOp")]
     [InlineData("[a] || b", "HideExpr", "UnionOp")]
     [InlineData("a ~ [b]", "HideExpr", "TildeOp")]
     [InlineData("a ++ [b]", "HideExpr", "DoublePlusOp")]
     [InlineData("a + [b]", "HideExpr", "AddOp")]
-    [InlineData("a - [b]",  "HideExpr", "SubtractOp")]
-    [InlineData("a in [b]", "HideExpr", "InOp")]
+    [InlineData("a - [b]", "HideExpr", "SubtractOp")]
     [InlineData("a << [b]", "HideExpr", "StrictlyBeforeOp")]
     [InlineData("a >> [b]", "HideExpr", "StrictlyAfterOp")]
-    [InlineData("a < [b]", "HideExpr", "BeforeOp")]
-    [InlineData("a > [b]", "HideExpr", "AfterOp")]
-    [InlineData("a * [b]", "HideExpr", "RecursiveOp")]
-    [InlineData("a && [b]", "HideExpr", "IntersectOp")]
+    [InlineData("a * [b]", "HideExpr", "RecurrenceOp")]
+    [InlineData("a / [b]", "HideExpr", "SplitOp")]
+    [InlineData("a \\ [b]", "HideExpr", "SetdiffOp")]
     [InlineData("a || [b]", "HideExpr", "UnionOp")]
-    // Combinations with ComplementOp
-    [InlineData("!a ~ b", "TildeOp", "ComplementOp")]
-    [InlineData("!a ++ b", "ComplementOp", "DoublePlusOp")]
-    [InlineData("!a + b", "ComplementOp", "AddOp")]
-    [InlineData("!a - b", "ComplementOp", "SubtractOp")]
-    [InlineData("!a in b", "ComplementOp", "InOp")]
-    [InlineData("!a << b", "ComplementOp", "StrictlyBeforeOp")]
-    [InlineData("!a >> b", "ComplementOp", "StrictlyAfterOp")]
-    [InlineData("!a < b", "ComplementOp", "BeforeOp")]
-    [InlineData("!a > b", "ComplementOp", "AfterOp")]
-    [InlineData("!a * b", "ComplementOp", "RecursiveOp")]
-    [InlineData("!a && b", "ComplementOp", "IntersectOp")]
-    [InlineData("!a || b", "ComplementOp", "UnionOp")]
-    [InlineData("!(a ~ b)", "ParenExpr", "ComplementOp")]
+    
     // TildeOp combinations
     [InlineData("a ~ b ++ c", "TildeOp", "DoublePlusOp")]
     [InlineData("a ~ b + c", "TildeOp", "AddOp")]
     [InlineData("a ~ b - c", "TildeOp", "SubtractOp")]
-    [InlineData("a ~ b in c", "TildeOp", "InOp")]
     [InlineData("a ~ b << c", "TildeOp", "StrictlyBeforeOp")]
     [InlineData("a ~ b >> c", "TildeOp", "StrictlyAfterOp")]
-    [InlineData("a ~ b < c", "TildeOp", "BeforeOp")]
-    [InlineData("a ~ b > c", "TildeOp", "AfterOp")]
-    [InlineData("a ~ b * c", "TildeOp", "RecursiveOp")]
-    [InlineData("a ~ b && c", "TildeOp", "IntersectOp")]
+    [InlineData("a ~ b * c", "TildeOp", "RecurrenceOp")]
+    [InlineData("a ~ b / c", "TildeOp", "SplitOp")]
+    [InlineData("a ~ b \\ c", "TildeOp", "SetdiffOp")]
     [InlineData("a ~ b || c", "TildeOp", "UnionOp")]
+    
     // DoublePlusOp combinations
     [InlineData("a ++ b ~ c", "TildeOp", "DoublePlusOp")]
-    [InlineData("a ++ b + c", "DoublePlusOp", "AddOp")]
-    [InlineData("a ++ b - c", "DoublePlusOp", "SubtractOp")]
-    [InlineData("a ++ b in c", "DoublePlusOp", "InOp")]
+    [InlineData("a ++ b + c", "AddOp", "DoublePlusOp")]
+    [InlineData("a ++ b - c", "SubtractOp", "DoublePlusOp")]
     [InlineData("a ++ b << c", "DoublePlusOp", "StrictlyBeforeOp")]
     [InlineData("a ++ b >> c", "DoublePlusOp", "StrictlyAfterOp")]
-    [InlineData("a ++ b < c", "DoublePlusOp", "BeforeOp")]
-    [InlineData("a ++ b > c", "DoublePlusOp", "AfterOp")]
-    [InlineData("a ++ b * c", "DoublePlusOp", "RecursiveOp")]
-    [InlineData("a ++ b && c", "DoublePlusOp", "IntersectOp")]
+    [InlineData("a ++ b * c", "DoublePlusOp", "RecurrenceOp")]
+    [InlineData("a ++ b / c", "DoublePlusOp", "SplitOp")]
+    [InlineData("a ++ b \\ c", "DoublePlusOp", "SetdiffOp")]
     [InlineData("a ++ b || c", "DoublePlusOp", "UnionOp")]
+    
     // AddOp combinations
     [InlineData("a + b ~ c", "TildeOp", "AddOp")]
-    [InlineData("a + b ++ c", "DoublePlusOp", "AddOp")]
+    [InlineData("a + b ++ c", "AddOp", "DoublePlusOp")]
     [InlineData("a + b - c", "AddOp", "SubtractOp")]
-    [InlineData("a + b in c", "AddOp", "InOp")]
     [InlineData("a + b << c", "AddOp", "StrictlyBeforeOp")]
     [InlineData("a + b >> c", "AddOp", "StrictlyAfterOp")]
-    [InlineData("a + b < c", "AddOp", "BeforeOp")]
-    [InlineData("a + b > c", "AddOp", "AfterOp")]
-    [InlineData("a + b * c", "AddOp", "RecursiveOp")]
-    [InlineData("a + b && c", "AddOp", "IntersectOp")]
+    [InlineData("a + b * c", "AddOp", "RecurrenceOp")]
+    [InlineData("a + b / c", "AddOp", "SplitOp")]
+    [InlineData("a + b \\ c", "AddOp", "SetdiffOp")]
     [InlineData("a + b || c", "AddOp", "UnionOp")]
+    
     // SubtractOp combinations
     [InlineData("a - b ~ c", "TildeOp", "SubtractOp")]
-    [InlineData("a - b ++ c", "DoublePlusOp", "SubtractOp")]
+    [InlineData("a - b ++ c", "SubtractOp", "DoublePlusOp")]
     [InlineData("a - b + c", "AddOp", "SubtractOp")]
-    [InlineData("a - b in c", "SubtractOp", "InOp")]
     [InlineData("a - b << c", "SubtractOp", "StrictlyBeforeOp")]
     [InlineData("a - b >> c", "SubtractOp", "StrictlyAfterOp")]
-    [InlineData("a - b < c", "SubtractOp", "BeforeOp")]
-    [InlineData("a - b > c", "SubtractOp", "AfterOp")]
-    [InlineData("a - b * c", "SubtractOp", "RecursiveOp")]
-    [InlineData("a - b && c", "SubtractOp", "IntersectOp")]
+    [InlineData("a - b * c", "SubtractOp", "RecurrenceOp")]
+    [InlineData("a - b / c", "SubtractOp", "SplitOp")]
+    [InlineData("a - b \\ c", "SubtractOp", "SetdiffOp")]
     [InlineData("a - b || c", "SubtractOp", "UnionOp")]
-    // InOp combinations
-    [InlineData("a in b ~ c", "TildeOp", "InOp")]
-    [InlineData("a in b ++ c", "DoublePlusOp", "InOp")]
-    [InlineData("a in b + c", "AddOp", "InOp" )]
-    [InlineData("a in b - c", "SubtractOp", "InOp")]
-    [InlineData("a in b << c", "InOp", "StrictlyBeforeOp")]
-    [InlineData("a in b >> c", "InOp", "StrictlyAfterOp")]
-    [InlineData("a in b < c", "InOp", "BeforeOp")]
-    [InlineData("a in b > c", "InOp", "AfterOp")]
-    [InlineData("a in b * c", "InOp", "RecursiveOp")]
-    [InlineData("a in b && c", "InOp", "IntersectOp")]
-    [InlineData("a in b || c", "InOp", "UnionOp")]
+    
     // StrictlyBeforeOp combinations
     [InlineData("a << b ~ c", "TildeOp", "StrictlyBeforeOp")]
     [InlineData("a << b ++ c", "DoublePlusOp", "StrictlyBeforeOp")]
     [InlineData("a << b + c", "AddOp", "StrictlyBeforeOp")]
     [InlineData("a << b - c", "SubtractOp", "StrictlyBeforeOp")]
-    [InlineData("a << b in c", "InOp", "StrictlyBeforeOp")]
     [InlineData("a << b >> c", "StrictlyBeforeOp", "StrictlyAfterOp")]
-    [InlineData("a << b < c", "StrictlyBeforeOp", "BeforeOp")]
-    [InlineData("a << b > c", "StrictlyBeforeOp", "AfterOp")]
-    [InlineData("a << b * c", "StrictlyBeforeOp", "RecursiveOp")]
-    [InlineData("a << b && c", "StrictlyBeforeOp", "IntersectOp")]
+    [InlineData("a << b * c", "StrictlyBeforeOp", "RecurrenceOp")]
+    [InlineData("a << b / c", "StrictlyBeforeOp", "SplitOp")]
+    [InlineData("a << b \\ c", "StrictlyBeforeOp", "SetdiffOp")]
     [InlineData("a << b || c", "StrictlyBeforeOp", "UnionOp")]
+    
     // StrictlyAfterOp combinations
     [InlineData("a >> b ~ c", "TildeOp", "StrictlyAfterOp")]
     [InlineData("a >> b ++ c", "DoublePlusOp", "StrictlyAfterOp")]
     [InlineData("a >> b + c", "AddOp", "StrictlyAfterOp")]
     [InlineData("a >> b - c", "SubtractOp", "StrictlyAfterOp")]
-    [InlineData("a >> b in c", "InOp", "StrictlyAfterOp")]
     [InlineData("a >> b << c", "StrictlyBeforeOp", "StrictlyAfterOp")]
-    [InlineData("a >> b < c", "StrictlyAfterOp", "BeforeOp")]
-    [InlineData("a >> b > c", "StrictlyAfterOp", "AfterOp")]
-    [InlineData("a >> b * c", "StrictlyAfterOp", "RecursiveOp")]
-    [InlineData("a >> b && c", "StrictlyAfterOp", "IntersectOp")]
+    [InlineData("a >> b * c", "StrictlyAfterOp", "RecurrenceOp")]
+    [InlineData("a >> b / c", "StrictlyAfterOp", "SplitOp")]
+    [InlineData("a >> b \\ c", "StrictlyAfterOp", "SetdiffOp")]
     [InlineData("a >> b || c", "StrictlyAfterOp", "UnionOp")]
-    // BeforeOp combinations
-    [InlineData("a < b ~ c", "TildeOp", "BeforeOp")]
-    [InlineData("a < b ++ c", "DoublePlusOp", "BeforeOp")]
-    [InlineData("a < b + c", "AddOp", "BeforeOp")]
-    [InlineData("a < b - c", "SubtractOp", "BeforeOp")]
-    [InlineData("a < b in c", "InOp", "BeforeOp")]
-    [InlineData("a < b << c", "StrictlyBeforeOp", "BeforeOp")]
-    [InlineData("a < b >> c", "StrictlyAfterOp", "BeforeOp")]
-    [InlineData("a < b > c", "BeforeOp", "AfterOp")]
-    [InlineData("a < b * c", "BeforeOp", "RecursiveOp")]
-    [InlineData("a < b && c", "BeforeOp", "IntersectOp")]
-    [InlineData("a < b || c", "BeforeOp", "UnionOp")]
-    // AfterOp combinations
-    [InlineData("a > b ~ c",  "TildeOp", "AfterOp")]
-    [InlineData("a > b ++ c",  "DoublePlusOp", "AfterOp")]
-    [InlineData("a > b + c",  "AddOp", "AfterOp")]
-    [InlineData("a > b - c",  "SubtractOp", "AfterOp")]
-    [InlineData("a > b in c",  "InOp", "AfterOp")]
-    [InlineData("a > b << c",  "StrictlyBeforeOp", "AfterOp")]
-    [InlineData("a > b >> c",  "StrictlyAfterOp", "AfterOp")]
-    [InlineData("a > b < c",  "BeforeOp", "AfterOp")]
-    [InlineData("a > b * c", "AfterOp", "RecursiveOp")]
-    [InlineData("a > b && c", "AfterOp", "IntersectOp")]
-    [InlineData("a > b || c", "AfterOp", "UnionOp")]
-    // RecursiveOp combinations
-    [InlineData("a * b ~ c",  "TildeOp", "RecursiveOp")]
-    [InlineData("a * b ++ c",  "DoublePlusOp", "RecursiveOp")]
-    [InlineData("a * b + c",  "AddOp", "RecursiveOp")]
-    [InlineData("a * b - c",  "SubtractOp", "RecursiveOp")]
-    [InlineData("a * b in c",  "InOp", "RecursiveOp")]
-    [InlineData("a * b << c",  "StrictlyBeforeOp", "RecursiveOp")]
-    [InlineData("a * b >> c",  "StrictlyAfterOp", "RecursiveOp")]
-    [InlineData("a * b < c",  "BeforeOp", "RecursiveOp")]
-    [InlineData("a * b > c",  "AfterOp", "RecursiveOp")]
-    [InlineData("a * b && c", "RecursiveOp", "IntersectOp")]
-    [InlineData("a * b || c", "RecursiveOp", "UnionOp")]
-    // IntersectOp combinations
-    [InlineData("a && b ~ c",  "TildeOp", "IntersectOp")]
-    [InlineData("a && b ++ c",  "DoublePlusOp", "IntersectOp")]
-    [InlineData("a && b + c",  "AddOp", "IntersectOp")]
-    [InlineData("a && b - c",  "SubtractOp", "IntersectOp")]
-    [InlineData("a && b in c",  "InOp", "IntersectOp")]
-    [InlineData("a && b << c",  "StrictlyBeforeOp", "IntersectOp")]
-    [InlineData("a && b >> c",  "StrictlyAfterOp", "IntersectOp")]
-    [InlineData("a && b < c",  "BeforeOp", "IntersectOp")]
-    [InlineData("a && b > c",  "AfterOp", "IntersectOp")]
-    [InlineData("a && b * c",  "RecursiveOp", "IntersectOp")]
-    [InlineData("a && b || c", "IntersectOp", "UnionOp")]
+    
+    // RecurrenceOp combinations
+    [InlineData("a * b ~ c", "TildeOp", "RecurrenceOp")]
+    [InlineData("a * b ++ c", "DoublePlusOp", "RecurrenceOp")]
+    [InlineData("a * b + c", "AddOp", "RecurrenceOp")]
+    [InlineData("a * b - c", "SubtractOp", "RecurrenceOp")]
+    [InlineData("a * b << c", "StrictlyBeforeOp", "RecurrenceOp")]
+    [InlineData("a * b >> c", "StrictlyAfterOp", "RecurrenceOp")]
+    [InlineData("a * b / c", "RecurrenceOp", "SplitOp")]
+    [InlineData("a * b \\ c", "RecurrenceOp", "SetdiffOp")]
+    [InlineData("a * b || c", "RecurrenceOp", "UnionOp")]
+    
+    // SplitOp combinations
+    [InlineData("a / b ~ c", "TildeOp", "SplitOp")]
+    [InlineData("a / b ++ c", "DoublePlusOp", "SplitOp")]
+    [InlineData("a / b + c", "AddOp", "SplitOp")]
+    [InlineData("a / b - c", "SubtractOp", "SplitOp")]
+    [InlineData("a / b << c", "StrictlyBeforeOp", "SplitOp")]
+    [InlineData("a / b >> c", "StrictlyAfterOp", "SplitOp")]
+    [InlineData("a / b * c", "RecurrenceOp", "SplitOp")]
+    [InlineData("a / b \\ c", "SplitOp", "SetdiffOp")]
+    [InlineData("a / b || c", "SplitOp", "UnionOp")]
+    
+    // SetdiffOp combinations
+    [InlineData("a \\ b ~ c", "TildeOp", "SetdiffOp")]
+    [InlineData("a \\ b ++ c", "DoublePlusOp", "SetdiffOp")]
+    [InlineData("a \\ b + c", "AddOp", "SetdiffOp")]
+    [InlineData("a \\ b - c", "SubtractOp", "SetdiffOp")]
+    [InlineData("a \\ b << c", "StrictlyBeforeOp", "SetdiffOp")]
+    [InlineData("a \\ b >> c", "StrictlyAfterOp", "SetdiffOp")]
+    [InlineData("a \\ b * c", "RecurrenceOp", "SetdiffOp")]
+    [InlineData("a \\ b / c", "SplitOp", "SetdiffOp")]
+    [InlineData("a \\ b || c", "SetdiffOp", "UnionOp")]
+    
     // UnionOp combinations
-    [InlineData("a || b ~ c",  "TildeOp", "UnionOp")]
-    [InlineData("a || b ++ c",  "DoublePlusOp", "UnionOp")]
-    [InlineData("a || b + c",  "AddOp", "UnionOp")]
-    [InlineData("a || b - c",  "SubtractOp", "UnionOp")]
-    [InlineData("a || b in c",  "InOp", "UnionOp")]
-    [InlineData("a || b << c",  "StrictlyBeforeOp", "UnionOp")]
-    [InlineData("a || b >> c",  "StrictlyAfterOp", "UnionOp")]
-    [InlineData("a || b < c",  "BeforeOp", "UnionOp")]
-    [InlineData("a || b > c", "AfterOp", "UnionOp")]
-    [InlineData("a || b * c", "RecursiveOp", "UnionOp")]
-    [InlineData("a || b && c", "IntersectOp", "UnionOp")]
+    [InlineData("a || b ~ c", "TildeOp", "UnionOp")]
+    [InlineData("a || b ++ c", "DoublePlusOp", "UnionOp")]
+    [InlineData("a || b + c", "AddOp", "UnionOp")]
+    [InlineData("a || b - c", "SubtractOp", "UnionOp")]
+    [InlineData("a || b << c", "StrictlyBeforeOp", "UnionOp")]
+    [InlineData("a || b >> c", "StrictlyAfterOp", "UnionOp")]
+    [InlineData("a || b * c", "RecurrenceOp", "UnionOp")]
+    [InlineData("a || b / c", "SplitOp", "UnionOp")]
+    [InlineData("a || b \\ c", "SetdiffOp", "UnionOp")]
+    
     // Additional complex combinations
-    [InlineData("(a + b) * c", "ParenExpr", "RecursiveOp")]
+    [InlineData("(a + b) * c", "ParenExpr", "RecurrenceOp")]
     [InlineData("a + (b * c)", "ParenExpr", "AddOp")]
-    [InlineData("[a + b] && c", "HideExpr", "IntersectOp")]
-    [InlineData("a || [b && c]", "HideExpr", "UnionOp" )]
+    [InlineData("[a + b] / c", "HideExpr", "SplitOp")]
+    [InlineData("a || [b \\ c]", "HideExpr", "UnionOp")]
 
     public void TestOperatorPrecedence(string expression, string higherPrecedenceOp, string lowerPrecedenceOp)
     {
@@ -520,15 +443,6 @@ public class LexerTests
         // Skip literal and identifier expressions
         if (context is CSLParser.LiteralExprContext || context is CSLParser.IdentifierExprContext)
             return;
-            
-        // For unary operators, process the operand first
-        if (context is CSLParser.ComplementOpContext)
-        {
-            var complementOp = (CSLParser.ComplementOpContext)context;
-            ExtractOperationsRecursive(complementOp.expr(), operations);
-            operations.Add("ComplementOp");
-            return;
-        }
         
         // For binary operators, process both operands first
         // This simulates the execution order - operands are evaluated before the operator

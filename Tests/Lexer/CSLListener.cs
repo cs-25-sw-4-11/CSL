@@ -87,65 +87,17 @@ public interface ICSLListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAddOp([NotNull] CSLParser.AddOpContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>IntersectOp</c>
+	/// Enter a parse tree produced by the <c>RecurrenceOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterIntersectOp([NotNull] CSLParser.IntersectOpContext context);
+	void EnterRecurrenceOp([NotNull] CSLParser.RecurrenceOpContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>IntersectOp</c>
+	/// Exit a parse tree produced by the <c>RecurrenceOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitIntersectOp([NotNull] CSLParser.IntersectOpContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>BeforeOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterBeforeOp([NotNull] CSLParser.BeforeOpContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>BeforeOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitBeforeOp([NotNull] CSLParser.BeforeOpContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>InOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterInOp([NotNull] CSLParser.InOpContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>InOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitInOp([NotNull] CSLParser.InOpContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>AfterOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterAfterOp([NotNull] CSLParser.AfterOpContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>AfterOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitAfterOp([NotNull] CSLParser.AfterOpContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>RecursiveOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterRecursiveOp([NotNull] CSLParser.RecursiveOpContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>RecursiveOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitRecursiveOp([NotNull] CSLParser.RecursiveOpContext context);
+	void ExitRecurrenceOp([NotNull] CSLParser.RecurrenceOpContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>DoublePlusOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
@@ -158,18 +110,6 @@ public interface ICSLListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitDoublePlusOp([NotNull] CSLParser.DoublePlusOpContext context);
-	/// <summary>
-	/// Enter a parse tree produced by the <c>ComplementOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterComplementOp([NotNull] CSLParser.ComplementOpContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>ComplementOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitComplementOp([NotNull] CSLParser.ComplementOpContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>UnionOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
@@ -243,6 +183,30 @@ public interface ICSLListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitParenExpr([NotNull] CSLParser.ParenExprContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>SplitOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSplitOp([NotNull] CSLParser.SplitOpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>SplitOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSplitOp([NotNull] CSLParser.SplitOpContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>SetdiffOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSetdiffOp([NotNull] CSLParser.SetdiffOpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>SetdiffOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSetdiffOp([NotNull] CSLParser.SetdiffOpContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>SubtractOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// </summary>
@@ -265,6 +229,26 @@ public interface ICSLListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitLiteral([NotNull] CSLParser.LiteralContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.subject"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSubject([NotNull] CSLParser.SubjectContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.subject"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSubject([NotNull] CSLParser.SubjectContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.description"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterDescription([NotNull] CSLParser.DescriptionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.description"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitDescription([NotNull] CSLParser.DescriptionContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="CSLParser.duration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -275,16 +259,6 @@ public interface ICSLListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitDuration([NotNull] CSLParser.DurationContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterDatetime([NotNull] CSLParser.DatetimeContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitDatetime([NotNull] CSLParser.DatetimeContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="CSLParser.clock"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -294,4 +268,14 @@ public interface ICSLListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitClock([NotNull] CSLParser.ClockContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.date"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterDate([NotNull] CSLParser.DateContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.date"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitDate([NotNull] CSLParser.DateContext context);
 }
