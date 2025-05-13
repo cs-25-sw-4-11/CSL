@@ -9,6 +9,21 @@ public record Event(
     Duration? Duration = null,
     Description? Description = null)
 {
+    public DateClock DateClock => new(Date, Clock);
+
+    public Event(DateClock dateClock,
+        Subject? Subject = null,
+        Duration? Duration = null,
+        Description? Description = null)
+        : this(
+            Subject: Subject,
+            Date: dateClock.Date,
+            Clock: dateClock.Clock,
+            Duration: Duration,
+            Description: Description)
+    {
+    }
+
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
