@@ -11,14 +11,14 @@ public record Event(
 {
     public DateClock DateClock => new(Date, Clock);
 
-    public Event(DateClock DateClock,
+    public Event(DateClock dateClock,
         Subject? Subject = null,
         Duration? Duration = null,
         Description? Description = null)
         : this(
             Subject: Subject,
-            Date: DateClock.Date,
-            Clock: DateClock.Clock,
+            Date: dateClock.Date,
+            Clock: dateClock.Clock,
             Duration: Duration,
             Description: Description)
     {
