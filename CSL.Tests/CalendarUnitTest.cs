@@ -33,6 +33,10 @@ public class CalendarUnitTest
                     new Event(Subject: "fødsel")
                 ])
             );
+            yield return new TestCaseData(
+                "mikkel = 'fødsel';",
+                new Calendar([])
+            );
         }
     }
     

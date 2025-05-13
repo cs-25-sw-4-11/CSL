@@ -31,7 +31,7 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
             throw new InvalidIdentifierCompilerException($"Identifier '{key}' not found");
         }
 
-        return value;
+        return new Calendar([]);
     }
 
     public override Calendar VisitIdentifierExpr(CSLParser.IdentifierExprContext context)
