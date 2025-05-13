@@ -25,8 +25,11 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     {
         var value = Visit(context.expr());
         var key = context.IDENTIFIER().GetText();
-        
-        Variables.Add(key, value);
+
+        if (!Variables.TryAdd(key, value))
+        {
+            throw new InvalidIdentifierCompilerException($"Identifier '{key}' not found");
+        }
 
         return value;
     }
