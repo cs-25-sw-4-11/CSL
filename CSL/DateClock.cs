@@ -10,6 +10,6 @@ public readonly struct DateClock(Date date, Clock clock)
         Duration duration = left.Date.GetDateAsDuration() +
                             left.Clock.GetClockAsDuration() + right;
         
-        return Duration.GetDurationAsDateClock(duration);
+        return duration.GetDurationAsDateClock();
     }
 }

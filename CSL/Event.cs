@@ -107,12 +107,15 @@ public record Event(
     public static Event AddOperator(Event left, Event right)
     {
         Event otherOperand;
+        Event firstOperand;
         if (left.Duration.HasValue && !left.Subject.HasValue && !left.Description.HasValue && !left.Clock.HasValue && !left.Date.HasValue)
         {
+            firstOperand = left;
             otherOperand = right;
         }
         else if (right.Duration.HasValue && !right.Subject.HasValue && !right.Description.HasValue && !right.Clock.HasValue && !right.Date.HasValue )
         {
+            firstOperand = right;
             otherOperand = left;
         }
         else
@@ -120,18 +123,49 @@ public record Event(
             throw new ArgumentException($"Missing expression with only {nameof(Duration)}");
         }
         
-        if (otherOperand.Duration.HasValue && !otherOperand.Date.HasValue && !otherOperand.Clock.HasValue)
+        if (otherOperand.Duration.HasValue && otherOperand.DateClock is null)
         {
             return new Event(
-                Duration: left.Duration + otherOperand.Duration
+                Duration: firstOperand.Duration + otherOperand.Duration
             );
         }
-        if (!otherOperand.Duration.HasValue && otherOperand.Date.HasValue && otherOperand.Clock.HasValue)
+        if (otherOperand.Duration is null && otherOperand.Date.HasValue)
+        {
+            
+            if (otherOperand.Duration is null && otherOperand.DateClock.HasValue)
+            {
+                var dateclock = otherOperand.DateClock.Value;
+                var duration = firstOperand.Duration;
+                var result = dateclock + duration;
+            
+                return new Event(
+                    (DateClock)(result)
+                );
+            }
+
+            if (firstOperand.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+            {
+                return new Event(
+                    Date: otherOperand.Date + firstOperand.Duration
+                );
+            }
+            
+            var date = otherOperand.Date.Value;
+            var dur = firstOperand.Duration.Value;
+            var result1 = CSL.Date.Plus(date, dur);
+            
+            return new Event(
+                result1
+            );
+        }
+        if (otherOperand.Duration is null && otherOperand.Clock.HasValue)
         {
             return new Event(
-               // missing logic for duration + datetime
+                Clock: otherOperand.Clock + firstOperand.Duration
             );
-        } 
+        }
+        
+        
         throw new ArgumentException($"Missing expression with either {nameof(Duration)} or {nameof(Date)} and {nameof(Clock)} ");
         
     }

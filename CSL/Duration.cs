@@ -40,18 +40,37 @@ public readonly struct Duration(int minutes, int months)
             );
     }
 
-    public static DateClock GetDurationAsDateClock(Duration duration)
+    public DateClock GetDurationAsDateClock()
     {
         return new DateClock(
             date: new Date( 
-                days: duration.Minutes/ DayFactor, 
-                months: duration.Months % YearFactor, 
-                years: duration.Months/YearFactor),
+                days: Minutes/ DayFactor, 
+                months: Months % YearFactor, 
+                years: Months/YearFactor),
             clock: new Clock(
-                hours: (duration.Minutes%DayFactor)/HourFactor,
-                minutes: duration.Minutes%HourFactor)
+                hours: (Minutes%DayFactor)/HourFactor,
+                minutes: Minutes%HourFactor)
             );
     }
+
+    public Date GetDurationAsDate()
+    {
+        return new Date(
+            days: Minutes/ DayFactor, 
+            months: Months % YearFactor, 
+            years: Months/YearFactor
+            );
+    }
+    
+    public Clock GetDurationAsClock()
+    {
+        return new Clock(
+            hours: (Minutes%DayFactor)/HourFactor,
+            minutes: Minutes%HourFactor
+        );
+    }
+    
+    
 
 
 }

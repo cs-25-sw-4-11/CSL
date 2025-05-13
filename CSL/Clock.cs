@@ -9,5 +9,11 @@ public readonly struct Clock(int hours, int minutes)
 
     public Duration GetClockAsDuration() => Duration.FromHours(Hours) 
                                             + Duration.FromMinutes(Minutes);
-
+    public static Clock operator +(Clock left, Duration right)
+    {
+        Duration duration = left.GetClockAsDuration() +
+                            right;
+        
+        return duration.GetDurationAsClock();
+    }
 }
