@@ -1,6 +1,4 @@
-namespace CSL;
-
-using CSL.SubTypes;
+namespace CSL.SubTypes;
 
 public readonly struct DateClock(Date? date, Clock? clock)
 {
