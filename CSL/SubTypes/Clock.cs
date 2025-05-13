@@ -1,4 +1,4 @@
-namespace CSL;
+namespace CSL.SubTypes;
 
 public readonly struct Clock(int hours, int minutes)
 {

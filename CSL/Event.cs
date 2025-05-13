@@ -2,6 +2,8 @@ using System.Text;
 
 namespace CSL;
 
+using CSL.SubTypes;
+
 public record Event(
     Subject? Subject = null,
     Date? Date = null,

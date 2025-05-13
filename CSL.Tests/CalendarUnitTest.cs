@@ -4,6 +4,9 @@ using CSL.TypeChecker;
 
 namespace CSL.Tests;
 
+using CSL.SubTypes;
+
+
 [TestFixture]
 public class CalendarUnitTest
 {
