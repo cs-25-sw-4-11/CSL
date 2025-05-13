@@ -9,7 +9,17 @@ public record Event(
     Duration? Duration = null,
     Description? Description = null)
 {
-    public DateClock DateClock => new(Date, Clock);
+    public DateClock? DateClock
+    {
+        get
+        {
+            if (Date is null || Clock is null)
+            {
+                return null;
+            }
+            return new(Date.Value, Clock.Value);
+        }
+    }
 
     public Event(DateClock dateClock,
         Subject? Subject = null,

@@ -7,4 +7,10 @@ public readonly struct Date(int days, int months, int years)
     public int Years { get; } = years;
 
     public override string ToString() => $"{Days}/{Months}/{Years}";
+
+    public Duration GetDateAsDuration() => Duration.FromDays(Days) 
+                                           + Duration.FromMonths(Months) 
+                                           + Duration.FromYears(Years);
+
+
 }

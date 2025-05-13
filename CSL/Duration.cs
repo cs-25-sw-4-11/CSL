@@ -39,5 +39,19 @@ public readonly struct Duration(int minutes, int months)
             months: left.Months + right.Months
             );
     }
-    
+
+    public static DateClock GetDurationAsDateClock(Duration duration)
+    {
+        return new DateClock(
+            date: new Date( 
+                days: duration.Minutes/ DayFactor, 
+                months: duration.Months % YearFactor, 
+                years: duration.Months/YearFactor),
+            clock: new Clock(
+                hours: (duration.Minutes%DayFactor)/HourFactor,
+                minutes: duration.Minutes%HourFactor)
+            );
+    }
+
+
 }
