@@ -287,5 +287,19 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         
         return EventTypes.Calendar;
     }
+
+    public override EventTypes VisitSetdiffOp([NotNull] CSLParser.SetdiffOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        if (left == EventTypes.Calendar && right == EventTypes.Calendar)
+        {
+            return EventTypes.Calendar;
+        }
+        
+        throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
+        
+    }
     
 }
