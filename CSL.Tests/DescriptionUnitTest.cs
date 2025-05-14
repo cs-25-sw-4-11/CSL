@@ -27,7 +27,6 @@ public class DescriptionTests
     [TestCase("\"Contains \\backslash\"")]
     [TestCase("\'Wrong quote type\'")]
     [TestCase("")]
-    
     public void TestInvalidDescriptionLiterals(string input)
     {
         Assert.Throws<InvalidLiteralCompilerException>(() => DescriptionParser.ParseDescription(input));

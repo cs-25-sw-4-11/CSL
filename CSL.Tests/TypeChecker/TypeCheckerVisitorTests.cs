@@ -4,7 +4,6 @@ using CSL.TypeChecker;
 
 namespace CSL.Tests.TypeChecker;
 
-
 [TestFixture]
 public class TypeCheckerVisitorTests
 {
@@ -35,18 +34,17 @@ public class TypeCheckerVisitorTests
     [TestCase("1 y * 08/08/2002")]
     [TestCase("(\"abc\" || 12:30) \\ (\"abc\" || 01/01/2001)")]
     [TestCase("(\"abc\" || 12:30) / (\"abc\" || 01/01/2001)")]
-
     public void TestTypeExpressionsValid(string input)
     {
         var stream = CharStreams.fromString(input);
         var lexer = new CSLLexer(stream);
-        
+
         var tokens = new CommonTokenStream(lexer);
         var parser = new CSLParser(tokens);
 
         var tree = parser.prog();
         var typeVisitor = new TypeCheckerVisitor();
-        
+
         Assert.DoesNotThrow(() => typeVisitor.Visit(tree));
     }
 
@@ -73,21 +71,17 @@ public class TypeCheckerVisitorTests
     [TestCase("1h * \"abc\" ++ 3h")]
     [TestCase("\"abc\" ++ 12:30 / \"abc\" ++ 01/01/2001")]
     [TestCase("\"abc\" ++ 12:30 \\ \"abc\" ++ 01/01/2001")]
-
-
-
-
     public void TestTypeExpressionsInvalid(string input)
     {
         var stream = CharStreams.fromString(input);
         var lexer = new CSLLexer(stream);
-        
+
         var tokens = new CommonTokenStream(lexer);
         var parser = new CSLParser(tokens);
 
         var tree = parser.prog();
         var typeVisitor = new TypeCheckerVisitor();
-        
+
         Assert.Throws<InvalidTypeCompilerException>(() => typeVisitor.Visit(tree));
     }
 }
