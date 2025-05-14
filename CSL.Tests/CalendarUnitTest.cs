@@ -28,6 +28,22 @@ public class CalendarUnitTest
                     Clock: new Clock(9, 30),
                     Duration: new Duration(180, 0),
                     Description: new Description("Annual planning session")));
+
+                yield return new TestCaseData(
+                "1h + 3h",
+                new Event(Duration: new Duration(240, 0)));
+
+                yield return new TestCaseData(
+                "1h + 12:30",
+                new Event(Clock: new Clock(13, 30)));
+
+                yield return new TestCaseData(
+                "12:30 + 30min",
+                new Event(Clock: new Clock(13, 0)));
+
+                yield return new TestCaseData(
+                "1h + 12:30 + 30min",
+                new Event(Clock: new Clock(14, 0)));
         }
     }
 
@@ -63,6 +79,9 @@ public class CalendarUnitTest
             yield return new TestCaseData("'abc' ++ 16:00 ++ 12:00");
             yield return new TestCaseData("'abc' ++ 'def'");
             yield return new TestCaseData("'abc' ++ 01/01/2001 ++ 01/01/2001");
+            yield return new TestCaseData("\"abc\" + 16:00");
+            yield return new TestCaseData("\"abc\" + 01/01/2001");
+
         }
     }
 
