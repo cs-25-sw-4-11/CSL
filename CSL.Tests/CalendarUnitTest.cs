@@ -1,5 +1,6 @@
 using System.Collections;
 using Antlr4.Runtime;
+using CSL.TypeChecker;
 using CSL.Exceptions;
 
 namespace CSL.Tests;
@@ -82,7 +83,8 @@ public class CalendarUnitTest
         var expr = calendarVisitor.Visit(Parse(input));
 
         Assert.That(expr, Is.Not.Null);
-        for (var i = 0; i < expectedResult.Events.Length; i++)
+        for (int i = 0; i < expectedResult.Events.Length; i++)
+        {
             Assert.That(expr.Events[i], Is.EqualTo(expectedResult.Events[i]));
         }
     }
