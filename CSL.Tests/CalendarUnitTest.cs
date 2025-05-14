@@ -1,5 +1,6 @@
 using System.Collections;
 using Antlr4.Runtime;
+using CSL.TypeChecker;
 
 namespace CSL.Tests;
 
@@ -12,7 +13,7 @@ public class CalendarUnitTest
         {
             yield return new TestCaseData(
                 "1mth ++ 'abc'",
-                new Event(new Subject("abc"), Duration: new Duration(0, 1)));
+                new Event(Subject: new Subject("abc"), Duration: new Duration(0, 1)));
         }
     }
 
@@ -23,8 +24,25 @@ public class CalendarUnitTest
             yield return new TestCaseData(
                 "'abc' || 'def'",
                 new Calendar([
-                    new Event(new Subject("abc")), new Event(new Subject("def"))
-                ]));
+                    new(Subject: new Subject("abc")), new(Subject: new Subject("def"))
+                ])
+            );
+            yield return new TestCaseData(
+                "mikkel = 'fødsel'; mikkel",
+                new Calendar([
+                    new Event(Subject: "fødsel")
+                ])
+            );
+            yield return new TestCaseData(
+                "mikkel = 'fødsel';",
+                new Calendar([])
+            );
+            yield return new TestCaseData(
+                "mikkel = 'fødsel'; mikkel 'er dum'",
+                new Calendar([
+                    new Event(Subject: "er dum")
+                ])
+            );
         }
     }
 
@@ -45,8 +63,10 @@ public class CalendarUnitTest
         var expr = calendarVisitor.Visit(Parse(input));
 
         Assert.That(expr, Is.Not.Null);
-        for (var i = 0; i < expectedResult.Events.Length; i++)
+        for (int i = 0; i < expectedResult.Events.Length; i++)
+        {
             Assert.That(expr.Events[i], Is.EqualTo(expectedResult.Events[i]));
+        }
     }
 
     private static CSLParser.ProgContext Parse(string input)
