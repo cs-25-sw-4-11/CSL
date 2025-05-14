@@ -19,7 +19,7 @@ public record Calendar(Event[] Events)
     public static Calendar AddOperator(Calendar left, Event right)
     {
         var events = new List<Event>();
-        
+
         foreach (Event e in left.Events)
         {
             events.Add(Event.AddOperator(e, right));
@@ -27,5 +27,4 @@ public record Calendar(Event[] Events)
 
         return new Calendar(events.ToArray());
     }
-    
 }
