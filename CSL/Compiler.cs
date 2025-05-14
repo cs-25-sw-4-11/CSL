@@ -1,3 +1,6 @@
+using Ical.Net.CalendarComponents;
+using Ical.Net.Serialization;
+
 namespace CSL;
 
 public class Compiler
@@ -6,7 +9,11 @@ public class Compiler
     {
         var generator = new Generator();
         var calendar = generator.GenerateCalendar(input);
+        
+        calendar.AddTimeZone(new VTimeZone("Europe/Copenhagen")); // TZ should be added
+        var serializer = new CalendarSerializer();
+        var serializedCalendar = serializer.SerializeToString(calendar);
 
-        return calendar.ToString();
+        return serializedCalendar;
     }
 }
