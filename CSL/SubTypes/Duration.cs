@@ -3,7 +3,7 @@ namespace CSL.SubTypes;
 public readonly struct Duration(int minutes, int months)
 {
     public int Minutes { get; } = minutes;
-    
+
     public int Months { get; } = months;
 
     public override string ToString() => $"{Minutes} min:{Months} months";
