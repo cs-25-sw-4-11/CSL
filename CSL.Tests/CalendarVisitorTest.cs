@@ -14,50 +14,10 @@ public class CalendarVisitorTest
         {
             yield return new TestCaseData(
                 "1mth ++ 'abc'",
-<<<<<<< HEAD:CSL.Tests/CalendarUnitTest.cs
-                new Event(Subject: new Subject("abc"), Duration: new Duration(0, 1)));
-
-                 yield return new TestCaseData(
-                "1y ++ \"abc\"",
-                new Event(Description: new Description("abc"), Duration: new Duration(0, 12)));    
-
-                yield return new TestCaseData(
-                "'Workshop' ++ 06/12/2023 ++ 09:30 ++ 3h ++ \"Annual planning session\"",
-                new Event(
-                    Subject: new Subject("Workshop"),
-                    Date: new Date(6, 12, 2023),
-                    Clock: new Clock(9, 30),
-                    Duration: new Duration(180, 0),
-                    Description: new Description("Annual planning session")));
-
-                yield return new TestCaseData(
-                "1h + 3h",
-                new Event(Duration: new Duration(240, 0)));
-
-                yield return new TestCaseData(
-                "1h + 12:30",
-                new Event(Clock: new Clock(13, 30)));
-
-                yield return new TestCaseData(
-                "12:30 + 30min",
-                new Event(Clock: new Clock(13, 0)));
-
-                yield return new TestCaseData(
-                "1h + 12:30 + 30min",
-                new Event(Clock: new Clock(14, 0)));
-        }
-    }
-
-    public static IEnumerable CalendarTestCases
-    {
-        get
-        {
-=======
                 new Calendar([
                     new Event(Subject: new Subject("abc"), Duration: new Duration(0, 1))
                 ])
             );
->>>>>>> 09e1a47b01759074b534b76bb48dd0d7a7c8944b:CSL.Tests/CalendarVisitorTest.cs
             yield return new TestCaseData(
                 "mikkel = 'fødsel'; mikkel 'er dum'",
                 new Calendar([
