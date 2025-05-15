@@ -64,8 +64,6 @@ public class CalendarVisitorTest
         }
     }
 
-<<<<<<< HEAD
-=======
     public static IEnumerable InvalidEventTestCases
     {
         get
@@ -79,7 +77,6 @@ public class CalendarVisitorTest
         }
     }
     
->>>>>>> main
     [TestCaseSource(nameof(CalendarTestCases))]
     public void TestCalendarOperations(string input, Calendar expectedResult)
     {
