@@ -56,12 +56,12 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
             throw new ArgumentException($"PlusPlus called on two Calendars: {left} and {right}");
         }
 
-        if (left.Events.Length > 1)
+        if (!left.IsEvent())
         {
             return Calendar.ConcatOperator(left, (Event)right);
         }
 
-        if (right.Events.Length > 1)
+        if (!right.IsEvent())
         {
             return Calendar.ConcatOperator(right, (Event)left);
         }
