@@ -121,11 +121,11 @@ public class CalendarVisitorTest
             yield return new TestCaseData("01/01/2000 ++ 13:00 + 3h",
                 new Event(new DateClock(new Date(1, 1, 2000), new Clock(16, 0))));
             yield return new TestCaseData("01/01/2000 ++ 13:00 + 3d",
-                new Event(new DateClock(new Date(4, 1, 2000), new Clock(13, 0))));
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(13, 0))));
             yield return new TestCaseData("01/01/2000 ++ 13:00 + 12h",
-                new Event(new DateClock(new Date(2, 1, 2000), new Clock(1, 0))));
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(1, 0))));
             yield return new TestCaseData("01/01/2000 ++ 13:00 + 3h + 3d",
-                new Event(new DateClock(new Date(4, 1, 2000), new Clock(16, 0))));
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(16, 0))));
             yield return new TestCaseData("13:00 + 3h", new Event(Clock: new Clock(16, 0)));
             yield return new TestCaseData("13:00 + 3d", new Event(Clock: new Clock(13, 0)));
             yield return new TestCaseData("13:00 + 12h", new Event(Clock: new Clock(1, 0)));
