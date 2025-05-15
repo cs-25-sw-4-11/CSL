@@ -1,3 +1,4 @@
+using Antlr4.Runtime.Misc;
 using CSL.Exceptions;
 
 namespace CSL;
@@ -5,7 +6,7 @@ namespace CSL;
 public class CalendarVisitor : CSLBaseVisitor<Calendar>
 {
     public Dictionary<string, Calendar> Variables = new Dictionary<string, Calendar>();
-    
+
     public override Calendar VisitSubject(CSLParser.SubjectContext context) =>
         new Event(Subject: new SubjectVisitor().VisitSubject(context));
 
@@ -65,7 +66,7 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         {
             return Calendar.ConcatOperator(right, (Event)left);
         }
-        
+
         return Event.ConcatOperator((Event)left, (Event)right);
     }
 
@@ -91,4 +92,10 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
             return Calendar.AddOperator(left, (Event)right);
         }
     }
+
+    public override Calendar VisitParenExpr([NotNull] CSLParser.ParenExprContext context)
+    {
+        return Visit(context.expr());
+    }
+
 }
