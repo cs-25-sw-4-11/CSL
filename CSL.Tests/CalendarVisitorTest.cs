@@ -1,6 +1,7 @@
 using System.Collections;
 using Antlr4.Runtime;
 using CSL.TypeChecker;
+using CSL.Exceptions;
 
 namespace CSL.Tests;
 
@@ -11,6 +12,7 @@ public class CalendarVisitorTest
     {
         get
         {
+            
             yield return new TestCaseData(
                 "1mth ++ 'abc'",
                 new Calendar([
@@ -18,9 +20,15 @@ public class CalendarVisitorTest
                 ])
             );
             yield return new TestCaseData(
-                "'abc' || 'def'",
+                "mikkel = 'fødsel'; mikkel 'er dum'",
                 new Calendar([
-                    new(Subject: new Subject("abc")), new(Subject: new Subject("def"))
+                    new Event(Subject: "er dum")
+                ])
+            );
+            yield return new TestCaseData(
+                "trussel = 'Rådhus💥💥'; trussel ++ 25/06/2025",
+                new Calendar([
+                    new Event(Subject: "Rådhus💥💥", Date: new Date(25, 6, 2025))
                 ])
             );
             yield return new TestCaseData(
@@ -30,18 +38,48 @@ public class CalendarVisitorTest
                 ])
             );
             yield return new TestCaseData(
-                "mikkel = 'fødsel';",
-                new Calendar([])
-            );
+                "'abc' || 'def'",
+                new Calendar ([
+                    new (Subject: new Subject("abc")),
+                    new (Subject: new Subject("def"))
+                ]));
             yield return new TestCaseData(
-                "mikkel = 'fødsel'; mikkel 'er dum'",
+                "'abc' || 16:00",
+                new Calendar ([
+                    new (Subject: new Subject("abc")), new (Clock: new Clock(16,00))
+                ]));
+            yield return new TestCaseData(
+                "'abc' || 'def' ++ 16:00",
+                new Calendar ([
+                    new (Subject: new Subject("abc")),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
+                ]));
+            yield return new TestCaseData(
+                "calendar1 = 'abc' || 'def'; calendar1 ++ 16:00",
                 new Calendar([
-                    new Event(Subject: "er dum")
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
                 ])
             );
         }
     }
 
+<<<<<<< HEAD
+=======
+    public static IEnumerable InvalidEventTestCases
+    {
+        get
+        {
+            yield return new TestCaseData("16:00 ++ 12:00");
+            yield return new TestCaseData("'abc' ++ 16:00 ++ 12:00");
+            yield return new TestCaseData("'abc' ++ 'def'");
+            yield return new TestCaseData("'abc' ++ 01/01/2001 ++ 01/01/2001");
+            yield return new TestCaseData("\"abc\" + 16:00");
+            yield return new TestCaseData("\"abc\" + 01/01/2001");
+        }
+    }
+    
+>>>>>>> main
     [TestCaseSource(nameof(CalendarTestCases))]
     public void TestCalendarOperations(string input, Calendar expectedResult)
     {
@@ -53,6 +91,16 @@ public class CalendarVisitorTest
         {
             Assert.That(expr.Events[i], Is.EqualTo(expectedResult.Events[i]));
         }
+    }
+
+    [TestCaseSource(nameof(InvalidEventTestCases))]
+    public void TestInvalidEventOperations(string input)
+    {
+        var calendarVisitor = new CalendarVisitor();
+    
+        Assert.Throws<ArgumentException>(() => {
+            var expr = calendarVisitor.Visit(Parse(input));
+        });
     }
 
     private static CSLParser.ProgContext Parse(string input)

@@ -52,6 +52,21 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
 
+        if (!left.IsEvent() && !right.IsEvent())
+        {
+            throw new ArgumentException($"PlusPlus called on two Calendars: {left} and {right}");
+        }
+
+        if (!left.IsEvent())
+        {
+            return Calendar.ConcatOperator(left, (Event)right);
+        }
+
+        if (!right.IsEvent())
+        {
+            return Calendar.ConcatOperator(right, (Event)left);
+        }
+        
         return Event.ConcatOperator((Event)left, (Event)right);
     }
 
