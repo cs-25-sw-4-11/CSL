@@ -191,7 +191,6 @@ public record Event(
             {
                 return new Event(
                     Subject: left.Subject,
-                    Duration: left.Duration,
                     Description: left.Description,
                     dateClock: left.DateClock.Value - right.Duration.Value
                 );
@@ -206,7 +205,6 @@ public record Event(
                 {
                     return new Event(
                         Subject: left.Subject,
-                        Duration: left.Duration,
                         Description: left.Description,
                         Date: left.Date.Value - right.Duration.Value
                     );
@@ -240,7 +238,7 @@ public record Event(
                 return new Event(
                     Subject: left.Subject,
                     Description: left.Description,
-                    Duration: left.Duration
+                    Duration: new Duration(1,1)
                 );
             }
         }
