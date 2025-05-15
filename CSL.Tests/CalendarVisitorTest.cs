@@ -6,14 +6,15 @@ using CSL.Exceptions;
 namespace CSL.Tests;
 
 [TestFixture]
-public class CalendarUnitTest
+public class CalendarVisitorTest
 {
-    public static IEnumerable EventTestCases
+    public static IEnumerable CalendarTestCases
     {
         get
         {
             yield return new TestCaseData(
                 "1mth ++ 'abc'",
+<<<<<<< HEAD:CSL.Tests/CalendarUnitTest.cs
                 new Event(Subject: new Subject("abc"), Duration: new Duration(0, 1)));
 
                  yield return new TestCaseData(
@@ -51,6 +52,12 @@ public class CalendarUnitTest
     {
         get
         {
+=======
+                new Calendar([
+                    new Event(Subject: new Subject("abc"), Duration: new Duration(0, 1))
+                ])
+            );
+>>>>>>> 09e1a47b01759074b534b76bb48dd0d7a7c8944b:CSL.Tests/CalendarVisitorTest.cs
             yield return new TestCaseData(
                 "mikkel = 'fødsel'; mikkel 'er dum'",
                 new Calendar([
@@ -101,17 +108,7 @@ public class CalendarUnitTest
             yield return new TestCaseData("\"abc\" + 01/01/2001");
         }
     }
-
-    [TestCaseSource(nameof(EventTestCases))]
-    public void TestEventOperations(string input, Event expectedResult)
-    {
-        var calendarVisitor = new CalendarVisitor();
-        var expr = calendarVisitor.Visit(Parse(input));
-
-        Assert.That(expr, Is.Not.Null);
-        Assert.That((Event)expr, Is.EqualTo(expectedResult));
-    }
-
+    
     [TestCaseSource(nameof(CalendarTestCases))]
     public void TestCalendarOperations(string input, Calendar expectedResult)
     {
