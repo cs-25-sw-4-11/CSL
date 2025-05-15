@@ -40,6 +40,32 @@ public readonly struct Duration(int minutes, int months)
         );
     }
 
+    public static Duration operator -(Duration left, Duration right)
+    {
+        return new Duration(
+            minutes: left.Minutes - right.Minutes,
+            months: left.Months - right.Months
+        );
+    }
+    public static bool operator >=(Duration left, Duration right)
+    {
+        DateTime start = new(2000, 1, 1);
+        DateTime leftDate = start.AddMinutes(left.Minutes)
+                .AddMonths(left.Months);
+        DateTime rightDate = start.AddMinutes(right.Minutes)
+                 .AddMonths(right.Months);
+        return leftDate >= rightDate;
+    }
+    public static bool operator <=(Duration left, Duration right)
+    {
+        DateTime start = new(2000, 1, 1);
+        DateTime leftDate = start.AddMinutes(left.Minutes)
+                .AddMonths(left.Months);
+        DateTime rightDate = start.AddMinutes(right.Minutes)
+                 .AddMonths(right.Months);
+        return leftDate <= rightDate;
+    }
+
     public DateClock GetDurationAsDateClock()
     {
         return new DateClock(
