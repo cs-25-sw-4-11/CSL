@@ -41,7 +41,7 @@ public class CalendarVisitorTest
             );
         }
     }
-    
+
     [TestCaseSource(nameof(CalendarTestCases))]
     public void TestCalendarOperations(string input, Calendar expectedResult)
     {
@@ -76,11 +76,11 @@ public class CalendarVisitorTest
             yield return new TestCaseData("01/01/2000 ++ 13:00 + 3h",
                 new Event(new DateClock(new Date(1, 1, 2000), new Clock(16, 0))));
             yield return new TestCaseData("01/01/2000 ++ 13:00 + 3d",
-                new Event(new DateClock(new Date(4, 1, 2000), new Clock(13, 0))));
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(13, 0))));
             yield return new TestCaseData("01/01/2000 ++ 13:00 + 12h",
-                new Event(new DateClock(new Date(2, 1, 2000), new Clock(1, 0))));
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(1, 0))));
             yield return new TestCaseData("01/01/2000 ++ 13:00 + 3h + 3d",
-                new Event(new DateClock(new Date(4, 1, 2000), new Clock(16, 0))));
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(16, 0))));
             yield return new TestCaseData("13:00 + 3h", new Event(Clock: new Clock(16, 0)));
             yield return new TestCaseData("13:00 + 3d", new Event(Clock: new Clock(13, 0)));
             yield return new TestCaseData("13:00 + 12h", new Event(Clock: new Clock(1, 0)));
@@ -140,6 +140,64 @@ public class CalendarVisitorTest
 
         var expr = calendarVisitor.Visit(tree);
 
+        Assert.That(expr, Is.Not.Null);
+        Assert.That(expr.Events[0], Is.Not.EqualTo(expectedResult));
+    }
+
+
+    public static IEnumerable TestMinusCases
+    {
+        get
+        {
+            yield return new TestCaseData("2mth - 1mth", new Event(Duration: new Duration(0, 1)));
+            yield return new TestCaseData("20min - 10min", new Event(Duration: new Duration(10, 0)));
+            yield return new TestCaseData("1y - 3mth", new Event(Duration: new Duration(0, 12)));
+            yield return new TestCaseData("01/01/2000 ++ 13:00 - 3h",
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(10, 0))));
+            yield return new TestCaseData("01/01/2000 ++ 13:00 - 3d",
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(13, 0))));
+            yield return new TestCaseData("01/01/2000 ++ 13:00 - 12h",
+                new Event(new DateClock(new Date(2, 1, 2000), new Clock(1, 0))));
+            yield return new TestCaseData("01/01/2000 ++ 13:00 - 3h - 3d",
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(10, 0))));
+            yield return new TestCaseData("19:00 - 3h", new Event(Clock: new Clock(16, 0)));
+            yield return new TestCaseData("13:00 - 3d", new Event(Clock: new Clock(13, 0)));
+            yield return new TestCaseData("13:00 - 12h", new Event(Clock: new Clock(1, 0)));
+            yield return new TestCaseData("01:00 - 3d - 3h", new Event(Clock: new Clock(22, 0)));
+            yield return new TestCaseData("01/01/2000 - 3d", new Event(Date: new Date(29, 12, 1999)));
+            yield return new TestCaseData("01/01/2000 - 24h", new Event(Date: new Date(31, 12, 1999)));
+            yield return new TestCaseData("02/01/2000 - 3h",
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(21, 0))));
+            yield return new TestCaseData("03/01/2000 - 25h",
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(23, 0))));
+            yield return new TestCaseData("05/01/2000 - 3h - 3d",
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(21, 0))));
+            
+        }
+    }
+    [TestCaseSource(nameof(TestMinusCases))]
+    public void TestMinusOp(string input, Event expectedResult){
+        var calendarVisitor = new CalendarVisitor();
+        var expr = calendarVisitor.Visit(Parse(input));
+
+        Assert.That(expr, Is.Not.Null);
+        Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
+    }
+
+
+    public static IEnumerable TestNotMinusCases
+    {
+        get
+        {
+            yield return new TestCaseData("13:00 - 3d", new Event(new DateClock(new Date(0, 0, 0), new Clock(10, 0))));
+        }
+    }
+    [TestCaseSource(nameof(TestNotMinusCases))]
+    public void TestNotMinusOp(string input, Event expectedResult)
+    {
+        var calendarVisitor = new CalendarVisitor();
+        var expr = calendarVisitor.Visit(Parse(input));
+        
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.Not.EqualTo(expectedResult));
     }

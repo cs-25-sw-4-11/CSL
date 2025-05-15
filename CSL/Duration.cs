@@ -49,21 +49,13 @@ public readonly struct Duration(int minutes, int months)
     }
     public static bool operator >=(Duration left, Duration right)
     {
-        DateTime start = new(2000, 1, 1);
-        DateTime leftDate = start.AddMinutes(left.Minutes)
-                .AddMonths(left.Months);
-        DateTime rightDate = start.AddMinutes(right.Minutes)
-                 .AddMonths(right.Months);
-        return leftDate >= rightDate;
+        if (left.Minutes >= right.Minutes && left.Minutes >= right.Minutes) return true;
+        return false;
     }
     public static bool operator <=(Duration left, Duration right)
     {
-        DateTime start = new(2000, 1, 1);
-        DateTime leftDate = start.AddMinutes(left.Minutes)
-                .AddMonths(left.Months);
-        DateTime rightDate = start.AddMinutes(right.Minutes)
-                 .AddMonths(right.Months);
-        return leftDate <= rightDate;
+        if (left.Minutes <= right.Minutes && left.Minutes <= right.Minutes) return true;
+        return false;
     }
 
     public DateClock GetDurationAsDateClock()
