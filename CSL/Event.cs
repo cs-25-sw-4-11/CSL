@@ -221,14 +221,11 @@ public record Event(
         }
         if (left.Clock.HasValue)
         {
-            if (left.Clock.Value >= right.Duration)
-            {
-                return new Event(
-                    Subject: left.Subject,
-                    Description: left.Description,
-                    Clock: left.Clock.Value - right.Duration.Value
-                );
-            }
+            return new Event(
+                Subject: left.Subject,
+                Description: left.Description,
+                Clock: left.Clock.Value - right.Duration.Value
+            );
         }
 
         if (left.Duration is not null)
@@ -238,7 +235,7 @@ public record Event(
                 return new Event(
                     Subject: left.Subject,
                     Description: left.Description,
-                    Duration: new Duration(1,1)
+                    Duration: left.Duration - right.Duration
                 );
             }
         }
