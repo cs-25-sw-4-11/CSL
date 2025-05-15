@@ -154,18 +154,6 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.SUBJECT, "'Token'"),                
                 }
             },
-            
-            /*
-            new object[]
-            {
-                "15sec",
-                new List<ExpectedToken>
-                {
-                    new ExpectedToken(CSLLexer.INT, "15"),
-                    new ExpectedToken(CSLLexer.TIMEUNITS, "sec"),                
-                }
-            },
-            */
         };
 
     [Theory]
