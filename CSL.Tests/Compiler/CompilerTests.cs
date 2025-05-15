@@ -1,3 +1,6 @@
+using Ical.Net.CalendarComponents;
+using Ical.Net.Serialization;
+
 namespace CSL.Tests;
 
 using CSL;
@@ -13,12 +16,12 @@ public class CompilerTests
         var compiler = new Compiler();
         var output = compiler.Compile(input);
         
-        //var expectedLines = File.ReadAllLines(expectedFile);
+        var expectedLines = File.ReadAllLines(expectedFile);
         var actualLines = output.Split(Environment.NewLine);
         
-        /*for (int i = 0; i < actualLines.Length; i++)
+        for (int i = 0; i < actualLines.Length; i++)
         {
             Assert.That(actualLines[i].Trim(), Is.EqualTo(expectedLines[i].Trim()));
-        }*/
+        }
     }
 }
