@@ -10,4 +10,33 @@ public record Calendar(Event[] Events)
     {
         return new Calendar(left.Events.Concat(right.Events).ToArray());
     }
+
+    public static Calendar ConcatOperator(Calendar left, Event right)
+    {
+        IList<Event> newCalendar = new List<Event>();
+        
+        foreach (var e in left.Events)
+        {
+            newCalendar.Add(Event.ConcatOperator(e, right));
+        }
+
+        return new(newCalendar.ToArray());
+    }
+
+    public bool IsEvent()
+    {
+        return Events.Length == 1;
+    }
+
+    public static Calendar AddOperator(Calendar left, Event right)
+    {
+        var events = new List<Event>();
+
+        foreach (Event e in left.Events)
+        {
+            events.Add(Event.AddOperator(e, right));
+        }
+
+        return new Calendar(events.ToArray());
+    }
 }
