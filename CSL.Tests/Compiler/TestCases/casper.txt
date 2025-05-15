@@ -1,13 +1,11 @@
 booster =
     'Bund en booster'
     ++ 5 min
-    ++ "Casper bunder en booster, han er tørstig"
     ++ 17:50;
 
 hygiejne =
-    'Vasker hænder'
+    'Vask hænder'
     ++ 5 min
-    ++ "Casper har brug for at have rene hænder"
     ++ 17:55;
 
 aftensmad = 'Aftensmad' ++ 60 min ++ 18:00;
