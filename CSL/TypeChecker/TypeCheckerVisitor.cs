@@ -259,7 +259,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
     }
 
-    public override EventTypes VisitRecursiveOp([NotNull] CSLParser.RecursiveOpContext context)
+    public override EventTypes VisitRecurrenceOp([NotNull] CSLParser.RecurrenceOpContext context)
     {
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
