@@ -15,7 +15,7 @@ public class LexerTests
             // Testing Basic Tokens
             new object[]
             {
-                "'Sub' + \"Des\" + 12/34/5678 + 10/10/2000 16:30 + 12:32 + 12min ",
+                "'Sub' + \"Des\" + 12/34/5678 + 10/10/2000 ++ 16:30 + 12:32 + 12min ",
                 new List<ExpectedToken>
                 {
                     new ExpectedToken(CSLLexer.SUBJECT, "'Sub'"),
@@ -25,6 +25,7 @@ public class LexerTests
                     new ExpectedToken(CSLLexer.DATE, "12/34/5678"),
                     new ExpectedToken(CSLLexer.PLUS, "+"),
                     new ExpectedToken(CSLLexer.DATE, "10/10/2000"),
+                    new ExpectedToken(CSLLexer.PLUSPLUS, "++"),
                     new ExpectedToken(CSLLexer.INT, "16"),
                     new ExpectedToken(CSLLexer.COLON, ":"),
                     new ExpectedToken(CSLLexer.INT, "30"),
