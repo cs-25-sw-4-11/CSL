@@ -12,6 +12,7 @@ public class CalendarVisitorTest
     {
         get
         {
+            
             yield return new TestCaseData(
                 "1mth ++ 'abc'",
                 new Calendar([
@@ -52,7 +53,14 @@ public class CalendarVisitorTest
                 new Calendar ([
                     new (Subject: new Subject("abc")),
                     new (Subject: new Subject("def"), Clock: new Clock(16,00))
-                ]));   
+                ]));
+            yield return new TestCaseData(
+                "calendar1 = 'abc' || 'def'; calendar1 ++ 16:00",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
+                ])
+            );
         }
     }
 
