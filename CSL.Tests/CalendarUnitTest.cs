@@ -52,6 +52,24 @@ public class CalendarUnitTest
         get
         {
             yield return new TestCaseData(
+                "mikkel = 'fødsel'; mikkel 'er dum'",
+                new Calendar([
+                    new Event(Subject: "er dum")
+                ])
+            );
+            yield return new TestCaseData(
+                "trussel = 'Rådhus💥💥'; trussel ++ 25/06/2025",
+                new Calendar([
+                    new Event(Subject: "Rådhus💥💥", Date: new Date(25, 6, 2025))
+                ])
+            );
+            yield return new TestCaseData(
+                "mikkel = 'fødsel'; mikkel",
+                new Calendar([
+                    new Event(Subject: "fødsel")
+                ])
+            );
+            yield return new TestCaseData(
                 "'abc' || 'def'",
                 new Calendar ([
                     new (Subject: new Subject("abc")),
@@ -81,7 +99,6 @@ public class CalendarUnitTest
             yield return new TestCaseData("'abc' ++ 01/01/2001 ++ 01/01/2001");
             yield return new TestCaseData("\"abc\" + 16:00");
             yield return new TestCaseData("\"abc\" + 01/01/2001");
-
         }
     }
 
