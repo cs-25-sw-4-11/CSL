@@ -5,22 +5,18 @@ using CSL.TypeChecker;
 namespace CSL.Tests;
 
 [TestFixture]
-public class CalendarUnitTest
+public class CalendarVisitorTest
 {
-    public static IEnumerable EventTestCases
+    public static IEnumerable CalendarTestCases
     {
         get
         {
             yield return new TestCaseData(
                 "1mth ++ 'abc'",
-                new Event(Subject: new Subject("abc"), Duration: new Duration(0, 1)));
-        }
-    }
-
-    public static IEnumerable CalendarTestCases
-    {
-        get
-        {
+                new Calendar([
+                    new Event(Subject: new Subject("abc"), Duration: new Duration(0, 1))
+                ])
+            );
             yield return new TestCaseData(
                 "'abc' || 'def'",
                 new Calendar([
@@ -45,17 +41,7 @@ public class CalendarUnitTest
             );
         }
     }
-
-    [TestCaseSource(nameof(EventTestCases))]
-    public void TestEventOperations(string input, Event expectedResult)
-    {
-        var calendarVisitor = new CalendarVisitor();
-        var expr = calendarVisitor.Visit(Parse(input));
-
-        Assert.That(expr, Is.Not.Null);
-        Assert.That((Event)expr, Is.EqualTo(expectedResult));
-    }
-
+    
     [TestCaseSource(nameof(CalendarTestCases))]
     public void TestCalendarOperations(string input, Calendar expectedResult)
     {
