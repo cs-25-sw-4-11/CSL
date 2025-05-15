@@ -22,4 +22,21 @@ public record Calendar(Event[] Events)
 
         return new(newCalendar.ToArray());
     }
+
+    public bool IsEvent()
+    {
+        return Events.Length == 1;
+    }
+
+    public static Calendar AddOperator(Calendar left, Event right)
+    {
+        var events = new List<Event>();
+
+        foreach (Event e in left.Events)
+        {
+            events.Add(Event.AddOperator(e, right));
+        }
+
+        return new Calendar(events.ToArray());
+    }
 }

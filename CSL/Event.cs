@@ -9,6 +9,32 @@ public record Event(
     Duration? Duration = null,
     Description? Description = null)
 {
+    public DateClock? DateClock
+    {
+        get
+        {
+            if (Date is null || Clock is null)
+            {
+                return null;
+            }
+
+            return new(Date.Value, Clock.Value);
+        }
+    }
+
+    public Event(DateClock dateClock,
+        Subject? Subject = null,
+        Duration? Duration = null,
+        Description? Description = null)
+        : this(
+            Subject: Subject,
+            Date: dateClock.Date,
+            Clock: dateClock.Clock,
+            Duration: Duration,
+            Description: Description)
+    {
+    }
+
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
@@ -49,22 +75,22 @@ public record Event(
         {
             throw new ArgumentException($"Overlapping {nameof(Subject)}");
         }
-        
+
         if (left.Date.HasValue && right.Date.HasValue)
         {
             throw new ArgumentException($"Overlapping {nameof(Date)}");
         }
-        
+
         if (left.Clock.HasValue && right.Clock.HasValue)
         {
             throw new ArgumentException($"Overlapping {nameof(Clock)}");
         }
-        
+
         if (left.Duration.HasValue && right.Duration.HasValue)
         {
             throw new ArgumentException($"Overlapping {nameof(Duration)}");
         }
-        
+
         if (left.Description.HasValue && right.Description.HasValue)
         {
             throw new ArgumentException($"Overlapping {nameof(Description)}");
@@ -78,7 +104,75 @@ public record Event(
             Description: left.Description ?? right.Description
         );
     }
-    
+
+    public static Event AddOperator(Event left, Event right)
+    {
+        Event otherOperand;
+        Event firstOperand;
+        //checks if one of the events is only duration and puts it as the first operand
+        if (left is { Duration: not null, Subject: null, Description: null, Clock: null, Date: null })
+        {
+            firstOperand = left;
+            otherOperand = right;
+        }
+        else if (right is { Duration: not null, Subject: null, Description: null, Clock: null, Date: null })
+        {
+            firstOperand = right;
+            otherOperand = left;
+        }
+        else
+        {
+            throw new ArgumentException($"Missing expression with only {nameof(Duration)}");
+        }
+
+        // checks if the other operand is a duration, date, dateclock or clock and calculates accordingly 
+        if (otherOperand is { Duration: not null, DateClock: null })
+        {
+            return new Event(
+                Duration: firstOperand.Duration + otherOperand.Duration
+            );
+        }
+
+        if (otherOperand.Duration is null && otherOperand.Date.HasValue)
+        {
+            if (otherOperand.Duration is null && otherOperand.DateClock.HasValue)
+            {
+                var dateclock = otherOperand.DateClock.Value;
+                var duration = firstOperand.Duration;
+                var result = dateclock + duration;
+
+                return new Event(
+                    (DateClock)(result)
+                );
+            }
+
+            if (firstOperand.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+            {
+                return new Event(
+                    Date: otherOperand.Date + firstOperand.Duration
+                );
+            }
+
+            var date = otherOperand.Date.Value;
+            var dur = firstOperand.Duration.Value;
+            var result1 = CSL.Date.Plus(date, dur);
+
+            return new Event(
+                result1
+            );
+        }
+
+        if (otherOperand.Duration is null && otherOperand.Clock.HasValue)
+        {
+            return new Event(
+                Clock: otherOperand.Clock + firstOperand.Duration
+            );
+        }
+
+        throw new ArgumentException(
+            $"Missing expression with either {nameof(Duration)} or {nameof(Date)} and {nameof(Clock)} ");
+    }
+
     /// <summary>
     /// 
     /// </summary>
