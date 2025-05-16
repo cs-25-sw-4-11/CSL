@@ -85,7 +85,7 @@ public class CalendarVisitorTest
             yield return new TestCaseData(
                 "(10:00 || 13/3/2032) ++ 3h",
                 new Calendar([
-                    new (Clock: new Clock(1,0), Duration: new Duration(180, 0)),
+                    new (Clock: new Clock(10,0), Duration: new Duration(180, 0)),
                     new (Date: new Date(13, 3, 2032), Duration: new Duration(180, 0))
                 ])
             );
@@ -97,10 +97,10 @@ public class CalendarVisitorTest
                 ])
             );
             yield return new TestCaseData(
-                "(10:00 || 13/23/2032) - 3h",
+                "(10:00 || 13/3/2032) - 3h",
                 new Calendar([
-                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
-                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
+                    new (Clock: new Clock(7,0)),
+                    new (dateClock: new DateClock(new(12,3,2032), new(21,0)))
                 ])
             );
         }
