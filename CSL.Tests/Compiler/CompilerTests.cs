@@ -18,9 +18,16 @@ public class CompilerTests
         
         var expectedLines = File.ReadAllLines(expectedFile);
         var actualLines = output.Split(Environment.NewLine);
-        
+
         for (int i = 0; i < actualLines.Length; i++)
         {
+            if (actualLines[i].StartsWith("DTSTAMP") ||
+                actualLines[i].StartsWith("UID") ||
+                (actualLines[i] == ""))
+            {
+                continue;
+            }
+            
             Assert.That(actualLines[i].Trim(), Is.EqualTo(expectedLines[i].Trim()));
         }
     }

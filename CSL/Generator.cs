@@ -8,7 +8,7 @@ namespace CSL;
 
 public class Generator
 {
-    public static readonly Event DefaultEvent = new Event(Subject: "Unnamed Event", Description: "Empty event description", Duration: Duration.FromHours(1));
+    public static readonly Event DefaultEvent = new Event(Subject: "Unnamed Event", Description: "", Duration: Duration.FromHours(1));
     
     public Ical.Net.Calendar GenerateCalendar(string input)
     {

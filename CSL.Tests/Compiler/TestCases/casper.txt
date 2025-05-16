@@ -10,4 +10,6 @@ hygiejne =
 
 aftensmad = 'Aftensmad' ++ 60 min ++ 18:00;
 
-aftensmad ++ 25/06/2025
+aften = booster || hygiejne || aftensmad;
+
+aften ++ 25/06/2025
