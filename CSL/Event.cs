@@ -108,7 +108,8 @@ public record Event(
             Date: left.Date ?? right.Date,
             Clock: left.Clock ?? right.Clock,
             Duration: left.Duration ?? right.Duration,
-            Description: left.Description ?? right.Description
+            Description: left.Description ?? right.Description,
+            Hidden: left.Hidden ?? right.Hidden
         );
     }
 
