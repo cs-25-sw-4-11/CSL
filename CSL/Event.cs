@@ -233,7 +233,7 @@ public record Event(
 
         if (left.Date.HasValue)
         {
-            if (right.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+            if (right.Duration.Value.Minutes % CSL.EventTypes.Duration.DayFactor == 0)
             {
                 if (left.Date.Value >= right.Duration)
                 {
@@ -247,7 +247,7 @@ public record Event(
             else
             {
                 return new Event(
-                        dateClock: CSL.Date.Minus(left.Date.Value, right.Duration.Value),
+                        dateClock: CSL.EventTypes.Date.Minus(left.Date.Value, right.Duration.Value),
                         Subject: left.Subject,
                         Description: left.Description
                     );
