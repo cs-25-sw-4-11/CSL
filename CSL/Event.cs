@@ -136,6 +136,9 @@ public record Event(
         if (otherOperand is { Duration: not null, DateClock: null })
         {
             return new Event(
+                Subject: otherOperand.Subject,
+                Description: otherOperand.Description,
+                Hidden: otherOperand.Hidden,
                 Duration: firstOperand.Duration + otherOperand.Duration
             );
         }
@@ -149,23 +152,32 @@ public record Event(
                 var result = dateclock + duration;
 
                 return new Event(
-                    (DateClock)(result)
+                    Subject: otherOperand.Subject,
+                    Description: otherOperand.Description,
+                    Hidden: otherOperand.Hidden,
+                    dateClock: result.Value
                 );
             }
 
             if (firstOperand.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
             {
                 return new Event(
+                    Subject: otherOperand.Subject,
+                    Description: otherOperand.Description,
+                    Hidden: otherOperand.Hidden,
                     Date: otherOperand.Date + firstOperand.Duration
                 );
             }
 
-            var date = otherOperand.Date.Value;
-            var dur = firstOperand.Duration.Value;
-            var result1 = CSL.Date.Plus(date, dur);
+            Date date = otherOperand.Date.Value;
+            Duration dur = firstOperand.Duration.Value;
+            DateClock result1 = CSL.Date.Plus(date, dur);
 
             return new Event(
-                result1
+                Subject: otherOperand.Subject,
+                Description: otherOperand.Description,
+                Hidden: otherOperand.Hidden,
+                dateClock: result1
             );
         }
 
@@ -200,7 +212,8 @@ public record Event(
                 return new Event(
                     Subject: left.Subject,
                     Description: left.Description,
-                    dateClock: left.DateClock.Value - right.Duration.Value
+                    dateClock: left.DateClock.Value - right.Duration.Value,
+                    Hidden: left.Hidden
                 );
             }
         }
@@ -214,7 +227,8 @@ public record Event(
                     return new Event(
                         Subject: left.Subject,
                         Description: left.Description,
-                        Date: left.Date.Value - right.Duration.Value
+                        Date: left.Date.Value - right.Duration.Value,
+                        Hidden: left.Hidden
                     );
                 }
             }
@@ -223,7 +237,8 @@ public record Event(
                 return new Event(
                         dateClock: CSL.Date.Minus(left.Date.Value, right.Duration.Value),
                         Subject: left.Subject,
-                        Description: left.Description
+                        Description: left.Description,
+                        Hidden: left.Hidden
                     );
             }
         }
@@ -232,7 +247,8 @@ public record Event(
             return new Event(
                 Subject: left.Subject,
                 Description: left.Description,
-                Clock: left.Clock.Value - right.Duration.Value
+                Clock: left.Clock.Value - right.Duration.Value,
+                Hidden: left.Hidden
             );
         }
 
@@ -243,7 +259,8 @@ public record Event(
                 return new Event(
                     Subject: left.Subject,
                     Description: left.Description,
-                    Duration: left.Duration - right.Duration
+                    Duration: left.Duration - right.Duration,
+                    Hidden: left.Hidden
                 );
             }
         }
