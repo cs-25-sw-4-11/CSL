@@ -255,4 +255,33 @@ public class CalendarVisitorTest
 
         Assert.Throws<ArgumentException>(() => calendarVisitor.Visit(Parse(input)));
     }
+
+    public static IEnumerable TestParentersesCases
+    {
+        get
+        {
+            yield return new TestCaseData("(01/01/2000 ++ 13:00) - 3h",
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(10, 0))));
+            yield return new TestCaseData("(01/01/2000 ++ 13:00) - 3d",
+                new Event(new DateClock(new Date(30, 12, 1999), new Clock(13, 0))));
+            yield return new TestCaseData("(03/01/2000 ++ 12:00) - 12h",
+                new Event(new DateClock(new Date(3, 1, 2000), new Clock(0, 0))));
+            yield return new TestCaseData("(02/07/2000 ++ 13:00) - 3h - 3d",
+                new Event(new DateClock(new Date(30, 6, 2000), new Clock(10, 0))));
+            yield return new TestCaseData("19:00 - (3h + 3h)", new Event(Clock: new Clock(13, 0)));
+            yield return new TestCaseData("05/01/2000 - (3d - 3h)",
+                new Event(new DateClock(new Date(2, 1, 2000), new Clock(3, 0))));
+            yield return new TestCaseData("12:00 + (3d - 3d)", new Event(Clock: new Clock(12, 0)));
+            
+            }
+    }
+    [TestCaseSource(nameof(TestParentersesCases))]
+    public void TestParenterses(string input, Event expectedResult)
+    {
+        var calendarVisitor = new CalendarVisitor();
+        var expr = calendarVisitor.Visit(Parse(input));
+
+        Assert.That(expr, Is.Not.Null);
+        Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
+    }
 }
