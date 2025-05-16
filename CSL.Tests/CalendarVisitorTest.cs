@@ -61,6 +61,48 @@ public class CalendarVisitorTest
                     new (Subject: new Subject("def"), Clock: new Clock(16,00))
                 ])
             );
+            yield return new TestCaseData(
+                "calendar1 = 'abc' || 'def'; calendar1 ++ 16:00",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
+                ])
+            );
+            yield return new TestCaseData(
+                "('abc' || 'def') ++ 16:00",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
+                ])
+            );
+            yield return new TestCaseData(
+                "('abc' || 'def') ++ 16:00 + 3h",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(19,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(19,00))
+                ])
+            );
+            yield return new TestCaseData(
+                "(10:00 || 13/3/2032) ++ 3h",
+                new Calendar([
+                    new (Clock: new Clock(1,0), Duration: new Duration(180, 0)),
+                    new (Date: new Date(13, 3, 2032), Duration: new Duration(180, 0))
+                ])
+            );
+            yield return new TestCaseData(
+                "(10:00 || 13/3/2032) + 3d",
+                new Calendar([
+                    new (Clock: new Clock(10,0)),
+                    new (Date: new Date(16,3,2032))
+                ])
+            );
+            yield return new TestCaseData(
+                "(10:00 || 13/23/2032) - 3h",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
+                ])
+            );
         }
     }
 
