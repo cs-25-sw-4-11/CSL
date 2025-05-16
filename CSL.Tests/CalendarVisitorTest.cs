@@ -61,6 +61,33 @@ public class CalendarVisitorTest
                     new (Subject: new Subject("def"), Clock: new Clock(16,00))
                 ])
             );
+            //Hide Tests
+            yield return new TestCaseData(
+                "calendar1 = 'abc' || ['def']; calendar1 ++ 16:00",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00), Hidden: true)
+                ])
+            );
+            yield return new TestCaseData(
+                "calendar1 = 'abc' || 'def'; calendar1 ++ [16:00]",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00), Hidden: true),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00), Hidden: true)
+                ])
+            );
+            yield return new TestCaseData(
+                "'Med' ++ [30min] ++ \"Dinner\"",
+                new Calendar([
+                    new (Subject: new Subject("Med"), Duration: new(30,0), Description: new("Dinner"), Hidden: true),
+                ])
+            );
+            yield return new TestCaseData(
+                "['Med' ++ 30min ++ \"Dinner\"]",
+                new Calendar([
+                    new (Subject: new Subject("Med"), Duration: new(30,0), Description: new("Dinner"), Hidden: true),
+                ])
+            );
         }
     }
 
