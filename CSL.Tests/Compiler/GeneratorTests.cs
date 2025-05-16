@@ -2,6 +2,7 @@ using System.Collections;
 using CSL.EventTypes;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
+using Ical.Net.Serialization;
 
 namespace CSL.Tests;
 
@@ -16,6 +17,7 @@ public class GeneratorTests
             {
                 // If Name property is used, it MUST be RFC 5545 compliant
                 Summary = "Bund en booster",
+                Description = "",
                 Start = new CalDateTime(new DateTime(2025, 6, 25, 17, 50, 0)),
                 End = new CalDateTime(new DateTime(2025, 6, 25, 17, 55, 0)),
             };
@@ -24,6 +26,7 @@ public class GeneratorTests
             {
                 // If Name property is used, it MUST be RFC 5545 compliant
                 Summary = "Vask hænder",
+                Description = "",
                 Start = new CalDateTime(new DateTime(2025, 6, 25, 17, 55, 0)),
                 End = new CalDateTime(new DateTime(2025, 6, 25, 18, 0, 0)),
             };
@@ -32,6 +35,7 @@ public class GeneratorTests
             {
                 // If Name property is used, it MUST be RFC 5545 compliant
                 Summary = "Aftensmad",
+                Description = "",
                 Start = new CalDateTime(new DateTime(2025, 6, 25, 18, 0, 0)),
                 End = new CalDateTime(new DateTime(2025, 6, 25, 19, 0, 0)),
             };
@@ -51,6 +55,10 @@ public class GeneratorTests
     [TestCaseSource(nameof(GeneratorTestCases))]
     public void CompareCalendars(Calendar calendar, Ical.Net.Calendar expectedCalendar)
     {
-        
+        expectedCalendar.AddTimeZone(new VTimeZone("Europe/Copenhagen")); // TZ should be added
+        var serializer = new CalendarSerializer();
+        var serializedCalendar = serializer.SerializeToString(expectedCalendar);
+
+        Console.WriteLine(serializedCalendar);
     }
 }
