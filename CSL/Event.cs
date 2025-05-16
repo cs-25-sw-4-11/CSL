@@ -26,13 +26,15 @@ public record Event(
     public Event(DateClock dateClock,
         Subject? Subject = null,
         Duration? Duration = null,
-        Description? Description = null)
+        Description? Description = null,
+        bool? Hidden = null)
         : this(
             Subject: Subject,
             Date: dateClock.Date,
             Clock: dateClock.Clock,
             Duration: Duration,
-            Description: Description)
+            Description: Description,
+            Hidden: Hidden)
     {
     }
 
@@ -66,6 +68,10 @@ public record Event(
             sb.Append($"description:{Description.Value}, ");
         }
 
+        if (Hidden.HasValue)
+        {
+            sb.Append($"Hidden:{Hidden.Value}, ");
+        }
         sb.Append(")");
         return sb.ToString();
     }
