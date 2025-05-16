@@ -1,3 +1,4 @@
+using Antlr4.Runtime.Misc;
 using CSL.Exceptions;
 
 namespace CSL;
@@ -91,4 +92,20 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
             return Calendar.AddOperator(left, (Event)right);
         }
     }
+
+    public override Calendar VisitSubtractOp([NotNull] CSLParser.SubtractOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+        
+        if (left.IsEvent() && right.IsEvent())
+        {
+            return Event.SubOperator((Event)left, (Event)right);
+        }
+        else
+        {
+            return Calendar.SubOperator(left, (Event)right);
+        }
+    }
+
 }

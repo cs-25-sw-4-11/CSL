@@ -39,4 +39,16 @@ public record Calendar(Event[] Events)
 
         return new Calendar(events.ToArray());
     }
+
+    public static Calendar SubOperator(Calendar left, Event right)
+    {
+        var events = new List<Event>();
+
+        foreach (Event e in left.Events)
+        {
+            events.Add(Event.SubOperator(e, right));
+        }
+
+        return new Calendar(events.ToArray());
+    }
 }
