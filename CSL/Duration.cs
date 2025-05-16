@@ -72,13 +72,8 @@ public readonly struct Duration(int minutes, int months)
     public DateClock GetDurationAsDateClock()
     {
         return new DateClock(
-            date: new Date(
-                days: Minutes / DayFactor,
-                months: Months % YearFactor,
-                years: Months / YearFactor),
-            clock: new Clock(
-                hours: (Minutes % DayFactor) / HourFactor,
-                minutes: Minutes % HourFactor)
+            date: GetDurationAsDate(),
+            clock: GetDurationAsClock()
         );
     }
 
