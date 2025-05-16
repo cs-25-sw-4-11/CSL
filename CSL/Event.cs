@@ -7,7 +7,8 @@ public record Event(
     Date? Date = null,
     Clock? Clock = null,
     Duration? Duration = null,
-    Description? Description = null)
+    Description? Description = null,
+    bool? Hidden = null)
 {
     public DateClock? DateClock
     {
@@ -25,13 +26,15 @@ public record Event(
     public Event(DateClock dateClock,
         Subject? Subject = null,
         Duration? Duration = null,
-        Description? Description = null)
+        Description? Description = null,
+        bool? Hidden = null)
         : this(
             Subject: Subject,
             Date: dateClock.Date,
             Clock: dateClock.Clock,
             Duration: Duration,
-            Description: Description)
+            Description: Description,
+            Hidden: Hidden)
     {
     }
 
@@ -65,6 +68,10 @@ public record Event(
             sb.Append($"description:{Description.Value}, ");
         }
 
+        if (Hidden.HasValue)
+        {
+            sb.Append($"Hidden:{Hidden.Value}, ");
+        }
         sb.Append(")");
         return sb.ToString();
     }
@@ -101,7 +108,8 @@ public record Event(
             Date: left.Date ?? right.Date,
             Clock: left.Clock ?? right.Clock,
             Duration: left.Duration ?? right.Duration,
-            Description: left.Description ?? right.Description
+            Description: left.Description ?? right.Description,
+            Hidden: left.Hidden ?? right.Hidden
         );
     }
 
@@ -129,6 +137,9 @@ public record Event(
         if (otherOperand is { Duration: not null, DateClock: null })
         {
             return new Event(
+                Subject: otherOperand.Subject,
+                Description: otherOperand.Description,
+                Hidden: otherOperand.Hidden,
                 Duration: firstOperand.Duration + otherOperand.Duration
             );
         }
@@ -142,23 +153,32 @@ public record Event(
                 var result = dateclock + duration;
 
                 return new Event(
-                    (DateClock)(result)
+                    Subject: otherOperand.Subject,
+                    Description: otherOperand.Description,
+                    Hidden: otherOperand.Hidden,
+                    dateClock: result.Value
                 );
             }
 
             if (firstOperand.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
             {
                 return new Event(
+                    Subject: otherOperand.Subject,
+                    Description: otherOperand.Description,
+                    Hidden: otherOperand.Hidden,
                     Date: otherOperand.Date + firstOperand.Duration
                 );
             }
 
-            var date = otherOperand.Date.Value;
-            var dur = firstOperand.Duration.Value;
-            var result1 = CSL.Date.Plus(date, dur);
+            Date date = otherOperand.Date.Value;
+            Duration dur = firstOperand.Duration.Value;
+            DateClock result1 = CSL.Date.Plus(date, dur);
 
             return new Event(
-                result1
+                Subject: otherOperand.Subject,
+                Description: otherOperand.Description,
+                Hidden: otherOperand.Hidden,
+                dateClock: result1
             );
         }
 
@@ -180,7 +200,8 @@ public record Event(
             throw new ArgumentException(
                 $"Missing expression with {nameof(Duration)}");
         }
-        if (left.Duration is not null && right.Date is not null || right.Clock is not null){
+        if (left.Duration is not null && right.Date is not null || right.Clock is not null)
+        {
             throw new ArgumentException(
                 $"Can not have both {nameof(Duration)} and ({nameof(Date)} or {nameof(Clock)})");
         }
@@ -192,7 +213,8 @@ public record Event(
                 return new Event(
                     Subject: left.Subject,
                     Description: left.Description,
-                    dateClock: left.DateClock.Value - right.Duration.Value
+                    dateClock: left.DateClock.Value - right.Duration.Value,
+                    Hidden: left.Hidden
                 );
             }
         }
@@ -206,7 +228,8 @@ public record Event(
                     return new Event(
                         Subject: left.Subject,
                         Description: left.Description,
-                        Date: left.Date.Value - right.Duration.Value
+                        Date: left.Date.Value - right.Duration.Value,
+                        Hidden: left.Hidden
                     );
                 }
             }
@@ -215,7 +238,8 @@ public record Event(
                 return new Event(
                         dateClock: CSL.Date.Minus(left.Date.Value, right.Duration.Value),
                         Subject: left.Subject,
-                        Description: left.Description
+                        Description: left.Description,
+                        Hidden: left.Hidden
                     );
             }
         }
@@ -224,7 +248,8 @@ public record Event(
             return new Event(
                 Subject: left.Subject,
                 Description: left.Description,
-                Clock: left.Clock.Value - right.Duration.Value
+                Clock: left.Clock.Value - right.Duration.Value,
+                Hidden: left.Hidden
             );
         }
 
@@ -235,13 +260,26 @@ public record Event(
                 return new Event(
                     Subject: left.Subject,
                     Description: left.Description,
-                    Duration: left.Duration - right.Duration
+                    Duration: left.Duration - right.Duration,
+                    Hidden: left.Hidden
                 );
             }
         }
 
         throw new ArgumentException(
             $"Missing expression with either {nameof(Duration)} or {nameof(Date)} and {nameof(Clock)} ");
+    }
+
+    public static Event HideOperator(Event e)
+    {
+        return new Event(
+            Subject: e.Subject,
+            Duration: e.Duration,
+            Description: e.Description,
+            Date: e.Date,
+            Clock: e.Clock,
+            Hidden: true
+        );
     }
 
     /// <summary>
