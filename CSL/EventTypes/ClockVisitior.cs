@@ -1,6 +1,6 @@
 using CSL.Exceptions;
 
-namespace CSL.SubTypes;
+namespace CSL.EventTypes;
 
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime;

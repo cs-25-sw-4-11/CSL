@@ -1,5 +1,5 @@
 using Antlr4.Runtime;
-using CSL.SubTypes;
+using CSL.EventTypes;
 using CSL.TypeChecker;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;

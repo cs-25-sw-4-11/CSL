@@ -1,4 +1,4 @@
-namespace CSL.SubTypes;
+namespace CSL.EventTypes;
 
 public readonly struct Duration(int minutes, int months)
 {

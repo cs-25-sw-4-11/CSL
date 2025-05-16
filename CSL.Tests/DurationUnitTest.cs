@@ -1,7 +1,7 @@
 namespace CSL.Tests;
 
 using CSL;
-using CSL.SubTypes;
+using CSL.EventTypes;
 using CSL.Exceptions;
 using NUnit.Framework;
 using Antlr4.Runtime;

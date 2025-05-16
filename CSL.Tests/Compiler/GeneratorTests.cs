@@ -1,5 +1,5 @@
 using System.Collections;
-using CSL.SubTypes;
+using CSL.EventTypes;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 

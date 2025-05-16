@@ -2,7 +2,7 @@ using CSL.Exceptions;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using System;
-using CSL.SubTypes;
+using CSL.EventTypes;
 
 namespace CSL
 {

@@ -2,7 +2,7 @@ using System.Text;
 
 namespace CSL;
 
-using CSL.SubTypes;
+using EventTypes;
 
 public record Event(
     Subject? Subject = null,
@@ -180,7 +180,7 @@ public record Event(
                 );
             }
 
-            if (firstOperand.Duration.Value.Minutes % CSL.SubTypes.Duration.DayFactor == 0)
+            if (firstOperand.Duration.Value.Minutes % CSL.EventTypes.Duration.DayFactor == 0)
             {
                 return new Event(
                     Date: otherOperand.Date + firstOperand.Duration
@@ -189,7 +189,7 @@ public record Event(
 
             var date = otherOperand.Date.Value;
             var dur = firstOperand.Duration.Value;
-            var result1 = CSL.SubTypes.Date.Plus(date, dur);
+            var result1 = CSL.EventTypes.Date.Plus(date, dur);
 
             return new Event(
                 result1

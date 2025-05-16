@@ -2,7 +2,7 @@ using CSL.Exceptions;
 
 namespace CSL;
 
-using CSL.SubTypes;
+using EventTypes;
 
 public class CalendarVisitor : CSLBaseVisitor<Calendar>
 {
