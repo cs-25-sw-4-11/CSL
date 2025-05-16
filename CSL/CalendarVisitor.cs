@@ -91,4 +91,25 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
             return Calendar.AddOperator(left, (Event)right);
         }
     }
+
+    public override Calendar VisitStrictlyBeforeOp(CSLParser.StrictlyBeforeOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        if (!left.IsEvent() && !right.IsEvent())
+        {
+            return Calendar.StrictlyBeforeOp(left, right);
+        }
+
+        if (left.IsEvent())
+        {
+            return Calendar.StrictlyBeforeOp((Event)left, right);
+        }
+
+        if (right.IsEvent())
+        {
+            return Calendar.StrictlyBeforeOp(left, (Event)right);
+        }
+    }
 }
