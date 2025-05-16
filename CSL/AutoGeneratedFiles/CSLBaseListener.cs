@@ -102,75 +102,19 @@ public partial class CSLBaseListener : ICSLListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAddOp([NotNull] CSLParser.AddOpContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>IntersectOp</c>
+	/// Enter a parse tree produced by the <c>RecurrenceOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIntersectOp([NotNull] CSLParser.IntersectOpContext context) { }
+	public virtual void EnterRecurrenceOp([NotNull] CSLParser.RecurrenceOpContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>IntersectOp</c>
+	/// Exit a parse tree produced by the <c>RecurrenceOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIntersectOp([NotNull] CSLParser.IntersectOpContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>BeforeOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBeforeOp([NotNull] CSLParser.BeforeOpContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>BeforeOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBeforeOp([NotNull] CSLParser.BeforeOpContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>InOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterInOp([NotNull] CSLParser.InOpContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>InOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitInOp([NotNull] CSLParser.InOpContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>AfterOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterAfterOp([NotNull] CSLParser.AfterOpContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>AfterOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitAfterOp([NotNull] CSLParser.AfterOpContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>RecursiveOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRecursiveOp([NotNull] CSLParser.RecursiveOpContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>RecursiveOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRecursiveOp([NotNull] CSLParser.RecursiveOpContext context) { }
+	public virtual void ExitRecurrenceOp([NotNull] CSLParser.RecurrenceOpContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>DoublePlusOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
@@ -185,20 +129,6 @@ public partial class CSLBaseListener : ICSLListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitDoublePlusOp([NotNull] CSLParser.DoublePlusOpContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>ComplementOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterComplementOp([NotNull] CSLParser.ComplementOpContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>ComplementOp</c>
-	/// labeled alternative in <see cref="CSLParser.expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitComplementOp([NotNull] CSLParser.ComplementOpContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by the <c>UnionOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
@@ -284,6 +214,34 @@ public partial class CSLBaseListener : ICSLListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitParenExpr([NotNull] CSLParser.ParenExprContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>SplitOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSplitOp([NotNull] CSLParser.SplitOpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>SplitOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSplitOp([NotNull] CSLParser.SplitOpContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>SetdiffOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSetdiffOp([NotNull] CSLParser.SetdiffOpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>SetdiffOp</c>
+	/// labeled alternative in <see cref="CSLParser.expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSetdiffOp([NotNull] CSLParser.SetdiffOpContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>SubtractOp</c>
 	/// labeled alternative in <see cref="CSLParser.expr"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -310,6 +268,30 @@ public partial class CSLBaseListener : ICSLListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitLiteral([NotNull] CSLParser.LiteralContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.subject"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSubject([NotNull] CSLParser.SubjectContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.subject"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSubject([NotNull] CSLParser.SubjectContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.description"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterDescription([NotNull] CSLParser.DescriptionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.description"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitDescription([NotNull] CSLParser.DescriptionContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="CSLParser.duration"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -322,18 +304,6 @@ public partial class CSLBaseListener : ICSLListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitDuration([NotNull] CSLParser.DurationContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDatetime([NotNull] CSLParser.DatetimeContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="CSLParser.datetime"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDatetime([NotNull] CSLParser.DatetimeContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="CSLParser.clock"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -345,6 +315,18 @@ public partial class CSLBaseListener : ICSLListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitClock([NotNull] CSLParser.ClockContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="CSLParser.date"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterDate([NotNull] CSLParser.DateContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="CSLParser.date"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitDate([NotNull] CSLParser.DateContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

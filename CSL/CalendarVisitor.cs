@@ -1,3 +1,4 @@
+using Antlr4.Runtime.Misc;
 using CSL.Exceptions;
 
 namespace CSL;
@@ -7,7 +8,7 @@ using EventTypes;
 public class CalendarVisitor : CSLBaseVisitor<Calendar>
 {
     public Dictionary<string, Calendar> Variables = new Dictionary<string, Calendar>();
-    
+
     public override Calendar VisitSubject(CSLParser.SubjectContext context) =>
         new Event(Subject: new SubjectVisitor().VisitSubject(context));
 
@@ -58,16 +59,16 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
             throw new ArgumentException($"PlusPlus called on two Calendars: {left} and {right}");
         }
 
-        if (left.Events.Length > 1)
+        if (!left.IsEvent())
         {
             return Calendar.ConcatOperator(left, (Event)right);
         }
 
-        if (right.Events.Length > 1)
+        if (!right.IsEvent())
         {
             return Calendar.ConcatOperator(right, (Event)left);
         }
-        
+
         return Event.ConcatOperator((Event)left, (Event)right);
     }
 
@@ -93,4 +94,25 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
             return Calendar.AddOperator(left, (Event)right);
         }
     }
+
+    public override Calendar VisitSubtractOp([NotNull] CSLParser.SubtractOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+        
+        if (left.IsEvent() && right.IsEvent())
+        {
+            return Event.SubOperator((Event)left, (Event)right);
+        }
+        else
+        {
+            return Calendar.SubOperator(left, (Event)right);
+        }
+    }
+
+    public override Calendar VisitParenExpr([NotNull] CSLParser.ParenExprContext context)
+    {
+        return Visit(context.expr());
+    }
+
 }

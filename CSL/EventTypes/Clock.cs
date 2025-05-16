@@ -17,4 +17,21 @@ public readonly struct Clock(int hours, int minutes)
 
         return duration.GetDurationAsClock();
     }
+
+    public static Clock operator -(Clock left, Duration right) 
+    {
+        Duration duration = left.GetClockAsDuration() - right;
+        return duration.GetDurationAsClock();
+    }
+
+    public static bool operator >=(Clock left, Duration right)
+    {
+        return left.GetClockAsDuration() >= right; 
+    }
+
+    public static bool operator <=(Clock left, Duration right)
+    {
+        return left.GetClockAsDuration() <= right; 
+    }
+    
 }

@@ -28,4 +28,24 @@ public readonly struct Date(int days, int months, int years)
 
         return duration.GetDurationAsDateClock();
     }
+    public static Date operator -(Date left, Duration right)
+    {
+        Duration duration = left.GetDateAsDuration() - right;
+        return duration.GetDurationAsDate();
+    }
+    public static DateClock Minus(Date left, Duration right)
+    {
+        Duration duration = left.GetDateAsDuration() - right;
+        return duration.GetDurationAsDateClock();
+    }
+
+    public static bool operator >=(Date left, Duration right)
+    {
+        return left.GetDateAsDuration() >= right; 
+    }
+
+    public static bool operator <=(Date left, Duration right)
+    {
+        return left.GetDateAsDuration() <= right; 
+    }
 }

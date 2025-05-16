@@ -143,7 +143,7 @@ public record Event(
     {
         Event otherOperand;
         Event firstOperand;
-        //checks if one of the events is only duration and puts it as the first operand
+        // checks if one of the events is only duration and puts it as the first operand
         if (left is { Duration: not null, Subject: null, Description: null, Clock: null, Date: null })
         {
             firstOperand = left;
@@ -201,6 +201,77 @@ public record Event(
             return new Event(
                 Clock: otherOperand.Clock + firstOperand.Duration
             );
+        }
+
+        throw new ArgumentException(
+            $"Missing expression with either {nameof(Duration)} or {nameof(Date)} and {nameof(Clock)} ");
+    }
+
+    public static Event SubOperator(Event left, Event right)
+    {
+        if (right.Duration is null)
+        {
+            throw new ArgumentException(
+                $"Missing expression with {nameof(Duration)}");
+        }
+        if (left.Duration is not null && right.Date is not null || right.Clock is not null){
+            throw new ArgumentException(
+                $"Can not have both {nameof(Duration)} and ({nameof(Date)} or {nameof(Clock)})");
+        }
+
+        if (left.DateClock.HasValue)
+        {
+            if (left.DateClock.Value >= right.Duration)
+            {
+                return new Event(
+                    Subject: left.Subject,
+                    Description: left.Description,
+                    dateClock: left.DateClock.Value - right.Duration.Value
+                );
+            }
+        }
+
+        if (left.Date.HasValue)
+        {
+            if (right.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+            {
+                if (left.Date.Value >= right.Duration)
+                {
+                    return new Event(
+                        Subject: left.Subject,
+                        Description: left.Description,
+                        Date: left.Date.Value - right.Duration.Value
+                    );
+                }
+            }
+            else
+            {
+                return new Event(
+                        dateClock: CSL.Date.Minus(left.Date.Value, right.Duration.Value),
+                        Subject: left.Subject,
+                        Description: left.Description
+                    );
+            }
+        }
+        if (left.Clock.HasValue)
+        {
+            return new Event(
+                Subject: left.Subject,
+                Description: left.Description,
+                Clock: left.Clock.Value - right.Duration.Value
+            );
+        }
+
+        if (left.Duration is not null)
+        {
+            if (left.Duration >= right.Duration)
+            {
+                return new Event(
+                    Subject: left.Subject,
+                    Description: left.Description,
+                    Duration: left.Duration - right.Duration
+                );
+            }
         }
 
         throw new ArgumentException(
