@@ -1,0 +1,17 @@
+Monday = 5/5/2025 ++ 8:00;
+
+Week = Monday || Monday + 1d || Monday + 2d || Monday + 3d || Monday + 4d;
+
+ReWeek = Week * 1w;
+
+WorkWeek = ReWeek ++ 'Work' ++ "Meet at Office" ++ 8:00~16:00;
+
+WorkTripStart = 12/04/2025 7:00;
+WorkTripDuration = WorkTripStart ~ 19/04/2025 23:59;
+
+WorkTrip = 'Work Trip' ++ "A trip for work" ++ WorkTripStart ++ WorkTripDuration;
+
+WorkWeekWithoutTrip = Work / WorkTripStart / WorkTripStart + WorkTripDuration \ WorkTrip;
+
+WorkWeekWithoutTrip
+WorkTrip

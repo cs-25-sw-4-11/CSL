@@ -3,6 +3,8 @@ using CSL.Exceptions;
 
 namespace CSL;
 
+using EventTypes;
+
 public class CalendarVisitor : CSLBaseVisitor<Calendar>
 {
     public Dictionary<string, Calendar> Variables = new Dictionary<string, Calendar>();

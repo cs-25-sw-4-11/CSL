@@ -28,4 +28,10 @@
       <ProjectReference Include="..\CSL\CSL.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Compiler\TestCases\*">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

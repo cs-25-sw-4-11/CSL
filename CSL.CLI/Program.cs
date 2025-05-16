@@ -25,22 +25,9 @@ class Program
             Console.WriteLine("No input provided, using default: " + input);
         }
 
-        var stream = CharStreams.fromString(input);
-
-        var lexer = new CSLLexer(stream);
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new CSLParser(tokens);
-
-        var tree = parser.prog();
+        var compiler = new Compiler();
+        var result = compiler.Compile(input);
         
-        // Type checker
-        var typeVisitor = new TypeCheckerVisitor();
-        typeVisitor.Visit(tree);
-        
-        // Calendar visitor
-        var visitor = new CalendarVisitor();
-        var result = visitor.Visit(tree);
-
         Console.WriteLine($"Input: {input}");
         Console.WriteLine($"Result: {result}");
     }
