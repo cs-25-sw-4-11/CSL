@@ -40,33 +40,86 @@ public readonly struct Duration(int minutes, int months)
         );
     }
 
+    public static Duration operator -(Duration left, Duration right)
+    {
+        return new Duration(
+            minutes: left.Minutes - right.Minutes,
+            months: left.Months - right.Months
+        );
+    }
+    public static bool operator >=(Duration left, Duration right)
+    {
+        DateTime reference = new DateTime(2000, 1, 1); // arbitrary but consistent
+        DateTime leftTime = AddDuration(reference, left);
+        DateTime rightTime = AddDuration(reference, right);
+        return leftTime >= rightTime;
+    }
+
+    public static bool operator <=(Duration left, Duration right)
+    {
+        DateTime reference = new DateTime(2000, 1, 1);
+        DateTime leftTime = AddDuration(reference, left);
+        DateTime rightTime = AddDuration(reference, right);
+        return leftTime <= rightTime;
+    }
+    public static DateTime AddDuration(DateTime baseDate, Duration d)
+    {
+        baseDate = baseDate.AddMonths(d.Months);
+        baseDate = baseDate.AddMinutes(d.Minutes);
+        return baseDate;
+    }
+
     public DateClock GetDurationAsDateClock()
     {
         return new DateClock(
-            date: new Date(
-                days: Minutes / DayFactor,
-                months: Months % YearFactor,
-                years: Months / YearFactor),
-            clock: new Clock(
-                hours: (Minutes % DayFactor) / HourFactor,
-                minutes: Minutes % HourFactor)
+            date: GetDurationAsDate(),
+            clock: GetDurationAsClock()
         );
     }
 
     public Date GetDurationAsDate()
     {
+        int days = Minutes / DayFactor;
+        int months = Months % YearFactor;
+        int years = Months / YearFactor;
+        if (months <= 0)
+        {
+            int yearAdjustment = (Math.Abs(months) + 11) / 12;
+            months += 12 * yearAdjustment;
+            years -= yearAdjustment;
+        }
+        while (days <= 0)
+        {
+            months -= 1;
+            if (months == 0)
+            {
+                months = 12;
+                years -= 1;
+            }
+            int daysInPreviousMonth = months switch
+            {
+                1 or 3 or 5 or 7 or 8 or 10 or 12 => 31,
+                4 or 6 or 9 or 11 => 30,
+                2 => DateTime.IsLeapYear(years) ? 29 : 28,
+                _ => throw new InvalidOperationException("Invalid month")
+            };
+
+            days += daysInPreviousMonth;
+        }
         return new Date(
-            days: Minutes / DayFactor,
-            months: Months % YearFactor,
-            years: Months / YearFactor
+                days: days,
+                months: months,
+                years: years
         );
     }
 
     public Clock GetDurationAsClock()
     {
+        int minutes = this.Minutes;
+        minutes = ((minutes % DayFactor) + DayFactor) % DayFactor;
         return new Clock(
-            hours: (Minutes % DayFactor) / HourFactor,
-            minutes: Minutes % HourFactor
+            hours: minutes / HourFactor,
+            minutes: minutes % HourFactor
         );
     }
 }
