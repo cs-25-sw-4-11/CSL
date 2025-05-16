@@ -93,6 +93,22 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         }
     }
 
+    public override Calendar VisitSubtractOp([NotNull] CSLParser.SubtractOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+        
+        if (left.IsEvent() && right.IsEvent())
+        {
+            return Event.SubOperator((Event)left, (Event)right);
+        }
+        else
+        {
+            return Calendar.SubOperator(left, (Event)right);
+        }
+    }
+
+
     public override Calendar VisitParenExpr([NotNull] CSLParser.ParenExprContext context)
     {
         return Visit(context.expr());

@@ -12,4 +12,21 @@ public readonly struct DateClock(Date date, Clock clock)
 
         return duration.GetDurationAsDateClock();
     }
+
+    public static DateClock operator -(DateClock left, Duration right)
+    {
+        Duration duration = left.Date.GetDateAsDuration() +
+                            left.Clock.GetClockAsDuration() - right;
+        return duration.GetDurationAsDateClock();
+    }
+
+    public static bool operator >=(DateClock left, Duration right)
+    {
+        return (left.Date.GetDateAsDuration() + left.Clock.GetClockAsDuration()) >= right; 
+    }
+
+    public static bool operator <=(DateClock left, Duration right)
+    {
+        return (left.Date.GetDateAsDuration() + left.Clock.GetClockAsDuration()) <= right; 
+    }
 }
