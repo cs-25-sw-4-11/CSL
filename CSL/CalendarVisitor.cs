@@ -108,6 +108,11 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         }
     }
 
+    public override Calendar VisitParenExpr([NotNull] CSLParser.ParenExprContext context)
+    {
+        return Visit(context.expr());
+    }
+
     public override Calendar VisitHideExpr([NotNull] CSLParser.HideExprContext context)
     {
         var visit = Visit(context.expr());
