@@ -7,7 +7,8 @@ public record Event(
     Date? Date = null,
     Clock? Clock = null,
     Duration? Duration = null,
-    Description? Description = null)
+    Description? Description = null,
+    bool? Hidden = null)
 {
     public DateClock? DateClock
     {
@@ -180,7 +181,8 @@ public record Event(
             throw new ArgumentException(
                 $"Missing expression with {nameof(Duration)}");
         }
-        if (left.Duration is not null && right.Date is not null || right.Clock is not null){
+        if (left.Duration is not null && right.Date is not null || right.Clock is not null)
+        {
             throw new ArgumentException(
                 $"Can not have both {nameof(Duration)} and ({nameof(Date)} or {nameof(Clock)})");
         }
@@ -242,6 +244,18 @@ public record Event(
 
         throw new ArgumentException(
             $"Missing expression with either {nameof(Duration)} or {nameof(Date)} and {nameof(Clock)} ");
+    }
+
+    public static Event HideOperator(Event e)
+    {
+        return new Event(
+            Subject: e.Subject,
+            Duration: e.Duration,
+            Description: e.Description,
+            Date: e.Date,
+            Clock: e.Clock,
+            Hidden: true
+        );
     }
 
     /// <summary>
