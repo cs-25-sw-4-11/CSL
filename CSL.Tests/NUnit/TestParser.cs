@@ -19,18 +19,18 @@ namespace CSL
             var lexer = new CSLLexer(stream);
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(new CSLLexerErrorListener());
-                
+
             var tokens = new CommonTokenStream(lexer);
             var parser = new CSLParser(tokens);
             parser.RemoveErrorListeners();
             parser.AddErrorListener(new CSLParserErrorListener());
-                
+
             var tree = parserRuleSelector(parser);
             var visitor = visitorFactory();
             return visitorMethod(visitor, tree);
         }
     }
-    
+
     public static class ClockParser
     {
         public static Clock? ParseClock(string input)
@@ -77,8 +77,8 @@ namespace CSL
         public static Date? ParseDate(string input)
         {
             return GenericParser.Parse<Date?, DateVisitor, CSLParser.DateContext>(
-                input, 
-                () => new DateVisitor(), 
+                input,
+                () => new DateVisitor(),
                 parser => parser.date(),
                 (visitor, tree) => visitor.VisitDate(tree),
                 "Date"
@@ -99,4 +99,19 @@ namespace CSL
             );
         }
     }
+
+    public static class StringParser
+    {
+        public static CSLParser.ProgContext ParseString(string input)
+        {
+            var stream = CharStreams.fromString(input);
+            var lexer = new CSLLexer(stream);
+
+            var tokens = new CommonTokenStream(lexer);
+            var parser = new CSLParser(tokens);
+
+            return parser.prog();
+        }
+    }
+    
 }

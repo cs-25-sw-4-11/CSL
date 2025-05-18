@@ -123,7 +123,7 @@ public class CalendarVisitorTest
     public void TestCalendarOperations(string input, Calendar expectedResult)
     {
         var calendarVisitor = new CalendarVisitor();
-        var expr = calendarVisitor.Visit(Parse(input));
+        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
 
         Assert.That(expr, Is.Not.Null);
         for (int i = 0; i < expectedResult.Events.Length; i++)
@@ -139,20 +139,10 @@ public class CalendarVisitorTest
 
         Assert.Throws<ArgumentException>(() =>
         {
-            var expr = calendarVisitor.Visit(Parse(input));
+            var expr = calendarVisitor.Visit(StringParser.ParseString(input));
         });
     }
 
-    private static CSLParser.ProgContext Parse(string input)
-    {
-        var stream = CharStreams.fromString(input);
-        var lexer = new CSLLexer(stream);
-
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new CSLParser(tokens);
-
-        return parser.prog();
-    }
 
     public static IEnumerable TestPlusCases
     {
@@ -188,16 +178,10 @@ public class CalendarVisitorTest
     [TestCaseSource(nameof(TestPlusCases))]
     public void TestPlusOp(string input, Event expectedResult)
     {
-        var stream = CharStreams.fromString(input);
-        var lexer = new CSLLexer(stream);
 
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new CSLParser(tokens);
-
-        var tree = parser.prog();
         var calendarVisitor = new CalendarVisitor();
 
-        var expr = calendarVisitor.Visit(tree);
+        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
 
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
@@ -217,16 +201,10 @@ public class CalendarVisitorTest
     [TestCaseSource(nameof(TestNotPlusCases))]
     public void TestNotPlusOp(string input, Event expectedResult)
     {
-        var stream = CharStreams.fromString(input);
-        var lexer = new CSLLexer(stream);
 
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new CSLParser(tokens);
-
-        var tree = parser.prog();
         var calendarVisitor = new CalendarVisitor();
 
-        var expr = calendarVisitor.Visit(tree);
+        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
 
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.Not.EqualTo(expectedResult));
@@ -271,7 +249,7 @@ public class CalendarVisitorTest
     public void TestMinusOp(string input, Event expectedResult)
     {
         var calendarVisitor = new CalendarVisitor();
-        var expr = calendarVisitor.Visit(Parse(input));
+        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
 
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
@@ -295,7 +273,7 @@ public class CalendarVisitorTest
     {
         var calendarVisitor = new CalendarVisitor();
 
-        Assert.Throws<ArgumentException>(() => calendarVisitor.Visit(Parse(input)));
+        Assert.Throws<ArgumentException>(() => calendarVisitor.Visit(StringParser.ParseString(input)));
     }
 
     public static IEnumerable TestParentersesCases
@@ -321,7 +299,7 @@ public class CalendarVisitorTest
     public void TestParenterses(string input, Event expectedResult)
     {
         var calendarVisitor = new CalendarVisitor();
-        var expr = calendarVisitor.Visit(Parse(input));
+        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
 
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
