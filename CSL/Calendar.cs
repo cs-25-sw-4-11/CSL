@@ -14,7 +14,7 @@ public record Calendar(Event[] Events)
     public static Calendar ConcatOperator(Calendar left, Event right)
     {
         IList<Event> newCalendar = new List<Event>();
-        
+
         foreach (var e in left.Events)
         {
             newCalendar.Add(Event.ConcatOperator(e, right));
@@ -49,6 +49,18 @@ public record Calendar(Event[] Events)
             events.Add(Event.SubOperator(e, right));
         }
 
+        return new Calendar(events.ToArray());
+    }
+
+    public static Calendar HideOperator(Calendar c)
+    {
+        var events = new List<Event>();
+
+        foreach (Event e in c.Events)
+        {
+            events.Add(Event.HideOperator(e));
+        }
+        
         return new Calendar(events.ToArray());
     }
 
