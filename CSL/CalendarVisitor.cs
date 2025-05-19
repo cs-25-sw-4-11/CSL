@@ -128,5 +128,7 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         {
             return Calendar.StrictlyBeforeOp(left, (Event)right);
         }
+
+        throw new ArgumentException("Invalid operation");
     }
 }

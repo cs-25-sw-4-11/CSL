@@ -61,14 +61,17 @@ public record Calendar(Event[] Events)
                 throw new ArgumentException("Event has dateclock");
             }
         }
-        foreach (Event e in right.Events)
-        {
-            
-        }
 
         Event first = right.IsEvent() ? right.Events[0] : FindFirst(right);
-
+        List<Event> resultEvents = new List<Event>();
         
+        foreach (Event e in left.Events)
+        {
+            Event modifiedEvent = SetEventBeforeTarget(e, first);
+            resultEvents.Add(modifiedEvent);
+        }
+
+        return new Calendar(resultEvents.Union(right.Events).ToArray());
     }
 
     private static Event FindFirst(Calendar calendar)
@@ -90,83 +93,142 @@ public record Calendar(Event[] Events)
     {
         if (first.DateClock.HasValue && second.DateClock.HasValue)
         {
-            if (first.Date!.Value.CompareTo(second.Date!.Value) < 0)
+            // Compare Date values
+            if (CompareDates(first.Date!.Value, second.Date!.Value) < 0)
             {
                 return true;
             }
-            else if (first.Date!.Value.CompareTo(second.Date!.Value) == 0)
+            else if (CompareDates(first.Date!.Value, second.Date!.Value) == 0)
             {
-                return first.Clock!.Value.CompareTo(second.Clock!.Value) < 0;
+                // Compare Clock values
+                return CompareClocks(first.Clock!.Value, second.Clock!.Value) < 0;
             }
             return false;
         }
         
         if (first.Date.HasValue && second.Date.HasValue)
         {
-            return first.Date.Value.CompareTo(second.Date.Value) < 0;
+            // Use our comparison method
+            return CompareDates(first.Date.Value, second.Date.Value) < 0;
         }
         
         if (first.Clock.HasValue && second.Clock.HasValue)
         {
-            return first.Clock.Value.CompareTo(second.Clock.Value) < 0;
+            // Use our comparison method
+            return CompareClocks(first.Clock.Value, second.Clock.Value) < 0;
         }
 
         return true;
     }
 
-private static Event SetEventBeforeTarget(Event eventToModify, Event targetEvent)
-{
-
-    if (targetEvent.DateClock.HasValue)
+    // Helper method to compare dates
+    private static int CompareDates(Date left, Date right)
     {
-        DateClock targetTime = targetEvent.DateClock.Value;
-        if (eventToModify.Duration.HasValue)
-        {
-            DateClock adjustedTime = targetTime - eventToModify.Duration.Value;
-            return new Event(
-                Subject: eventToModify.Subject,
-                Date: adjustedTime.Date,
-                Clock: adjustedTime.Clock,
-                Duration: eventToModify.Duration,
-                Description: eventToModify.Description
-            );
-        }
-        else
-        {
-            return new Event(
-                Subject: eventToModify.Subject,
-                Date: targetTime.Date,
-                Clock: targetTime.Clock,
-                Duration: eventToModify.Duration,
-                Description: eventToModify.Description
-            );
-        }
+        if (left.Years != right.Years)
+            return left.Years.CompareTo(right.Years);
+        
+        if (left.Months != right.Months)
+            return left.Months.CompareTo(right.Months);
+        
+        return left.Days.CompareTo(right.Days);
     }
-    
-    else if (targetEvent.Date.HasValue)
+
+    // Helper method to compare clocks
+    private static int CompareClocks(Clock left, Clock right)
     {
-        Date targetDate = targetEvent.Date.Value;
-        if (eventToModify.Duration.HasValue && eventToModify.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+        if (left.Hours != right.Hours)
+            return left.Hours.CompareTo(right.Hours);
+        
+        return left.Minutes.CompareTo(right.Minutes);
+    }
+
+    private static Event SetEventBeforeTarget(Event eventToModify, Event targetEvent)
+    {
+        if (targetEvent.DateClock.HasValue)
         {
-            Date adjustedDate = targetDate - eventToModify.Duration.Value;
-            return new Event(
-                Subject: eventToModify.Subject,
-                Date: adjustedDate,
-                Clock: eventToModify.Clock,
-                Duration: eventToModify.Duration,
-                Description: eventToModify.Description
-            );
+            DateClock targetTime = targetEvent.DateClock.Value;
+            if (eventToModify.Duration.HasValue)
+            {
+                DateClock adjustedTime = targetTime - eventToModify.Duration.Value;
+                return new Event(
+                    Subject: eventToModify.Subject,
+                    Date: adjustedTime.Date,
+                    Clock: adjustedTime.Clock,
+                    Duration: eventToModify.Duration,
+                    Description: eventToModify.Description
+                );
+            }
+            else
+            {
+                return new Event(
+                    Subject: eventToModify.Subject,
+                    Date: targetTime.Date,
+                    Clock: targetTime.Clock,
+                    Duration: eventToModify.Duration,
+                    Description: eventToModify.Description
+                );
+            }
         }
-        else
+        else if (targetEvent.Date.HasValue)
         {
-            Date dayBefore = targetDate - new Duration(CSL.Duration.DayFactor);
-            return new Event(
-                Subject: eventToModify.Subject,
-                Date: dayBefore,
-                Clock: eventToModify.Clock,
-                Duration: eventToModify.Duration,
-                Description: eventToModify.Description
-            );
+            Date targetDate = targetEvent.Date.Value;
+            Date dayBefore = targetDate - new Duration(CSL.Duration.DayFactor, 0);
+            
+            if (eventToModify.Duration.HasValue)
+            {
+                // Calculate end of day time based on duration
+                int durationMinutes = eventToModify.Duration.Value.Minutes % CSL.Duration.DayFactor;
+                
+                // If the duration is in whole days or there's no remaining minutes component,
+                // don't set a clock time
+                if (durationMinutes == 0 || eventToModify.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+                {
+                    return new Event(
+                        Subject: eventToModify.Subject,
+                        Date: dayBefore,
+                        Clock: null,
+                        Duration: eventToModify.Duration,
+                        Description: eventToModify.Description
+                    );
+                }
+                
+                int durationHours = durationMinutes / 60;
+                int durationRemainingMinutes = durationMinutes % 60;
+                
+                // Calculate the clock time for the day before (24 - duration hours)
+                int hours = 24 - durationHours;
+                int minutes = durationRemainingMinutes > 0 ? 60 - durationRemainingMinutes : 0;
+                
+                // Adjust hours if we needed to borrow from minutes
+                if (durationRemainingMinutes > 0)
+                    hours--;
+                
+                // Handle special case where hours could be 24, which is invalid
+                if (hours == 24)
+                    hours = 0;
+                
+                Clock newClock = new Clock(hours, minutes);
+                
+                return new Event(
+                    Subject: eventToModify.Subject,
+                    Date: dayBefore,
+                    Clock: newClock,
+                    Duration: eventToModify.Duration,
+                    Description: eventToModify.Description
+                );
+            }
+            else
+            {
+                // If no duration specified, just copy the date of the target event without setting a clock
+                return new Event(
+                    Subject: eventToModify.Subject,
+                    Date: targetDate,
+                    Clock: null,
+                    Duration: eventToModify.Duration,
+                    Description: eventToModify.Description
+                );
+            }
         }
+        throw new ArgumentException("Invalid operation");
     }
 }
