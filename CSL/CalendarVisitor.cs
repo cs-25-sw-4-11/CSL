@@ -119,21 +119,6 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
 
-        if (!left.IsEvent() && !right.IsEvent())
-        {
-            return Calendar.StrictlyBeforeOp(left, right);
-        }
-
-        if (left.IsEvent())
-        {
-            return Calendar.StrictlyBeforeOp((Event)left, right);
-        }
-
-        if (right.IsEvent())
-        {
-            return Calendar.StrictlyBeforeOp(left, (Event)right);
-        }
-
-        throw new ArgumentException("Invalid operation");
+        return Calendar.StrictlyBeforeOp(left, right);
     }
 }
