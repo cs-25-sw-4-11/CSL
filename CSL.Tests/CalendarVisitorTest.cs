@@ -61,6 +61,48 @@ public class CalendarVisitorTest
                     new (Subject: new Subject("def"), Clock: new Clock(16,00))
                 ])
             );
+            yield return new TestCaseData(
+                "calendar1 = 'abc' || 'def'; calendar1 ++ 16:00",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
+                ])
+            );
+            yield return new TestCaseData(
+                "('abc' || 'def') ++ 16:00",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(16,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(16,00))
+                ])
+            );
+            yield return new TestCaseData(
+                "('abc' || 'def') ++ 16:00 + 3h",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(19,00)),
+                    new (Subject: new Subject("def"), Clock: new Clock(19,00))
+                ])
+            );
+            yield return new TestCaseData(
+                "(10:00 || 13/3/2032) ++ 3h",
+                new Calendar([
+                    new (Clock: new Clock(10,0), Duration: new Duration(180, 0)),
+                    new (Date: new Date(13, 3, 2032), Duration: new Duration(180, 0))
+                ])
+            );
+            yield return new TestCaseData(
+                "(10:00 || 13/3/2032) + 3d",
+                new Calendar([
+                    new (Clock: new Clock(10,0)),
+                    new (Date: new Date(16,3,2032))
+                ])
+            );
+            yield return new TestCaseData(
+                "(10:00 || 13/3/2032) - 3h",
+                new Calendar([
+                    new (Clock: new Clock(7,0)),
+                    new (dateClock: new DateClock(new(12,3,2032), new(21,0)))
+                ])
+            );
 
             yield return new TestCaseData(
                 "e1 = 1h; e2 = 12:30 ++ 02/06/2004; e1 << e2",
@@ -331,5 +373,34 @@ public class CalendarVisitorTest
         var calendarVisitor = new CalendarVisitor();
 
         Assert.Throws<ArgumentException>(() => calendarVisitor.Visit(Parse(input)));
+    }
+
+    public static IEnumerable TestParentersesCases
+    {
+        get
+        {
+            yield return new TestCaseData("(01/01/2000 ++ 13:00) - 3h",
+                new Event(new DateClock(new Date(1, 1, 2000), new Clock(10, 0))));
+            yield return new TestCaseData("(01/01/2000 ++ 13:00) - 3d",
+                new Event(new DateClock(new Date(30, 12, 1999), new Clock(13, 0))));
+            yield return new TestCaseData("(03/01/2000 ++ 12:00) - 12h",
+                new Event(new DateClock(new Date(3, 1, 2000), new Clock(0, 0))));
+            yield return new TestCaseData("(02/07/2000 ++ 13:00) - 3h - 3d",
+                new Event(new DateClock(new Date(30, 6, 2000), new Clock(10, 0))));
+            yield return new TestCaseData("19:00 - (3h + 3h)", new Event(Clock: new Clock(13, 0)));
+            yield return new TestCaseData("05/01/2000 - (3d - 3h)",
+                new Event(new DateClock(new Date(2, 1, 2000), new Clock(3, 0))));
+            yield return new TestCaseData("12:00 + (3d - 3d)", new Event(Clock: new Clock(12, 0)));
+            
+            }
+    }
+    [TestCaseSource(nameof(TestParentersesCases))]
+    public void TestParenterses(string input, Event expectedResult)
+    {
+        var calendarVisitor = new CalendarVisitor();
+        var expr = calendarVisitor.Visit(Parse(input));
+
+        Assert.That(expr, Is.Not.Null);
+        Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
     }
 }
