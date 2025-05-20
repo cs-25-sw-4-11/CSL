@@ -123,9 +123,9 @@ public record Calendar(Event[] Events)
 
     private static Event SetEventBeforeTarget(Event eventToModify, Event targetEvent)
     {
-        if (!targetEvent.DateClock.HasValue && !targetEvent.Date.HasValue)
+        if (targetEvent.DateClock is null && targetEvent.Date is null)
         {
-            throw new ArgumentException("Target event must have either DateClock or Date");
+            throw new ArgumentException($"Target event must have either {nameof(DateClock)} or {nameof(Date)}");
         }
 
         if (targetEvent.DateClock.HasValue)
@@ -144,7 +144,7 @@ public record Calendar(Event[] Events)
         }
 
         Date targetDate = targetEvent.Date!.Value;
-        if (!eventToModify.Duration.HasValue)
+        if (eventToModify.Duration is null)
         {
             return new Event(
                 Subject: eventToModify.Subject,
