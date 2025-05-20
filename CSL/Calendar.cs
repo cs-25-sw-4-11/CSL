@@ -1,5 +1,4 @@
 namespace CSL;
-
 using EventTypes;
 public record Calendar(Event[] Events)
 {
@@ -61,7 +60,7 @@ public record Calendar(Event[] Events)
         {
             events.Add(Event.HideOperator(e));
         }
-        
+
         return new Calendar(events.ToArray());
     }
 
@@ -69,7 +68,7 @@ public record Calendar(Event[] Events)
     {
         Event first = right.IsEvent() ? right.Events[0] : FindFirst(right);
         List<Event> resultEvents = new List<Event>();
-        
+
         foreach (Event e in left.Events)
         {
             if (e.DateClock.HasValue)
@@ -87,7 +86,7 @@ public record Calendar(Event[] Events)
     private static Event FindFirst(Calendar calendar)
     {
         Event first = calendar.Events[0];
-        
+
         foreach (Event e in calendar.Events)
         {
             if (IsEventEarlier(e, first))
@@ -95,7 +94,7 @@ public record Calendar(Event[] Events)
                 first = e;
             }
         }
-        
+
         return first;
     }
 
@@ -106,13 +105,13 @@ public record Calendar(Event[] Events)
             Duration secondDuration = second.Date!.Value.GetDateAsDuration() + second.Clock!.Value.GetClockAsDuration();
             return first.DateClock <= secondDuration;
         }
-        
+
         if (first.Date.HasValue && second.Date.HasValue)
         {
             Duration secondDuration = second.Date.Value.GetDateAsDuration();
             return first.Date.Value <= secondDuration;
         }
-        
+
         if (first.Clock.HasValue && second.Clock.HasValue)
         {
             Duration secondDuration = second.Clock.Value.GetClockAsDuration();
@@ -124,6 +123,11 @@ public record Calendar(Event[] Events)
 
     private static Event SetEventBeforeTarget(Event eventToModify, Event targetEvent)
     {
+        if (!targetEvent.DateClock.HasValue && !targetEvent.Date.HasValue)
+        {
+            throw new ArgumentException("Target event must have either DateClock or Date");
+        }
+
         if (targetEvent.DateClock.HasValue)
         {
             DateClock targetTime = targetEvent.DateClock.Value;
@@ -139,48 +143,35 @@ public record Calendar(Event[] Events)
             );
         }
 
-        if (targetEvent.Date.HasValue)
+        Date targetDate = targetEvent.Date!.Value;
+        if (!eventToModify.Duration.HasValue)
         {
-            Date targetDate = targetEvent.Date.Value;
-
-            if (eventToModify.Duration.HasValue)
-            {
-                Duration duration = eventToModify.Duration.Value;
-
-                if (duration.Minutes % Duration.DayFactor == 0)
-                {
-                    Date newDate = targetDate - duration;
-                    return new Event(
-                        Subject: eventToModify.Subject,
-                        Date: newDate,
-                        Duration: eventToModify.Duration,
-                        Description: eventToModify.Description
-                    );
-                }
-                else
-                {
-                    DateClock targetDateClock = new DateClock(targetDate, new Clock(0, 0));
-                    DateClock adjustedDateClock = targetDateClock - duration;
-
-                    return new Event(
-                        Subject: eventToModify.Subject,
-                        dateClock: adjustedDateClock,
-                        Duration: eventToModify.Duration,
-                        Description: eventToModify.Description
-                    );
-                }
-            }
-            else
-            {
-                return new Event(
-                    Subject: eventToModify.Subject,
-                    Date: targetDate,
-                    Duration: eventToModify.Duration,
-                    Description: eventToModify.Description
-                );
-            }
+            return new Event(
+                Subject: eventToModify.Subject,
+                Date: targetDate,
+                Description: eventToModify.Description
+            );
         }
 
-        throw new ArgumentException("Target event must have either DateClock or Date");
+        Duration duration = eventToModify.Duration.Value;
+        if (duration.Minutes % Duration.DayFactor == 0)
+        {
+            Date newDate = targetDate - duration;
+            return new Event(
+                Subject: eventToModify.Subject,
+                Date: newDate,
+                Duration: eventToModify.Duration,
+                Description: eventToModify.Description
+            );
+        }
+
+        DateClock targetDateClock = new DateClock(targetDate, new Clock(0, 0));
+        DateClock adjustedDateClock = targetDateClock - duration;
+        return new Event(
+            Subject: eventToModify.Subject,
+            dateClock: adjustedDateClock,
+            Duration: eventToModify.Duration,
+            Description: eventToModify.Description
+        );
     }
 }
