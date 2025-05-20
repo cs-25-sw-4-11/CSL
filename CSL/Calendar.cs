@@ -144,7 +144,7 @@ public record Calendar(Event[] Events)
         }
 
         Date targetDate = targetEvent.Date!.Value;
-        if (!eventToModify.Duration.HasValue)
+        if (eventToModify.Duration is null)
         {
             return new Event(
                 Subject: eventToModify.Subject,
