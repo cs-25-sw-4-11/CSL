@@ -229,6 +229,17 @@ public class CalendarVisitorTest
                     new (Subject: new Subject("qwe"), Date: new Date(4, 5, 2020)),
                 ])
             );
+            yield return new TestCaseData(
+            "Meds = 'Take Medicine' ++ 5 min ++ \"Take the blue pill\";" +
+            "Dinner = 'Dinner' ++ 30 min ++ 18:00;" +
+            "MedsBeforeDinner = Meds << ([30 min] << Dinner);" +
+            "MedsBeforeDinner ++ 11/04/2025",
+                new Calendar([
+                    new (Subject: new Subject("Take Medicine"), Duration: new Duration(5, 0), Description: "Take the blue pill", Date: new Date(11, 4, 2025), Clock: new Clock(17, 25)),
+                    new (Hidden: true, Duration: new Duration(30, 0), Date: new Date(11, 4, 2025), Clock: new Clock(17, 30)),
+                    new (Subject: new Subject("Dinner"), Duration: new Duration(30, 0), Date: new Date(11, 4, 2025), Clock: new Clock(18, 0))
+                ])
+            );
         }
     }
 
