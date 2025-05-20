@@ -129,6 +129,106 @@ public class CalendarVisitorTest
                     new (Subject: new Subject("Med"), Duration: new(30,0), Description: new("Dinner"), Hidden: true),
                 ])
             );
+
+            yield return new TestCaseData(
+                "e1 = 1h; e2 = 12:30 ++ 02/06/2004; e1 << e2",
+                new Calendar([
+                    new (Duration: new Duration(60, 0), Clock: new Clock(11, 30), Date: new Date(2, 6, 2004)),
+                    new (Clock: new Clock(12, 30), Date: new Date(2, 6, 2004))
+                ])
+            );
+            yield return new TestCaseData(
+                "e1 = 1h; e2 = 1:00 ++ 02/06/2004; e1 << e2",
+                new Calendar([
+                    new (Duration: new Duration(60, 0), Clock: new Clock(0, 0), Date: new Date(2, 6, 2004)),
+                    new (Clock: new Clock(1, 0), Date: new Date(2, 6, 2004))
+                ])
+            );
+            yield return new TestCaseData(
+            "e1 = 10h; e2 = 9:00 ++ 02/06/2004; e1 << e2",
+                new Calendar([
+                    new (Duration: new Duration(600, 0), Clock: new Clock(23, 0), Date: new Date(1, 6, 2004)),
+                    new (Clock: new Clock(9, 0), Date: new Date(2, 6, 2004))
+                ])
+            );
+            yield return new TestCaseData(
+                "e1 = 1h; e2 = 02/06/2004; e1 << e2",
+                new Calendar([
+                    new (Duration: new Duration(60, 0), Clock: new Clock(23, 0), Date: new Date(1, 6, 2004)),
+                    new (Date: new Date(2, 6, 2004))
+                ])
+            );
+            yield return new TestCaseData(
+                "e1 = 'abc'; e2 = 12:30 ++ 01/01/2000; e1 << e2",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Clock: new Clock(12, 30), Date: new Date(1, 1, 2000)),
+                    new (Date: new Date(1, 1, 2000), Clock: new Clock(12, 30))
+                ])
+            );
+            yield return new TestCaseData(
+                "e1 = 'abc'; e2 = 01/01/2000; e1 << e2",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Date: new Date(1, 1, 2000)),
+                    new (Date: new Date(1, 1, 2000))
+                ])
+            );
+            yield return new TestCaseData(
+            "e1 = 'abc' ++ 2d; e2 = 01/10/2025; e1 << e2",
+            new Calendar([
+                    new (Subject: new Subject("abc"), Date: new Date(29, 9, 2025), Duration: new Duration(2880, 0)),
+                    new (Date: new Date(1, 10, 2025))
+                ])
+            );
+            yield return new TestCaseData(
+                "e1 = 2d; e2 = 3h; e1 << (e2 << 06/06/2006)",
+                new Calendar([
+                    new (Duration: new Duration(2880, 0), Date: new Date(3, 6, 2006), Clock: new Clock(21, 0)),
+                    new (Duration: new Duration(180, 0), Date: new Date(5, 6, 2006), Clock: new Clock(21, 0)),
+                    new (Date: new Date(6, 6, 2006))
+                ])
+            );
+            yield return new TestCaseData(
+            "e1 = 2d; e1 << 06/06/2006",
+            new Calendar([
+                    new (Duration: new Duration(2880, 0), Date: new Date(4, 6, 2006)),
+                    new (Date: new Date(6, 6, 2006))
+                ])
+            );
+            yield return new TestCaseData(
+            "e1 = 1d; e2 = 2d; e1 << (e2 << 06/06/2006)",
+            new Calendar([
+                    new (Duration: new Duration(1440, 0), Date: new Date(3, 6, 2006)),
+                    new (Duration: new Duration(2880, 0), Date: new Date(4, 6, 2006)),
+                    new (Date: new Date(6, 6, 2006))
+                ])
+            );
+            yield return new TestCaseData(
+                "e2 = 1mth; e2 << 06/06/2006",
+                new Calendar([
+                    new (Duration: new Duration(0, 1), Date: new Date(6, 5, 2006)),
+                    new (Date: new Date(6, 6, 2006))
+                ])
+            );
+            yield return new TestCaseData(
+            "e1 = 1y; e2 = 2y; e1 << (e2 << 06/06/2006)",
+            new Calendar([
+                    new (Duration: new Duration(0, 12), Date: new Date(6, 6, 2003)),
+                    new (Duration: new Duration(0, 24), Date: new Date(6, 6, 2004)),
+                    new (Date: new Date(6, 6, 2006))
+                ])
+            );
+            yield return new TestCaseData(
+                "e1 = 'abc' ++ 1d ++ \"def\";" +
+                "e2 = 'hij' ++ 30min ++ 05/05/2020;" +
+                "e3 = 'qwe' ++ 04/05/2020;" +
+                "c1 = e2 || e3;" +
+                "e1 << c1",
+                new Calendar([
+                    new (Subject: new Subject("abc"), Duration: new Duration(1440, 0), Description: "def", Date: new Date(3, 5, 2020)),
+                    new (Subject: new Subject("hij"), Duration: new Duration(30, 0), Date: new Date(5, 5, 2020)),
+                    new (Subject: new Subject("qwe"), Date: new Date(4, 5, 2020)),
+                ])
+            );
         }
     }
 

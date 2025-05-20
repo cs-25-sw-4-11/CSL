@@ -129,4 +129,12 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     }
 
 
+
+    public override Calendar VisitStrictlyBeforeOp(CSLParser.StrictlyBeforeOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        return Calendar.StrictlyBeforeOp(left, right);
+    }
 }
