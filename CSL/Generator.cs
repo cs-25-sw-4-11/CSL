@@ -37,6 +37,11 @@ public class Generator
 
         foreach (var calEvent in calendar.Events)
         {
+            if (calEvent.Hidden ?? false)
+            {
+                continue;
+            }
+            
             if (!calEvent.TryGetDateTime(out DateTime dateTime))
             {
                 // If there's a default value, then use that instead.

@@ -9,13 +9,15 @@ using CSL;
 public class CompilerTests
 {
     [TestCase("Compiler/TestCases/casper.txt", "Compiler/TestCases/casper.result.ics")]
+    [TestCase("Compiler/TestCases/casper2.txt", "Compiler/TestCases/casper.result.ics")]
+    
     public void TestSourceCodeExamples(string inputFile, string expectedFile)
     {
         var input = File.ReadAllText(inputFile);
 
         var compiler = new Compiler();
         var output = compiler.Compile(input);
-        
+
         var expectedLines = File.ReadAllLines(expectedFile);
         var actualLines = output.Split(Environment.NewLine);
 
@@ -27,7 +29,7 @@ public class CompilerTests
             {
                 continue;
             }
-            
+
             Assert.That(actualLines[i].Trim(), Is.EqualTo(expectedLines[i].Trim()));
         }
     }
