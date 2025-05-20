@@ -99,7 +99,7 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     {
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
-        
+
         if (left.IsEvent() && right.IsEvent())
         {
             return Event.SubOperator((Event)left, (Event)right);
@@ -114,5 +114,19 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     {
         return Visit(context.expr());
     }
+
+    public override Calendar VisitHideExpr([NotNull] CSLParser.HideExprContext context)
+    {
+        var visit = Visit(context.expr());
+        if (visit.IsEvent())
+        {
+            return Event.HideOperator((Event)visit);
+        }
+        else
+        {
+            return Calendar.HideOperator(visit);
+        }
+    }
+
 
 }
