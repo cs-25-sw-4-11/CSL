@@ -1,7 +1,6 @@
 using System.Collections;
 using Antlr4.Runtime;
-using CSL.TypeChecker;
-using CSL.Exceptions;
+using CSL.EventTypes;
 
 namespace CSL.Tests;
 

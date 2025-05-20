@@ -1,4 +1,4 @@
-namespace CSL;
+namespace CSL.EventTypes;
 
 public readonly struct DateClock(Date date, Clock clock)
 {
