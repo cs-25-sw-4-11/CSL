@@ -123,9 +123,9 @@ public record Calendar(Event[] Events)
 
     private static Event SetEventBeforeTarget(Event eventToModify, Event targetEvent)
     {
-        if (targetEvent.DateClock is null && targetEvent.Date is null)
+        if (targetEvent.DateClock is null && targetEvent.Date is null && targetEvent.Clock is null)
         {
-            throw new ArgumentException($"Target event must have either {nameof(DateClock)} or {nameof(Date)}");
+            throw new ArgumentException($"Target event must have either {nameof(DateClock)}, {nameof(Date)} or {nameof(Clock)}");
         }
 
         if (targetEvent.DateClock.HasValue)
@@ -139,7 +139,24 @@ public record Calendar(Event[] Events)
                 Subject: eventToModify.Subject,
                 dateClock: adjustedTime,
                 Duration: eventToModify.Duration,
-                Description: eventToModify.Description
+                Description: eventToModify.Description,
+                Hidden: eventToModify.Hidden
+            );
+        }
+
+        if (targetEvent.Clock.HasValue)
+        {
+            Clock targetTime = targetEvent.Clock.Value;
+            Clock adjustedTime = eventToModify.Duration.HasValue
+                ? targetTime - eventToModify.Duration.Value
+                : targetTime;
+
+            return new Event(
+                Subject: eventToModify.Subject,
+                Clock: adjustedTime,
+                Duration: eventToModify.Duration,
+                Description: eventToModify.Description,
+                Hidden: eventToModify.Hidden
             );
         }
 
@@ -149,7 +166,8 @@ public record Calendar(Event[] Events)
             return new Event(
                 Subject: eventToModify.Subject,
                 Date: targetDate,
-                Description: eventToModify.Description
+                Description: eventToModify.Description,
+                Hidden: eventToModify.Hidden
             );
         }
 
@@ -161,7 +179,8 @@ public record Calendar(Event[] Events)
                 Subject: eventToModify.Subject,
                 Date: newDate,
                 Duration: eventToModify.Duration,
-                Description: eventToModify.Description
+                Description: eventToModify.Description,
+                Hidden: eventToModify.Hidden
             );
         }
 
@@ -171,7 +190,8 @@ public record Calendar(Event[] Events)
             Subject: eventToModify.Subject,
             dateClock: adjustedDateClock,
             Duration: eventToModify.Duration,
-            Description: eventToModify.Description
+            Description: eventToModify.Description,
+            Hidden: eventToModify.Hidden
         );
     }
 }
