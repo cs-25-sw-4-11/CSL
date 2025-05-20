@@ -2,6 +2,8 @@ using System.Text;
 
 namespace CSL;
 
+using EventTypes;
+
 public record Event(
     Subject? Subject = null,
     Date? Date = null,
@@ -36,6 +38,38 @@ public record Event(
             Description: Description,
             Hidden: Hidden)
     {
+    }
+    
+    /// <summary>
+    /// Tries to get the datetime for an event.
+    /// If an event has a clock, then it gets added as well.
+    /// </summary>
+    /// <param name="dateTime"></param>
+    /// <returns>Whether the datetime was able to be constructed.</returns>
+    public bool TryGetDateTime(out DateTime dateTime)
+    {
+        if (Date is null)
+        {
+            dateTime = default;
+            return false;
+        }
+
+        if (Clock.HasValue)
+        {
+            dateTime = new DateTime(Date.Value.Years,
+                Date.Value.Months,
+                Date.Value.Days,
+                Clock.Value.Hours,
+                Clock.Value.Minutes,
+                0);
+            return true;
+        }
+
+        dateTime = new DateTime(
+            Date.Value.Years,
+            Date.Value.Months,
+            Date.Value.Days);
+        return true;
     }
 
     public override string ToString()
@@ -160,7 +194,7 @@ public record Event(
                 );
             }
 
-            if (firstOperand.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+            if (firstOperand.Duration.Value.Minutes % CSL.EventTypes.Duration.DayFactor == 0)
             {
                 return new Event(
                     Subject: otherOperand.Subject,
@@ -170,9 +204,9 @@ public record Event(
                 );
             }
 
-            Date date = otherOperand.Date.Value;
-            Duration dur = firstOperand.Duration.Value;
-            DateClock result1 = CSL.Date.Plus(date, dur);
+            var date = otherOperand.Date.Value;
+            var dur = firstOperand.Duration.Value;
+            var result1 = CSL.EventTypes.Date.Plus(date, dur);
 
             return new Event(
                 Subject: otherOperand.Subject,
@@ -221,7 +255,7 @@ public record Event(
 
         if (left.Date.HasValue)
         {
-            if (right.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+            if (right.Duration.Value.Minutes % CSL.EventTypes.Duration.DayFactor == 0)
             {
                 if (left.Date.Value >= right.Duration)
                 {
@@ -236,7 +270,7 @@ public record Event(
             else
             {
                 return new Event(
-                        dateClock: CSL.Date.Minus(left.Date.Value, right.Duration.Value),
+                        dateClock: CSL.EventTypes.Date.Minus(left.Date.Value, right.Duration.Value),
                         Subject: left.Subject,
                         Description: left.Description,
                         Hidden: left.Hidden
@@ -281,7 +315,6 @@ public record Event(
             Hidden: true
         );
     }
-
     /// <summary>
     /// 
     /// </summary>

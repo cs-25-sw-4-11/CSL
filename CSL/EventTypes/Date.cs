@@ -1,4 +1,4 @@
-namespace CSL;
+namespace CSL.EventTypes;
 
 public readonly struct Date(int days, int months, int years)
 {
