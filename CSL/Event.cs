@@ -39,6 +39,7 @@ public record Event(
             Hidden: Hidden)
     {
     }
+    
     /// <summary>
     /// Tries to get the datetime for an event.
     /// If an event has a clock, then it gets added as well.
@@ -203,9 +204,9 @@ public record Event(
                 );
             }
 
-            Date date = otherOperand.Date.Value;
-            Duration dur = firstOperand.Duration.Value;
-            DateClock result1 = CSL.Date.Plus(date, dur);
+            var date = otherOperand.Date.Value;
+            var dur = firstOperand.Duration.Value;
+            var result1 = CSL.EventTypes.Date.Plus(date, dur);
 
             return new Event(
                 Subject: otherOperand.Subject,
@@ -314,7 +315,6 @@ public record Event(
             Hidden: true
         );
     }
-
     /// <summary>
     /// 
     /// </summary>
