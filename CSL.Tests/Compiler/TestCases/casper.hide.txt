@@ -1,0 +1,21 @@
+booster =
+    'Bund en booster'
+    ++ 5 min
+    ++ 17:50;
+
+hygiejne =
+    'Vask hænder'
+    ++ 5 min
+    ++ 17:55;
+
+hemmeligEvent =
+    'Tur i kirke'
+    ++ 1h
+    ++ 22:00;
+
+aftensmad = 'Aftensmad' ++ 60 min ++ 18:00;
+
+
+aften = booster || hygiejne || aftensmad || [hemmeligEvent];
+
+aften ++ 25/06/2025
