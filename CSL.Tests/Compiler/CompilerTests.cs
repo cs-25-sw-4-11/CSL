@@ -8,7 +8,7 @@ using CSL;
 [TestFixture]
 public class CompilerTests
 {
-    [TestCase("casper.txt", "casper.result.ics")]
+    [TestCase("Compiler/TestCases/casper.txt", "Compiler/TestCases/casper.result.ics")]
     public void TestSourceCodeExamples(string inputFile, string expectedFile)
     {
         var input = File.ReadAllText(inputFile);
