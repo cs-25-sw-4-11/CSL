@@ -125,7 +125,7 @@ public record Calendar(Event[] Events)
     {
         if (!targetEvent.DateClock.HasValue && !targetEvent.Date.HasValue)
         {
-            throw new ArgumentException("Target event must have either DateClock or Date");
+            throw new ArgumentException($"Target event must have either {nameof(DateClock)} or {nameof(Date)}");
         }
 
         if (targetEvent.DateClock.HasValue)
