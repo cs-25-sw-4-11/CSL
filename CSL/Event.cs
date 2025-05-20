@@ -39,39 +39,6 @@ public record Event(
             Hidden: Hidden)
     {
     }
-    
-    /// <summary>
-    /// Tries to get the datetime for an event.
-    /// If an event has a clock, then it gets added as well.
-    /// </summary>
-    /// <param name="dateTime"></param>
-    /// <returns>Whether the datetime was able to be constructed.</returns>
-    public bool TryGetDateTime(out DateTime dateTime)
-    {
-        if (Date is null)
-        {
-            dateTime = default;
-            return false;
-        }
-
-        if (Clock.HasValue)
-        {
-            dateTime = new DateTime(Date.Value.Years,
-                Date.Value.Months,
-                Date.Value.Days,
-                Clock.Value.Hours,
-                Clock.Value.Minutes,
-                0);
-            return true;
-        }
-
-        dateTime = new DateTime(
-            Date.Value.Years,
-            Date.Value.Months,
-            Date.Value.Days);
-        return true;
-    }
-    
     /// <summary>
     /// Tries to get the datetime for an event.
     /// If an event has a clock, then it gets added as well.
