@@ -254,11 +254,8 @@ public record Event(
                 var duration = firstOperand.Duration;
                 var result = dateclock + duration;
 
-                return new Event(
-                    Subject: otherOperand.Subject,
-                    Description: otherOperand.Description,
-                    Hidden: otherOperand.Hidden,
-                    dateClock: result.Value
+                return otherOperand.With(
+                    result.Value
                 );
             }
 
