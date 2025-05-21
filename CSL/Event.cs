@@ -241,11 +241,8 @@ public record Event(
         // checks if the other operand is a duration, date, dateclock or clock and calculates accordingly 
         if (otherOperand is { Duration: not null, DateClock: null })
         {
-            return new Event(
-                Subject: otherOperand.Subject,
-                Description: otherOperand.Description,
-                Hidden: otherOperand.Hidden,
-                Duration: firstOperand.Duration + otherOperand.Duration
+            return otherOperand.With(
+                duration: firstOperand.Duration + otherOperand.Duration
             );
         }
 
