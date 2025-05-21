@@ -277,8 +277,8 @@ public record Event(
 
         if (otherOperand.Duration is null && otherOperand.Clock.HasValue)
         {
-            return new Event(
-                Clock: otherOperand.Clock + firstOperand.Duration
+            return otherOperand.With(
+                clock: otherOperand.Clock + firstOperand.Duration
             );
         }
 
