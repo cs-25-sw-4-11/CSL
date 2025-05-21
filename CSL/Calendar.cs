@@ -27,6 +27,10 @@ public record Calendar(Event[] Events)
     {
         return Events.Length == 1;
     }
+    
+    public Event this[int index] => Events[index];
+
+    public Event? Event => IsEvent() ? Events[0] : null;
 
     public static Calendar AddOperator(Calendar left, Event right)
     {
