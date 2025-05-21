@@ -51,7 +51,6 @@ public class EventTests
     {
         var firstDate = new Date(firstDay, firstMonth, firstYear);
         var secondDate = new Date(secondDay, secondMonth, secondYear);
-        var duration = secondDate.GetDateAsDuration();
-        Assert.That(firstDate >= duration, Is.EqualTo(expectedResult));
+        Assert.That(firstDate >= secondDate, Is.EqualTo(expectedResult));
     }
 }
