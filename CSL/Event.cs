@@ -10,7 +10,8 @@ public record Event(
     Clock? Clock = null,
     Duration? Duration = null,
     Description? Description = null,
-    bool? Hidden = null)
+    bool? Hidden = null,
+    Duration? RepeatInterval = null)
 {
     public DateClock? DateClock
     {
@@ -29,14 +30,16 @@ public record Event(
         Subject? Subject = null,
         Duration? Duration = null,
         Description? Description = null,
-        bool? Hidden = null)
+        bool? Hidden = null,
+        Duration? RepeatInterval = null)
         : this(
             Subject: Subject,
             Date: dateClock.Date,
             Clock: dateClock.Clock,
             Duration: Duration,
             Description: Description,
-            Hidden: Hidden)
+            Hidden: Hidden,
+            RepeatInterval: RepeatInterval)
     {
     }
     
