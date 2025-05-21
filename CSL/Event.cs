@@ -343,15 +343,9 @@ public record Event(
 
     public static Event HideOperator(Event e)
     {
-        return new Event(
-            Subject: e.Subject,
-            Duration: e.Duration,
-            Description: e.Description,
-            Date: e.Date,
-            Clock: e.Clock,
-            Hidden: true
-        );
+        return e.With(hidden: true);
     }
+    
     /// <summary>
     /// 
     /// </summary>
