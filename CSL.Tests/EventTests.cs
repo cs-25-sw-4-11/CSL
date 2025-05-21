@@ -37,7 +37,7 @@ public class EventTests
     [TestCase(1, 1, 2025, 31, 12, 2024, true)]
 
 
-    //Oskar fix den her 
+    //Mikkel fix den her 
     [TestCase(1, 2, 2024, 31, 1, 2024, true)]
 
     [TestCase(1, 1, 2024, 1, 1, 2024, true)]
