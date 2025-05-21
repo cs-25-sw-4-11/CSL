@@ -42,6 +42,81 @@ public record Event(
             RepeatInterval: RepeatInterval)
     {
     }
+
+    /// <summary>
+    /// Bases of the current Event, and applies the new attributes.
+    /// </summary>
+    /// <param name="subject"></param>
+    /// <param name="date"></param>
+    /// <param name="clock"></param>
+    /// <param name="duration"></param>
+    /// <param name="description"></param>
+    /// <param name="hidden"></param>
+    /// <param name="repeatInterval"></param>
+    /// <returns></returns>
+    public Event With(Subject? subject = null,
+        Date? date = null,
+        Clock? clock = null,
+        Duration? duration = null,
+        Description? description = null,
+        bool? hidden = null,
+        Duration? repeatInterval = null)
+    {
+        return new Event(
+            Subject: subject ?? this.Subject,
+            Date: date ?? this.Date,
+            Clock: clock ?? this.Clock,
+            Duration: duration ?? this.Duration,
+            Description: description ?? this.Description,
+            Hidden: hidden ?? this.Hidden,
+            RepeatInterval: repeatInterval ?? this.RepeatInterval
+        );
+    }
+
+    /// <summary>
+    /// Bases of the current Event, and applies the new attributes.
+    /// </summary>
+    /// <param name="dateClock"></param>
+    /// <param name="subject"></param>
+    /// <param name="duration"></param>
+    /// <param name="description"></param>
+    /// <param name="hidden"></param>
+    /// <param name="repeatInterval"></param>
+    /// <returns></returns>
+    public Event With(DateClock dateClock,
+        Subject? subject = null,
+        Duration? duration = null,
+        Description? description = null,
+        bool? hidden = null,
+        Duration? repeatInterval = null)
+    {
+        return new Event(
+            dateClock,
+            Subject: subject ?? this.Subject,
+            Duration: duration ?? this.Duration,
+            Description: description ?? this.Description,
+            Hidden: hidden ?? this.Hidden,
+            RepeatInterval: repeatInterval ?? this.RepeatInterval
+        );
+    }
+
+    /// <summary>
+    /// Spreads <code>e</code> and applies With.
+    /// </summary>
+    /// <param name="e"></param>
+    /// <returns></returns>
+    public Event With(Event e)
+    {
+        return new Event(
+            Subject: e.Subject ?? this.Subject,
+            Date: e.Date ?? this.Date,
+            Clock: e.Clock ?? this.Clock,
+            Duration: e.Duration ?? this.Duration,
+            Description: e.Description ?? this.Description,
+            Hidden: e.Hidden ?? this.Hidden,
+            RepeatInterval: e.RepeatInterval ?? this.RepeatInterval
+        );
+    }
     
     /// <summary>
     /// Tries to get the datetime for an event.
