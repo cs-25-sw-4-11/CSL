@@ -261,11 +261,8 @@ public record Event(
 
             if (firstOperand.Duration.Value.Minutes % CSL.EventTypes.Duration.DayFactor == 0)
             {
-                return new Event(
-                    Subject: otherOperand.Subject,
-                    Description: otherOperand.Description,
-                    Hidden: otherOperand.Hidden,
-                    Date: otherOperand.Date + firstOperand.Duration
+                return otherOperand.With(
+                    date: otherOperand.Date + firstOperand.Duration
                 );
             }
 
