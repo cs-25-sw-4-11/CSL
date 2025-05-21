@@ -270,11 +270,8 @@ public record Event(
             var dur = firstOperand.Duration.Value;
             var result1 = CSL.EventTypes.Date.Plus(date, dur);
 
-            return new Event(
-                Subject: otherOperand.Subject,
-                Description: otherOperand.Description,
-                Hidden: otherOperand.Hidden,
-                dateClock: result1
+            return otherOperand.With(
+                result1
             );
         }
 
