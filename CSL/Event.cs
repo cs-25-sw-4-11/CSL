@@ -352,11 +352,11 @@ public record Event(
     }
     
     /// <summary>
-    /// 
+    /// Returns the event of a singleton Calendar.
     /// </summary>
-    /// <param name="c"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="c">Singleton Calendar</param>
+    /// <returns>The event of the calendar</returns>
+    /// <exception cref="InvalidCastException">Throws an exception if Calendar doesn't contain exactly one event</exception>
     public static explicit operator Event(Calendar c)
     {
         if (c.Events.Length != 1)
