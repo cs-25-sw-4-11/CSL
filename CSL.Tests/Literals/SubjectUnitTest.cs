@@ -1,4 +1,4 @@
-namespace CSL.Tests;
+namespace CSL.Tests.Literals;
 
 using CSL;
 using CSL.Exceptions;
