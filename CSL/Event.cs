@@ -345,6 +345,11 @@ public record Event(
     {
         return e.With(hidden: true);
     }
+
+    public static Event RecurrenceOperator(Event ev, Duration interval)
+    {
+        return ev.With(repeatInterval: interval);
+    }
     
     /// <summary>
     /// 
