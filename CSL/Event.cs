@@ -332,12 +332,8 @@ public record Event(
         {
             if (left.Duration >= right.Duration)
             {
-                return new Event(
-                    Subject: left.Subject,
-                    Description: left.Description,
-                    Duration: left.Duration - right.Duration,
-                    Hidden: left.Hidden
-                );
+                // Doesn't call .value here, an error?
+                return left.With(duration: left.Duration - right.Duration);
             }
         }
 
