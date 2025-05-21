@@ -313,31 +313,18 @@ public record Event(
             {
                 if (left.Date.Value >= right.Duration)
                 {
-                    return new Event(
-                        Subject: left.Subject,
-                        Description: left.Description,
-                        Date: left.Date.Value - right.Duration.Value,
-                        Hidden: left.Hidden
-                    );
+                    return left.With(date: left.Date.Value - right.Duration.Value);
                 }
             }
             else
             {
-                return new Event(
-                        dateClock: CSL.EventTypes.Date.Minus(left.Date.Value, right.Duration.Value),
-                        Subject: left.Subject,
-                        Description: left.Description,
-                        Hidden: left.Hidden
-                    );
+                return left.With(CSL.EventTypes.Date.Minus(left.Date.Value, right.Duration.Value));
             }
         }
         if (left.Clock.HasValue)
         {
-            return new Event(
-                Subject: left.Subject,
-                Description: left.Description,
-                Clock: left.Clock.Value - right.Duration.Value,
-                Hidden: left.Hidden
+            return left.With(
+                clock: left.Clock.Value - right.Duration.Value
             );
         }
 
