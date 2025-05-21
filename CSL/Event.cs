@@ -356,7 +356,7 @@ public record Event(
     {
         if (c.Events.Length != 1)
         {
-            throw new ArgumentException();
+            throw new InvalidCastException($"Can't cast Calendar to event, because Calendar contains '{c.Events.Length}' events");
         }
 
         return c.Events[0];
