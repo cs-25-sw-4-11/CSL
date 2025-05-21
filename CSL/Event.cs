@@ -303,12 +303,7 @@ public record Event(
         {
             if (left.DateClock.Value >= right.Duration)
             {
-                return new Event(
-                    Subject: left.Subject,
-                    Description: left.Description,
-                    dateClock: left.DateClock.Value - right.Duration.Value,
-                    Hidden: left.Hidden
-                );
+                return left.With(left.DateClock.Value - right.Duration.Value);
             }
         }
 
