@@ -215,14 +215,7 @@ public record Event(
             throw new ArgumentException($"Overlapping {nameof(Description)}");
         }
 
-        return new Event(
-            Subject: left.Subject ?? right.Subject,
-            Date: left.Date ?? right.Date,
-            Clock: left.Clock ?? right.Clock,
-            Duration: left.Duration ?? right.Duration,
-            Description: left.Description ?? right.Description,
-            Hidden: left.Hidden ?? right.Hidden
-        );
+        return right.With(left);
     }
 
     public static Event AddOperator(Event left, Event right)
