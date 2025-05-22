@@ -1,4 +1,4 @@
-Meds = 'Take Medicine' ++ 5 min ++ "Take the blue pill, Nero";
+Meds = 'Take Medicine' ++ 5 min ++ "Take the blue pill, Neo";
 
 Dinner = 'Dinner' ++ 30 min ++ 18:00;
 

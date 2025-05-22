@@ -1,5 +1,6 @@
 using System.Collections;
 using CSL.EventTypes;
+using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 using Ical.Net.Serialization;
@@ -51,8 +52,42 @@ public class GeneratorTests
             ]), ical);
         }
     }
+
+    public static IEnumerable CaseStudy2TestCase
+    {
+        get
+        {
+            var ical = new Ical.Net.Calendar();
+            
+            var medsEvent = new CalendarEvent
+            {
+                Summary = "Take Medicine",
+                Description = "Take the blue pill, Neo",
+                Start = new CalDateTime(new DateTime(2025, 4, 11, 17, 25, 0)),
+                End = new CalDateTime(new DateTime(2025, 4, 11, 17, 30, 0)),
+            };
+            
+            var dinnerEvent = new CalendarEvent
+            {
+                Summary = "Dinner",
+                Description = "",
+                Start = new CalDateTime(new DateTime(2025, 4, 11, 18, 0, 0)),
+                End = new CalDateTime(new DateTime(2025, 4, 11, 18, 30, 0)),
+            };
+
+            var rrule = new RecurrencePattern(FrequencyType.Daily, 1);
+            medsEvent.RecurrenceRules = new List<RecurrencePattern> { rrule };
+            dinnerEvent.RecurrenceRules = new List<RecurrencePattern> { rrule };
+            
+            ical.Events.Add(medsEvent);
+            ical.Events.Add(dinnerEvent);
+
+            yield return new TestCaseData(new Calendar([]), ical);
+        }
+    }
     
     [TestCaseSource(nameof(GeneratorTestCases))]
+    [TestCaseSource(nameof(CaseStudy2TestCase))]
     public void CompareCalendars(Calendar calendar, Ical.Net.Calendar expectedCalendar)
     {
         expectedCalendar.AddTimeZone(new VTimeZone("Europe/Copenhagen")); // TZ should be added

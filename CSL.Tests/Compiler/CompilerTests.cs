@@ -10,7 +10,7 @@ public class CompilerTests
 {
     [TestCase("Compiler/TestCases/casper.txt", "Compiler/TestCases/casper.result.ics")]
     [TestCase("Compiler/TestCases/casper.hide.txt", "Compiler/TestCases/casper.result.ics")]
-    
+    [TestCase("Compiler/TestCases/CaseStudy2.txt", "Compiler/TestCases/CaseStudy2.result.ics")]
     public void TestSourceCodeExamples(string inputFile, string expectedFile)
     {
         var input = File.ReadAllText(inputFile);
