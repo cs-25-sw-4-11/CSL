@@ -314,7 +314,7 @@ public static IEnumerable TildeOpCases
         yield return new TestCaseData("((01/01/2000 ++ 10:00) ~ (01/01/2000 ++ 13:00))",
             new Event(Duration: new Duration(180, 0))); // 0y 0m 0d 3h 0m 0s
         yield return new TestCaseData("(01/01/2000 ~ (01/02/2000 ++ 13:00))",
-            new Event(Duration: new Duration(2220, 0))); // 0y 0m 1d 13h 0m 0s
+            new Event(Duration: new Duration(780, 1))); // 0y 1m 0d 13h 0m 0s
         yield return new TestCaseData("((01/01/2000 ++ 13:00) ~ 01/01/2000)",
             new Event(Duration: new Duration(0, 0))); // Same day would be 0 difference if Date has 00:00 time
         yield return new TestCaseData("(10:30 ~ 13:00)",
