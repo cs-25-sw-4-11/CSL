@@ -307,18 +307,19 @@ public class CalendarVisitorTest
 
 public static IEnumerable TildeOpCases
 {
-    get
-    {
-        yield return new TestCaseData("(01/01/2000 ~ 02/02/2001)",
-            new Event(Duration: new Duration(1440, 13))); // 1 year, 1 month, 1 day
-        yield return new TestCaseData("((01/01/2000 ++ 10:00) ~ (01/01/2000 ++ 13:00))",
-            new Event(Duration: new Duration(180, 0))); // 0y 0m 0d 3h 0m 0s
-        yield return new TestCaseData("(01/01/2000 ~ (01/02/2000 ++ 13:00))",
-            new Event(Duration: new Duration(780, 1))); // 0y 1m 0d 13h 0m 0s
-        yield return new TestCaseData("((01/01/2000 ++ 13:00) ~ 01/01/2000)",
-            new Event(Duration: new Duration(0, 0))); // Same day would be 0 difference if Date has 00:00 time
-        yield return new TestCaseData("(10:30 ~ 13:00)",
-            new Event(Duration: new Duration(150, 0))); // 0y 0m 0d 2h 30m 0s
+        get
+        {
+            yield return new TestCaseData("(01/01/2000 ~ 02/02/2001)",
+                new Event(Duration: new Duration(1440, 13))); // 1 year, 1 month, 1 day // date ~ date
+            yield return new TestCaseData("((01/01/2000 ++ 10:00) ~ (01/01/2000 ++ 13:00))",
+                new Event(Duration: new Duration(180, 0))); // 0y 0m 0d 3h 0m 0s // dateclock ~ dateclock
+            yield return new TestCaseData("(01/01/2000 ~ (01/02/2000 ++ 13:00))",
+                new Event(Duration: new Duration(780, 1))); // 0y 1m 0d 13h 0m 0s // date ~ dateclock
+            yield return new TestCaseData("(10:30 ~ 13:00)",
+                new Event(Duration: new Duration(150, 0))); // 0y 0m 0d 2h 30m 0s // clock ~ clock
+                    yield return new TestCaseData("((01/01/2000 ++ 10:00) ~ 02/02/2001)",
+            new Event(Duration: new Duration(840, 13))); // 1y 1m 1d 0h 0m 0s // dateclock ~ date
+            
     }
 }
 
@@ -332,12 +333,16 @@ public void TestTildeOp(string input, Event expectedResult)
     Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
 }
 
-/*         public static IEnumerable TestTildeOpErrorCases
+        public static IEnumerable TestTildeOpErrorCases
     {
         get
         {
-            yield return new TestCaseData("(02/02/2002 ~ 01/01/2000)",
-                new Event(new Duration()));
+            yield return new TestCaseData("(02/02/2001 ~ 01/01/2000)"); //date ~ date, negative duration not allowed
+            yield return new TestCaseData("(13:00 ~ 01/01/2000)"); // Clock ~ date not allowed
+            yield return new TestCaseData("(13:00 ~ 11:00)"); //clock ~ clock, negative duration not allowed
+            yield return new TestCaseData("(12:00 ~ (01/01/2000 ++ 13:00))"); //clock ~ datetime not allowed    
+            yield return new TestCaseData("(01/01/2000) ~ 13:00"); //date ~ clock not allowed
+            yield return new TestCaseData("((01/01/2000 ++ 13:00) ~ 13:00)"); //datetime ~ clock not allowed            
         }
     }
     
@@ -346,6 +351,6 @@ public void TestTildeOp(string input, Event expectedResult)
     {
         var calendarVisitor = new CalendarVisitor();
 
-        Assert.Throws<ArgumentException>(() => calendarVisitor.Visit(StringParser.ParseString(input)));
-    } */
+        Assert.Throws<InvalidOperationException>(() => calendarVisitor.Visit(StringParser.ParseString(input)));
+    }
 }

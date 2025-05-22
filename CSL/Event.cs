@@ -256,15 +256,39 @@ public static Event TildeOperator(Event left, Event right)
         Duration dateClockResult = CSL.DateClock.TildeOp(leftDateClock, rightDateClock);
         return new Event(Duration: dateClockResult);
     }
+        if (left.Date.HasValue && right.Clock.HasValue && !left.Clock.HasValue && !right.Date.HasValue)
+        {
+            throw new InvalidOperationException("Invalid combination of event properties for Range operation");
+        }
+        if (left.Clock.HasValue && !left.Date.HasValue && !right.Clock.HasValue && right.Date.HasValue)
+        {
+            throw new InvalidOperationException("Invalid combination of event properties for Range operation");
+        }
+        if (left.Clock.HasValue && !left.Date.HasValue && right.DateClock.HasValue)
+        {
+            throw new InvalidOperationException("Invalid combination of event properties for Range operation");            
+        }
+        if (left.DateClock.HasValue && right.Clock.HasValue && !right.Date.HasValue)
+        {
+            throw new InvalidOperationException("Invalid combination of event properties for Range operation");    
+        }
+        if (left.Date.HasValue && left.Clock.HasValue && right.Clock.HasValue && !right.Date.HasValue)
+        {
+            throw new InvalidOperationException("Invalid combination of event properties for Range operation");
+        }
+        if (left.Clock.HasValue && !left.Date.HasValue && right.Date.HasValue && right.Clock.HasValue)
+        {
+            throw new InvalidOperationException("Invalid combination of event properties for Range operation");
+        }
 
         // Handle DateClock ~ Date
-    if (left.DateClock.HasValue && right.Date.HasValue)
-    {
-        DateClock leftDateClock = left.DateClock.Value;
-        Date rightDate = right.Date.Value;
-        Duration result = CSL.DateClock.TildeOp(leftDateClock, rightDate);
-        return new Event(Duration: result);
-    }
+        if (left.DateClock.HasValue && right.Date.HasValue)
+        {
+            DateClock leftDateClock = left.DateClock.Value;
+            Date rightDate = right.Date.Value;
+            Duration result = CSL.DateClock.TildeOp(leftDateClock, rightDate);
+            return new Event(Duration: result);
+        }
 
         // Handle Date ~ DateClock
     if (left.Date.HasValue && right.DateClock.HasValue)
@@ -285,7 +309,7 @@ public static Event TildeOperator(Event left, Event right)
         }
 
     // Handle Clock ~ Clock
-    if (left.Clock.HasValue && right.Clock.HasValue)
+    if (left.Clock.HasValue && right.Clock.HasValue && !right.Date.HasValue)
     {
         Clock leftClock = left.Clock.Value;
         Clock rightClock = right.Clock.Value;
