@@ -172,7 +172,9 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             }
         }
 
-        if ((left & right) != 0)
+        if (((left & right) != 0)
+            && left != EventTypes.DateTime // Exempt DateTime, no questions asked.
+            )
         {
             throw new InvalidTypeCompilerException([~left], left); // NOTE: Expected types are not exhaustive
         }
