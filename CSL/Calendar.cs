@@ -106,20 +106,17 @@ public record Calendar(Event[] Events)
     {
         if (first.DateClock.HasValue && second.DateClock.HasValue)
         {
-            Duration secondDuration = second.Date!.Value.GetDateAsDuration() + second.Clock!.Value.GetClockAsDuration();
-            return first.DateClock <= secondDuration;
+            return first.DateClock.Value <= second.DateClock.Value;
         }
 
         if (first.Date.HasValue && second.Date.HasValue)
         {
-            Duration secondDuration = second.Date.Value.GetDateAsDuration();
-            return first.Date.Value <= secondDuration;
+            return first.Date.Value <= second.Date.Value;
         }
 
         if (first.Clock.HasValue && second.Clock.HasValue)
         {
-            Duration secondDuration = second.Clock.Value.GetClockAsDuration();
-            return first.Clock.Value <= secondDuration;
+            return first.Clock.Value <= second.Clock.Value;
         }
 
         return true;

@@ -22,15 +22,22 @@ public readonly struct DateClock(Date date, Clock clock)
 
     public static bool operator >=(DateClock left, Duration right)
     {
-        DateClock rightDate = right.GetDurationAsDateClock();
-        if (left.Date == rightDate.Date) return left.Clock >= rightDate.Clock;
-        return left.Date >= rightDate.Date;
+        return left >= right.GetDurationAsDateClock();
     }
 
     public static bool operator <=(DateClock left, Duration right)
     {
-        DateClock rightDate = right.GetDurationAsDateClock();
-        if (left.Date == rightDate.Date) return left.Clock <= rightDate.Clock;
-        return left.Date <= rightDate.Date;
+        return left <= right.GetDurationAsDateClock();
+    }
+    public static bool operator >=(DateClock left, DateClock right)
+    {
+        if (left.Date == right.Date) return left.Clock >= right.Clock;
+        return left.Date >= right.Date;
+    }
+
+    public static bool operator <=(DateClock left, DateClock right)
+    {
+        if (left.Date == right.Date) return left.Clock <= right.Clock;
+        return left.Date <= right.Date;
     }
 }
