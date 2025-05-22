@@ -33,19 +33,19 @@ public readonly struct Clock(int hours, int minutes)
     {
         return left <= right.GetDurationAsClock();
     }
-    
+
     public static bool operator >=(Clock left, Clock right)
     {
-        if (left.Hours >= right.Hours) return true;
-        if (left.Minutes >= right.Hours) return true;
+        if (left.Hours > right.Hours) return true;
+        if (left.Hours == right.Hours && left.Minutes >= right.Minutes) return true;
         return false;
     }
 
     public static bool operator <=(Clock left, Clock right)
     {
-        if (left.Hours <= right.Hours) return true;
-        if (left.Minutes <= right.Hours) return true;
+        if (left.Hours < right.Hours) return true;
+        if (left.Hours == right.Hours && left.Minutes <= right.Minutes) return true;
         return false;
     }
-    
+
 }
