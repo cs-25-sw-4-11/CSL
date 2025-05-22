@@ -49,24 +49,19 @@ public readonly struct Duration(int minutes, int months)
     }
     public static bool operator >=(Duration left, Duration right)
     {
-        DateTime reference = new DateTime(2000, 1, 1); // arbitrary but consistent
-        DateTime leftTime = AddDuration(reference, left);
-        DateTime rightTime = AddDuration(reference, right);
-        return leftTime >= rightTime;
+
+        return left.GetDurationAsDateTime() >= right.GetDurationAsDateTime();
     }
 
     public static bool operator <=(Duration left, Duration right)
     {
-        DateTime reference = new DateTime(2000, 1, 1);
-        DateTime leftTime = AddDuration(reference, left);
-        DateTime rightTime = AddDuration(reference, right);
-        return leftTime <= rightTime;
+        return left.GetDurationAsDateTime() <= right.GetDurationAsDateTime();
     }
-    public static DateTime AddDuration(DateTime baseDate, Duration d)
+
+    public DateTime GetDurationAsDateTime()
     {
-        baseDate = baseDate.AddMonths(d.Months);
-        baseDate = baseDate.AddMinutes(d.Minutes);
-        return baseDate;
+        DateTime referenceDate = new DateTime(1, 1, 1);
+        return referenceDate.AddMonths(Months).AddMinutes(Minutes);
     }
 
     public DateClock GetDurationAsDateClock()
@@ -82,20 +77,27 @@ public readonly struct Duration(int minutes, int months)
         int days = Minutes / DayFactor;
         int months = Months % YearFactor;
         int years = Months / YearFactor;
+
+        // Handle zero or negative months
         if (months <= 0)
         {
             int yearAdjustment = (Math.Abs(months) + 11) / 12;
             months += 12 * yearAdjustment;
             years -= yearAdjustment;
         }
+
+        // Handle zero or negative days
         while (days <= 0)
         {
             months -= 1;
-            if (months == 0)
+
+            // Handle month underflow
+            if (months <= 0)
             {
                 months = 12;
                 years -= 1;
             }
+
             int daysInPreviousMonth = months switch
             {
                 1 or 3 or 5 or 7 or 8 or 10 or 12 => 31,
@@ -106,10 +108,11 @@ public readonly struct Duration(int minutes, int months)
 
             days += daysInPreviousMonth;
         }
+
         return new Date(
-                days: days,
-                months: months,
-                years: years
+            days: days,
+            months: months,
+            years: years
         );
     }
 
