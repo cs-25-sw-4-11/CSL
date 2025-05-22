@@ -1,0 +1,15 @@
+booster =
+    'Bund en booster'
+    ++ 5 min
+    ++ 17:50;
+
+hygiejne =
+    'Vask hænder'
+    ++ 5 min
+    ++ 17:55;
+
+aftensmad = 'Aftensmad' ++ 60 min ++ 18:00;
+
+aften = booster || hygiejne || aftensmad;
+
+aften ++ 25/06/2025

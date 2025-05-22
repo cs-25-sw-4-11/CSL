@@ -3,12 +3,16 @@ using Antlr4.Runtime.Atn;
 
 namespace CSL;
 
+using EventTypes;
+
 public record Event(
     Subject? Subject = null,
     Date? Date = null,
     Clock? Clock = null,
     Duration? Duration = null,
-    Description? Description = null)
+    Description? Description = null,
+    bool? Hidden = null,
+    Duration? RepeatInterval = null)
 {
     public DateClock? DateClock
     {
@@ -26,14 +30,50 @@ public record Event(
     public Event(DateClock dateClock,
         Subject? Subject = null,
         Duration? Duration = null,
-        Description? Description = null)
+        Description? Description = null,
+        bool? Hidden = null,
+        Duration? RepeatInterval = null)
         : this(
             Subject: Subject,
             Date: dateClock.Date,
             Clock: dateClock.Clock,
             Duration: Duration,
-            Description: Description)
+            Description: Description,
+            Hidden: Hidden,
+            RepeatInterval: RepeatInterval)
     {
+    }
+    
+    /// <summary>
+    /// Tries to get the datetime for an event.
+    /// If an event has a clock, then it gets added as well.
+    /// </summary>
+    /// <param name="dateTime"></param>
+    /// <returns>Whether the datetime was able to be constructed.</returns>
+    public bool TryGetDateTime(out DateTime dateTime)
+    {
+        if (Date is null)
+        {
+            dateTime = default;
+            return false;
+        }
+
+        if (Clock.HasValue)
+        {
+            dateTime = new DateTime(Date.Value.Years,
+                Date.Value.Months,
+                Date.Value.Days,
+                Clock.Value.Hours,
+                Clock.Value.Minutes,
+                0);
+            return true;
+        }
+
+        dateTime = new DateTime(
+            Date.Value.Years,
+            Date.Value.Months,
+            Date.Value.Days);
+        return true;
     }
 
     public override string ToString()
@@ -66,6 +106,10 @@ public record Event(
             sb.Append($"description:{Description.Value}, ");
         }
 
+        if (Hidden.HasValue)
+        {
+            sb.Append($"Hidden:{Hidden.Value}, ");
+        }
         sb.Append(")");
         return sb.ToString();
     }
@@ -102,7 +146,8 @@ public record Event(
             Date: left.Date ?? right.Date,
             Clock: left.Clock ?? right.Clock,
             Duration: left.Duration ?? right.Duration,
-            Description: left.Description ?? right.Description
+            Description: left.Description ?? right.Description,
+            Hidden: left.Hidden ?? right.Hidden
         );
     }
 
@@ -130,6 +175,9 @@ public record Event(
         if (otherOperand is { Duration: not null, DateClock: null })
         {
             return new Event(
+                Subject: otherOperand.Subject,
+                Description: otherOperand.Description,
+                Hidden: otherOperand.Hidden,
                 Duration: firstOperand.Duration + otherOperand.Duration
             );
         }
@@ -143,23 +191,32 @@ public record Event(
                 var result = dateclock + duration;
 
                 return new Event(
-                    (DateClock)(result)
+                    Subject: otherOperand.Subject,
+                    Description: otherOperand.Description,
+                    Hidden: otherOperand.Hidden,
+                    dateClock: result.Value
                 );
             }
 
-            if (firstOperand.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+            if (firstOperand.Duration.Value.Minutes % CSL.EventTypes.Duration.DayFactor == 0)
             {
                 return new Event(
+                    Subject: otherOperand.Subject,
+                    Description: otherOperand.Description,
+                    Hidden: otherOperand.Hidden,
                     Date: otherOperand.Date + firstOperand.Duration
                 );
             }
 
             var date = otherOperand.Date.Value;
             var dur = firstOperand.Duration.Value;
-            var result1 = CSL.Date.Plus(date, dur);
+            var result1 = CSL.EventTypes.Date.Plus(date, dur);
 
             return new Event(
-                result1
+                Subject: otherOperand.Subject,
+                Description: otherOperand.Description,
+                Hidden: otherOperand.Hidden,
+                dateClock: result1
             );
         }
 
@@ -181,7 +238,8 @@ public record Event(
             throw new ArgumentException(
                 $"Missing expression with {nameof(Duration)}");
         }
-        if (left.Duration is not null && right.Date is not null || right.Clock is not null){
+        if (left.Duration is not null && right.Date is not null || right.Clock is not null)
+        {
             throw new ArgumentException(
                 $"Can not have both {nameof(Duration)} and ({nameof(Date)} or {nameof(Clock)})");
         }
@@ -193,30 +251,33 @@ public record Event(
                 return new Event(
                     Subject: left.Subject,
                     Description: left.Description,
-                    dateClock: left.DateClock.Value - right.Duration.Value
+                    dateClock: left.DateClock.Value - right.Duration.Value,
+                    Hidden: left.Hidden
                 );
             }
         }
 
         if (left.Date.HasValue)
         {
-            if (right.Duration.Value.Minutes % CSL.Duration.DayFactor == 0)
+            if (right.Duration.Value.Minutes % CSL.EventTypes.Duration.DayFactor == 0)
             {
                 if (left.Date.Value >= right.Duration)
                 {
                     return new Event(
                         Subject: left.Subject,
                         Description: left.Description,
-                        Date: left.Date.Value - right.Duration.Value
+                        Date: left.Date.Value - right.Duration.Value,
+                        Hidden: left.Hidden
                     );
                 }
             }
             else
             {
                 return new Event(
-                        dateClock: CSL.Date.Minus(left.Date.Value, right.Duration.Value),
+                        dateClock: CSL.EventTypes.Date.Minus(left.Date.Value, right.Duration.Value),
                         Subject: left.Subject,
-                        Description: left.Description
+                        Description: left.Description,
+                        Hidden: left.Hidden
                     );
             }
         }
@@ -225,7 +286,8 @@ public record Event(
             return new Event(
                 Subject: left.Subject,
                 Description: left.Description,
-                Clock: left.Clock.Value - right.Duration.Value
+                Clock: left.Clock.Value - right.Duration.Value,
+                Hidden: left.Hidden
             );
         }
 
@@ -236,7 +298,8 @@ public record Event(
                 return new Event(
                     Subject: left.Subject,
                     Description: left.Description,
-                    Duration: left.Duration - right.Duration
+                    Duration: left.Duration - right.Duration,
+                    Hidden: left.Hidden
                 );
             }
         }
@@ -245,17 +308,28 @@ public record Event(
             $"Missing expression with either {nameof(Duration)} or {nameof(Date)} and {nameof(Clock)} ");
     }
 
-public static Event TildeOperator(Event left, Event right)
-{
-    
-        // Handle DateClock ~ DateClock
-    if (left.DateClock.HasValue && right.DateClock.HasValue)
+    public static Event HideOperator(Event e)
     {
-        DateClock leftDateClock = left.DateClock.Value;
-        DateClock rightDateClock = right.DateClock.Value;
-        Duration dateClockResult = CSL.DateClock.TildeOp(leftDateClock, rightDateClock);
-        return new Event(Duration: dateClockResult);
+        return new Event(
+            Subject: e.Subject,
+            Duration: e.Duration,
+            Description: e.Description,
+            Date: e.Date,
+            Clock: e.Clock,
+            Hidden: true
+        );
     }
+    public static Event TildeOperator(Event left, Event right)
+    {
+        // Handle DateClock ~ DateClock
+        if (left.DateClock.HasValue && right.DateClock.HasValue)
+        {
+            DateClock leftDateClock = left.DateClock.Value;
+            DateClock rightDateClock = right.DateClock.Value;
+            Duration dateClockResult = CSL.EventTypes.DateClock.TildeOp(leftDateClock, rightDateClock);
+            return new Event(Duration: dateClockResult);
+        }
+        
         if (left.Date.HasValue && right.Clock.HasValue && !left.Clock.HasValue && !right.Date.HasValue)
         {
             throw new InvalidOperationException("Invalid combination of event properties for Range operation");
@@ -286,40 +360,40 @@ public static Event TildeOperator(Event left, Event right)
         {
             DateClock leftDateClock = left.DateClock.Value;
             Date rightDate = right.Date.Value;
-            Duration result = CSL.DateClock.TildeOp(leftDateClock, rightDate);
+            Duration result = CSL.EventTypes.DateClock.TildeOp(leftDateClock, rightDate);
             return new Event(Duration: result);
         }
 
         // Handle Date ~ DateClock
-    if (left.Date.HasValue && right.DateClock.HasValue)
-    {
-        Date leftDate = left.Date.Value;
-        DateClock rightDateClock = right.DateClock.Value;
-        Duration result = CSL.DateClock.TildeOp(leftDate, rightDateClock);
-        return new Event(Duration: result);
-    }
-
-    // Handle Date ~ Date
-        if (left.Date.HasValue && right.Date.HasValue)
+        if (left.Date.HasValue && right.DateClock.HasValue)
         {
             Date leftDate = left.Date.Value;
-            Date rightDate = right.Date.Value;
-            Duration dateResult = CSL.Date.TildeOp(leftDate, rightDate);
-            return new Event(Duration: dateResult);
+            DateClock rightDateClock = right.DateClock.Value;
+            Duration result = CSL.EventTypes.DateClock.TildeOp(leftDate, rightDateClock);
+            return new Event(Duration: result);
         }
 
-    // Handle Clock ~ Clock
-    if (left.Clock.HasValue && right.Clock.HasValue && !right.Date.HasValue)
-    {
-        Clock leftClock = left.Clock.Value;
-        Clock rightClock = right.Clock.Value;
-        Duration clockResult = CSL.Clock.TildeOp(leftClock, rightClock);
-        return new Event(Duration: clockResult);
-    }
+        // Handle Date ~ Date
+            if (left.Date.HasValue && right.Date.HasValue)
+            {
+                Date leftDate = left.Date.Value;
+                Date rightDate = right.Date.Value;
+                Duration dateResult = CSL.EventTypes.Date.TildeOp(leftDate, rightDate);
+                return new Event(Duration: dateResult);
+            }
 
-    // If we get here, something is wrong with the events
-    throw new InvalidOperationException("Invalid combination of event properties for Range operation");
-}
+        // Handle Clock ~ Clock
+        if (left.Clock.HasValue && right.Clock.HasValue && !right.Date.HasValue)
+        {
+            Clock leftClock = left.Clock.Value;
+            Clock rightClock = right.Clock.Value;
+            Duration clockResult = CSL.EventTypes.Clock.TildeOp(leftClock, rightClock);
+            return new Event(Duration: clockResult);
+        }
+
+        // If we get here, something is wrong with the events
+        throw new InvalidOperationException("Invalid combination of event properties for Range operation");
+    }
 
 /*Duration.GetDurationAsDate*/
     /// <summary>

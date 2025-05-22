@@ -3,6 +3,8 @@ using CSL.Exceptions;
 
 namespace CSL;
 
+using EventTypes;
+
 public class CalendarVisitor : CSLBaseVisitor<Calendar>
 {
     public Dictionary<string, Calendar> Variables = new Dictionary<string, Calendar>();
@@ -97,7 +99,7 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     {
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
-
+        
         if (left.IsEvent() && right.IsEvent())
         {
             return Event.SubOperator((Event)left, (Event)right);
@@ -113,6 +115,26 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         return Visit(context.expr());
     }
 
+    public override Calendar VisitHideExpr([NotNull] CSLParser.HideExprContext context)
+    {
+        var visit = Visit(context.expr());
+        if (visit.IsEvent())
+        {
+            return Event.HideOperator((Event)visit);
+        }
+        else
+        {
+            return Calendar.HideOperator(visit);
+        }
+    }
+
+    public override Calendar VisitStrictlyBeforeOp(CSLParser.StrictlyBeforeOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        return Calendar.StrictlyBeforeOp(left, right);
+    }
     
     //RangeOpContext fix ?? autogenerate?
     public override Calendar VisitTildeOp([NotNull] CSLParser.TildeOpContext context)
@@ -130,5 +152,4 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
 
         }
     }
-
 }

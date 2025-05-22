@@ -1,4 +1,4 @@
-namespace CSL;
+namespace CSL.EventTypes;
 
 public readonly struct DateClock(Date date, Clock clock)
 {
@@ -22,14 +22,24 @@ public readonly struct DateClock(Date date, Clock clock)
 
     public static bool operator >=(DateClock left, Duration right)
     {
-        return (left.Date.GetDateAsDuration() + left.Clock.GetClockAsDuration()) >= right;
+        return left >= right.GetDurationAsDateClock();
     }
 
     public static bool operator <=(DateClock left, Duration right)
     {
-        return (left.Date.GetDateAsDuration() + left.Clock.GetClockAsDuration()) <= right;
+        return left <= right.GetDurationAsDateClock();
+    }
+    public static bool operator >=(DateClock left, DateClock right)
+    {
+        if (left.Date == right.Date) return left.Clock >= right.Clock;
+        return left.Date >= right.Date;
     }
 
+    public static bool operator <=(DateClock left, DateClock right)
+    {
+        if (left.Date == right.Date) return left.Clock <= right.Clock;
+        return left.Date <= right.Date;
+    }
 
     public static Duration TildeOp(DateClock left, Date right)
     {
@@ -59,14 +69,14 @@ public readonly struct DateClock(Date date, Clock clock)
 
     public static Duration TildeOp(DateClock left, DateClock right)
     {
-     Duration leftDuration = left.Date.GetDateAsDuration() + left.Clock.GetClockAsDuration();
-     Duration rightDuration = right.Date.GetDateAsDuration() + right.Clock.GetClockAsDuration();
+        Duration leftDuration = left.Date.GetDateAsDuration() + left.Clock.GetClockAsDuration();
+        Duration rightDuration = right.Date.GetDateAsDuration() + right.Clock.GetClockAsDuration();
 
-     Duration difference = rightDuration - leftDuration;
+        Duration difference = rightDuration - leftDuration;
 
-    if (difference >= Duration.Zero)
-        return difference;
-     else
-        throw new InvalidOperationException("Range operation results in negative duration");
-}
+        if (difference >= Duration.Zero)
+            return difference;
+        else
+            throw new InvalidOperationException("Range operation results in negative duration");
+    }
 }
