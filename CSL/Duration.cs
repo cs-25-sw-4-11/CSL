@@ -122,4 +122,5 @@ public readonly struct Duration(int minutes, int months)
             minutes: minutes % HourFactor
         );
     }
+    public static Duration Zero => new(0, 0);
 }

@@ -1,4 +1,5 @@
 using System.Text;
+using Antlr4.Runtime.Atn;
 
 namespace CSL;
 
@@ -244,6 +245,59 @@ public record Event(
             $"Missing expression with either {nameof(Duration)} or {nameof(Date)} and {nameof(Clock)} ");
     }
 
+public static Event TildeOperator(Event left, Event right)
+{
+    
+        // Handle DateClock ~ DateClock
+    if (left.DateClock.HasValue && right.DateClock.HasValue)
+    {
+        DateClock leftDateClock = left.DateClock.Value;
+        DateClock rightDateClock = right.DateClock.Value;
+        Duration dateClockResult = CSL.DateClock.TildeOp(leftDateClock, rightDateClock);
+        return new Event(Duration: dateClockResult);
+    }
+
+        // Handle DateClock ~ Date
+    if (left.DateClock.HasValue && right.Date.HasValue)
+    {
+        DateClock leftDateClock = left.DateClock.Value;
+        Date rightDate = right.Date.Value;
+        Duration result = CSL.DateClock.TildeOp(leftDateClock, rightDate);
+        return new Event(Duration: result);
+    }
+
+        // Handle Date ~ DateClock
+    if (left.Date.HasValue && right.DateClock.HasValue)
+    {
+        Date leftDate = left.Date.Value;
+        DateClock rightDateClock = right.DateClock.Value;
+        Duration result = CSL.DateClock.TildeOp(leftDate, rightDateClock);
+        return new Event(Duration: result);
+    }
+
+    // Handle Date ~ Date
+        if (left.Date.HasValue && right.Date.HasValue)
+        {
+            Date leftDate = left.Date.Value;
+            Date rightDate = right.Date.Value;
+            Duration dateResult = CSL.Date.TildeOp(leftDate, rightDate);
+            return new Event(Duration: dateResult);
+        }
+
+    // Handle Clock ~ Clock
+    if (left.Clock.HasValue && right.Clock.HasValue)
+    {
+        Clock leftClock = left.Clock.Value;
+        Clock rightClock = right.Clock.Value;
+        Duration clockResult = CSL.Clock.TildeOp(leftClock, rightClock);
+        return new Event(Duration: clockResult);
+    }
+
+    // If we get here, something is wrong with the events
+    throw new InvalidOperationException("Invalid combination of event properties for Range operation");
+}
+
+/*Duration.GetDurationAsDate*/
     /// <summary>
     /// 
     /// </summary>

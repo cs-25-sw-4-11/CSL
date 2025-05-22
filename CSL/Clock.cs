@@ -18,7 +18,7 @@ public readonly struct Clock(int hours, int minutes)
         return duration.GetDurationAsClock();
     }
 
-    public static Clock operator -(Clock left, Duration right) 
+    public static Clock operator -(Clock left, Duration right)
     {
         Duration duration = left.GetClockAsDuration() - right;
         return duration.GetDurationAsClock();
@@ -26,12 +26,24 @@ public readonly struct Clock(int hours, int minutes)
 
     public static bool operator >=(Clock left, Duration right)
     {
-        return left.GetClockAsDuration() >= right; 
+        return left.GetClockAsDuration() >= right;
     }
 
     public static bool operator <=(Clock left, Duration right)
     {
-        return left.GetClockAsDuration() <= right; 
+        return left.GetClockAsDuration() <= right;
     }
     
+    public static Duration TildeOp(Clock left, Clock right)
+{
+    Duration leftDuration = left.GetClockAsDuration();
+    Duration rightDuration = right.GetClockAsDuration();
+
+    Duration difference = rightDuration - leftDuration;
+
+    if (difference >= Duration.Zero)
+        return difference;
+    else
+        throw new InvalidOperationException("Range operation results in negative duration");
+}
 }

@@ -292,8 +292,8 @@ public class CalendarVisitorTest
             yield return new TestCaseData("05/01/2000 - (3d - 3h)",
                 new Event(new DateClock(new Date(2, 1, 2000), new Clock(3, 0))));
             yield return new TestCaseData("12:00 + (3d - 3d)", new Event(Clock: new Clock(12, 0)));
-            
-            }
+
+        }
     }
     [TestCaseSource(nameof(TestParentersesCases))]
     public void TestParenterses(string input, Event expectedResult)
@@ -304,4 +304,48 @@ public class CalendarVisitorTest
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
     }
+
+public static IEnumerable TildeOpCases
+{
+    get
+    {
+        yield return new TestCaseData("(01/01/2000 ~ 02/02/2001)",
+            new Event(Duration: new Duration(1440, 13))); // 1 year, 1 month, 1 day
+        yield return new TestCaseData("((01/01/2000 ++ 10:00) ~ (01/01/2000 ++ 13:00))",
+            new Event(Duration: new Duration(180, 0))); // 0y 0m 0d 3h 0m 0s
+        yield return new TestCaseData("(01/01/2000 ~ (01/02/2000 ++ 13:00))",
+            new Event(Duration: new Duration(2220, 0))); // 0y 0m 1d 13h 0m 0s
+        yield return new TestCaseData("((01/01/2000 ++ 13:00) ~ 01/01/2000)",
+            new Event(Duration: new Duration(0, 0))); // Same day would be 0 difference if Date has 00:00 time
+        yield return new TestCaseData("(10:30 ~ 13:00)",
+            new Event(Duration: new Duration(150, 0))); // 0y 0m 0d 2h 30m 0s
+    }
+}
+
+[TestCaseSource(nameof(TildeOpCases))]
+public void TestTildeOp(string input, Event expectedResult)
+{
+    var calendarVisitor = new CalendarVisitor();
+    var expr = calendarVisitor.Visit(StringParser.ParseString(input));
+
+    Assert.That(expr, Is.Not.Null);
+    Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
+}
+
+/*         public static IEnumerable TestTildeOpErrorCases
+    {
+        get
+        {
+            yield return new TestCaseData("(02/02/2002 ~ 01/01/2000)",
+                new Event(new Duration()));
+        }
+    }
+    
+    [TestCaseSource(nameof(TestTildeOpErrorCases))]
+    public void TestTildeOpError(string input)
+    {
+        var calendarVisitor = new CalendarVisitor();
+
+        Assert.Throws<ArgumentException>(() => calendarVisitor.Visit(StringParser.ParseString(input)));
+    } */
 }

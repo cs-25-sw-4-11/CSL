@@ -97,7 +97,7 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     {
         var left = Visit(context.expr(0));
         var right = Visit(context.expr(1));
-        
+
         if (left.IsEvent() && right.IsEvent())
         {
             return Event.SubOperator((Event)left, (Event)right);
@@ -111,6 +111,24 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
     public override Calendar VisitParenExpr([NotNull] CSLParser.ParenExprContext context)
     {
         return Visit(context.expr());
+    }
+
+    
+    //RangeOpContext fix ?? autogenerate?
+    public override Calendar VisitTildeOp([NotNull] CSLParser.TildeOpContext context)
+    {
+        var left = Visit(context.expr(0));
+        var right = Visit(context.expr(1));
+
+        if (!left.IsEvent() || !right.IsEvent())
+        {
+            throw new ArgumentException($"Range called on 1 || 2 Calendars: {left} and {right}");
+        }
+        else
+        {
+            return Event.TildeOperator((Event)left, (Event)right);
+
+        }
     }
 
 }

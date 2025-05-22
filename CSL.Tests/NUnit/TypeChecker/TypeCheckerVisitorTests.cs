@@ -36,13 +36,8 @@ public class TypeCheckerVisitorTests
     [TestCase("(\"abc\" || 12:30) / (\"abc\" || 01/01/2001)")]
     public void TestTypeExpressionsValid(string input)
     {
-        var stream = CharStreams.fromString(input);
-        var lexer = new CSLLexer(stream);
 
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new CSLParser(tokens);
-
-        var tree = parser.prog();
+        var tree = StringParser.ParseString(input);
         var typeVisitor = new TypeCheckerVisitor();
 
         Assert.DoesNotThrow(() => typeVisitor.Visit(tree));
@@ -73,13 +68,8 @@ public class TypeCheckerVisitorTests
     [TestCase("\"abc\" ++ 12:30 \\ \"abc\" ++ 01/01/2001")]
     public void TestTypeExpressionsInvalid(string input)
     {
-        var stream = CharStreams.fromString(input);
-        var lexer = new CSLLexer(stream);
 
-        var tokens = new CommonTokenStream(lexer);
-        var parser = new CSLParser(tokens);
-
-        var tree = parser.prog();
+        var tree = StringParser.ParseString(input);
         var typeVisitor = new TypeCheckerVisitor();
 
         Assert.Throws<InvalidTypeCompilerException>(() => typeVisitor.Visit(tree));

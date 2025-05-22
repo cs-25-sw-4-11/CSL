@@ -41,11 +41,24 @@ public readonly struct Date(int days, int months, int years)
 
     public static bool operator >=(Date left, Duration right)
     {
-        return left.GetDateAsDuration() >= right; 
+        return left.GetDateAsDuration() >= right;
     }
 
     public static bool operator <=(Date left, Duration right)
     {
-        return left.GetDateAsDuration() <= right; 
+        return left.GetDateAsDuration() <= right;
     }
+    
+    public static Duration TildeOp(Date left, Date right)
+{
+    Duration leftDuration = left.GetDateAsDuration();
+    Duration rightDuration = right.GetDateAsDuration();
+
+    Duration difference = rightDuration - leftDuration;
+
+    if (difference >= Duration.Zero)
+        return difference;
+    else
+        throw new InvalidOperationException("Range operation results in negative duration");
+}
 }
