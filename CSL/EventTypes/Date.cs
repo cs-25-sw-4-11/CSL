@@ -41,11 +41,52 @@ public readonly struct Date(int days, int months, int years)
 
     public static bool operator >=(Date left, Duration right)
     {
-        return left.GetDateAsDuration() >= right; 
+        return left >= right.GetDurationAsDate();
     }
-
     public static bool operator <=(Date left, Duration right)
     {
-        return left.GetDateAsDuration() <= right; 
+        return left <= right.GetDurationAsDate();
+    }
+
+    public static bool operator >=(Date left, Date right)
+    {
+        if (left.Years > right.Years) return true;
+        if (left.Years == right.Years)
+        {
+            if (left.Months > right.Months) return true;
+            if (left.Months == right.Months)
+            {
+                if (left.Days >= right.Days) return true;
+            }
+        }
+        return false;
+    }
+
+    public static bool operator <=(Date left, Date right)
+    {
+        if (left.Years < right.Years) return true;
+        if (left.Years == right.Years)
+        {
+            if (left.Months < right.Months) return true;
+            if (left.Months == right.Months)
+            {
+                if (left.Days <= right.Days) return true;
+            }
+        }
+        return false;
+    }
+    public static bool operator ==(Date left, Date right)
+    {
+        if (left.Days != right.Days) return false;
+        if (left.Months != right.Months) return false;
+        if (left.Years != right.Years) return false;
+        return true;
+    }
+    public static bool operator !=(Date left, Date right)
+    {
+        if (left.Days == right.Days) return false;
+        if (left.Months == right.Months) return false;
+        if (left.Years == right.Years) return false;
+        return true;
     }
 }
