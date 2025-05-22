@@ -1,3 +1,5 @@
+namespace CSL.Tests.Xunit;
+
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Xunit;

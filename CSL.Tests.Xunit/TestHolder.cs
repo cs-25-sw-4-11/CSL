@@ -1,3 +1,5 @@
+namespace CSL.Tests.Xunit;
+
 public class TestHolder{
     
     public string Input {get; set;}

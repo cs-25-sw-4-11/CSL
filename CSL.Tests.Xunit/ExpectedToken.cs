@@ -1,3 +1,5 @@
+namespace CSL.Tests.Xunit;
+
 public class ExpectedToken
 {
     public int Type { get; set; }
