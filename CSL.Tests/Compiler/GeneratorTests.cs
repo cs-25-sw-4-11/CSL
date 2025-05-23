@@ -75,7 +75,7 @@ public class GeneratorTests
                 End = new CalDateTime(new DateTime(2025, 4, 11, 18, 30, 0)),
             };
 
-            var rrule = new RecurrencePattern(FrequencyType.Daily, 1);
+            var rrule = new RecurrencePattern(FrequencyType.Minutely, 24 * 60);
             medsEvent.RecurrenceRules = new List<RecurrencePattern> { rrule };
             dinnerEvent.RecurrenceRules = new List<RecurrencePattern> { rrule };
             
