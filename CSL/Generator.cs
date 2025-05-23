@@ -1,6 +1,7 @@
 using Antlr4.Runtime;
 using CSL.EventTypes;
 using CSL.TypeChecker;
+using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
 
@@ -50,7 +51,7 @@ public class Generator
                     continue;
                 }
             }
-            
+
             var subject = calEvent.Subject ?? DefaultEvent.Subject!.Value;
             var description = calEvent.Description ?? DefaultEvent.Description!.Value;
             var duration = calEvent.Duration ?? DefaultEvent.Duration!.Value;
@@ -63,6 +64,23 @@ public class Generator
                 Start = new CalDateTime(dateTime),
                 End = new CalDateTime(dateTime.AddMonths(duration.Months).AddMinutes(duration.Minutes)),
             };
+            
+            if (calEvent.RepeatInterval.HasValue)
+            {
+                RecurrencePattern? rrule = null;
+                if (calEvent.RepeatInterval.Value.Minutes != 0)
+                {
+                    rrule = new RecurrencePattern(FrequencyType.Minutely, calEvent.RepeatInterval.Value.Minutes);
+                }else if (calEvent.RepeatInterval.Value.Months != 0)
+                {
+                    rrule = new RecurrencePattern(FrequencyType.Monthly, calEvent.RepeatInterval.Value.Months);
+                }
+
+                if (rrule is not null)
+                {
+                    calendarEvent.RecurrenceRules = new List<RecurrencePattern>() { rrule };
+                }
+            }
             
             ical.Events.Add(calendarEvent);
         }

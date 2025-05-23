@@ -58,14 +58,12 @@ public record Calendar(Event[] Events)
 
     public static Calendar HideOperator(Calendar c)
     {
-        var events = new List<Event>();
-
-        foreach (Event e in c.Events)
-        {
-            events.Add(Event.HideOperator(e));
-        }
-
-        return new Calendar(events.ToArray());
+        return new Calendar(c.Events.Select(e => Event.HideOperator(e)).ToArray());
+    }
+    
+    public static Calendar RecurrenceOperator(Calendar c, Duration interval)
+    {
+        return new Calendar(c.Events.Select(ev => CSL.Event.RecurrenceOperator(ev, interval)).ToArray());
     }
 
     public static Calendar StrictlyBeforeOp(Calendar left, Calendar right)

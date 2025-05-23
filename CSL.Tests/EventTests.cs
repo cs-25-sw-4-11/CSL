@@ -1,4 +1,4 @@
-namespace CSL.Tests.Literals;
+namespace CSL.Tests;
 
 using CSL;
 using CSL.EventTypes;

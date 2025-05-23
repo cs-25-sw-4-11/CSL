@@ -16,7 +16,7 @@ public class InvalidTypeCompilerException : CompilerException
     {
     }
 
-    public InvalidTypeCompilerException(EventTypes[] expected, EventTypes actual) : base($"Expected: {expected}, found: {actual}")
+    public InvalidTypeCompilerException(EventTypes[] expected, EventTypes actual) : base($"Expected: {string.Join(", ", expected)}, found: {actual}")
     {
     }
 }

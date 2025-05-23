@@ -3,9 +3,9 @@ namespace CSL.TypeChecker;
 [Flags]
 public enum EventTypes
 {
-    Calendar = 0,
-    Subject = 0b1,
-    DateTime = 0b10,
-    Description = 0b100,
-    Duration = 0b1000,
+    Calendar = 0b1,
+    Subject = 0b10,
+    DateTime = 0b100,
+    Description = 0b1000,
+    Duration = 0b10000,
 }

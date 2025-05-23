@@ -7,6 +7,8 @@ namespace CSL.TypeChecker;
 
 public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
 {
+    public Dictionary<string, EventTypes> Variables = new Dictionary<string, EventTypes>();
+
     public override EventTypes VisitClock(CSLParser.ClockContext context)
     {
         return EventTypes.DateTime;
@@ -172,7 +174,9 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             }
         }
 
-        if ((left & right) != 0)
+        if (((left & right) != 0)
+            && left != EventTypes.DateTime // Exempt DateTime, no questions asked.
+            )
         {
             throw new InvalidTypeCompilerException([~left], left); // NOTE: Expected types are not exhaustive
         }
@@ -311,5 +315,48 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         }
 
         throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
+    }
+
+    public override EventTypes VisitLiteral(CSLParser.LiteralContext context)
+    {
+        var child = context.children.FirstOrDefault();
+        var res = Visit(context.children.First());
+
+        return res;
+    }
+
+    public override EventTypes VisitHideExpr(CSLParser.HideExprContext context)
+    {
+        return Visit(context.expr());
+    }
+
+    public override EventTypes VisitParenExpr(CSLParser.ParenExprContext context)
+    {
+        return Visit(context.expr());
+    }
+    
+    public override EventTypes VisitStat(CSLParser.StatContext context)
+    {
+        var value = Visit(context.expr());
+        var key = context.IDENTIFIER().GetText();
+
+        if (!Variables.TryAdd(key, value))
+        {
+            throw new InvalidIdentifierCompilerException($"Identifier '{key}' not found");
+        }
+
+        return EventTypes.Calendar;
+    }
+
+    public override EventTypes VisitIdentifierExpr(CSLParser.IdentifierExprContext context)
+    {
+        var key = context.IDENTIFIER().GetText();
+
+        if (!Variables.TryGetValue(key, out var expr))
+        {
+            throw new InvalidIdentifierCompilerException($"Identifier '{key}' not found");
+        }
+
+        return expr;
     }
 }
