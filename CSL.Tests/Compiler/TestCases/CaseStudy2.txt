@@ -1,7 +1,0 @@
-Meds = 'Take Medicine' ++ 5 min ++ "Take the blue pill, Nero";
-
-Dinner = 'Dinner' ++ 30 min ++ 18:00;
-
-MedsBeforeDinner = Meds << [30 min] << Dinner;
-
-MedsBeforeDinner ++ 11/04/2025 * 1 day

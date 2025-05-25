@@ -42,6 +42,81 @@ public record Event(
             RepeatInterval: RepeatInterval)
     {
     }
+
+    /// <summary>
+    /// Bases of the current Event, and applies the new attributes.
+    /// </summary>
+    /// <param name="subject"></param>
+    /// <param name="date"></param>
+    /// <param name="clock"></param>
+    /// <param name="duration"></param>
+    /// <param name="description"></param>
+    /// <param name="hidden"></param>
+    /// <param name="repeatInterval"></param>
+    /// <returns></returns>
+    public Event With(Subject? subject = null,
+        Date? date = null,
+        Clock? clock = null,
+        Duration? duration = null,
+        Description? description = null,
+        bool? hidden = null,
+        Duration? repeatInterval = null)
+    {
+        return new Event(
+            Subject: subject ?? this.Subject,
+            Date: date ?? this.Date,
+            Clock: clock ?? this.Clock,
+            Duration: duration ?? this.Duration,
+            Description: description ?? this.Description,
+            Hidden: hidden ?? this.Hidden,
+            RepeatInterval: repeatInterval ?? this.RepeatInterval
+        );
+    }
+
+    /// <summary>
+    /// Bases of the current Event, and applies the new attributes.
+    /// </summary>
+    /// <param name="dateClock"></param>
+    /// <param name="subject"></param>
+    /// <param name="duration"></param>
+    /// <param name="description"></param>
+    /// <param name="hidden"></param>
+    /// <param name="repeatInterval"></param>
+    /// <returns></returns>
+    public Event With(DateClock dateClock,
+        Subject? subject = null,
+        Duration? duration = null,
+        Description? description = null,
+        bool? hidden = null,
+        Duration? repeatInterval = null)
+    {
+        return new Event(
+            dateClock,
+            Subject: subject ?? this.Subject,
+            Duration: duration ?? this.Duration,
+            Description: description ?? this.Description,
+            Hidden: hidden ?? this.Hidden,
+            RepeatInterval: repeatInterval ?? this.RepeatInterval
+        );
+    }
+
+    /// <summary>
+    /// Spreads <code>e</code> and applies With.
+    /// </summary>
+    /// <param name="e"></param>
+    /// <returns></returns>
+    public Event With(Event e)
+    {
+        return new Event(
+            Subject: e.Subject ?? this.Subject,
+            Date: e.Date ?? this.Date,
+            Clock: e.Clock ?? this.Clock,
+            Duration: e.Duration ?? this.Duration,
+            Description: e.Description ?? this.Description,
+            Hidden: e.Hidden ?? this.Hidden,
+            RepeatInterval: e.RepeatInterval ?? this.RepeatInterval
+        );
+    }
     
     /// <summary>
     /// Tries to get the datetime for an event.
@@ -140,14 +215,7 @@ public record Event(
             throw new ArgumentException($"Overlapping {nameof(Description)}");
         }
 
-        return new Event(
-            Subject: left.Subject ?? right.Subject,
-            Date: left.Date ?? right.Date,
-            Clock: left.Clock ?? right.Clock,
-            Duration: left.Duration ?? right.Duration,
-            Description: left.Description ?? right.Description,
-            Hidden: left.Hidden ?? right.Hidden
-        );
+        return right.With(left);
     }
 
     public static Event AddOperator(Event left, Event right)
@@ -173,11 +241,8 @@ public record Event(
         // checks if the other operand is a duration, date, dateclock or clock and calculates accordingly 
         if (otherOperand is { Duration: not null, DateClock: null })
         {
-            return new Event(
-                Subject: otherOperand.Subject,
-                Description: otherOperand.Description,
-                Hidden: otherOperand.Hidden,
-                Duration: firstOperand.Duration + otherOperand.Duration
+            return otherOperand.With(
+                duration: firstOperand.Duration + otherOperand.Duration
             );
         }
 
@@ -189,21 +254,15 @@ public record Event(
                 var duration = firstOperand.Duration;
                 var result = dateclock + duration;
 
-                return new Event(
-                    Subject: otherOperand.Subject,
-                    Description: otherOperand.Description,
-                    Hidden: otherOperand.Hidden,
-                    dateClock: result.Value
+                return otherOperand.With(
+                    result.Value
                 );
             }
 
             if (firstOperand.Duration.Value.Minutes % CSL.EventTypes.Duration.DayFactor == 0)
             {
-                return new Event(
-                    Subject: otherOperand.Subject,
-                    Description: otherOperand.Description,
-                    Hidden: otherOperand.Hidden,
-                    Date: otherOperand.Date + firstOperand.Duration
+                return otherOperand.With(
+                    date: otherOperand.Date + firstOperand.Duration
                 );
             }
 
@@ -211,18 +270,15 @@ public record Event(
             var dur = firstOperand.Duration.Value;
             var result1 = CSL.EventTypes.Date.Plus(date, dur);
 
-            return new Event(
-                Subject: otherOperand.Subject,
-                Description: otherOperand.Description,
-                Hidden: otherOperand.Hidden,
-                dateClock: result1
+            return otherOperand.With(
+                result1
             );
         }
 
         if (otherOperand.Duration is null && otherOperand.Clock.HasValue)
         {
-            return new Event(
-                Clock: otherOperand.Clock + firstOperand.Duration
+            return otherOperand.With(
+                clock: otherOperand.Clock + firstOperand.Duration
             );
         }
 
@@ -247,12 +303,7 @@ public record Event(
         {
             if (left.DateClock.Value >= right.Duration)
             {
-                return new Event(
-                    Subject: left.Subject,
-                    Description: left.Description,
-                    dateClock: left.DateClock.Value - right.Duration.Value,
-                    Hidden: left.Hidden
-                );
+                return left.With(left.DateClock.Value - right.Duration.Value);
             }
         }
 
@@ -262,31 +313,18 @@ public record Event(
             {
                 if (left.Date.Value >= right.Duration)
                 {
-                    return new Event(
-                        Subject: left.Subject,
-                        Description: left.Description,
-                        Date: left.Date.Value - right.Duration.Value,
-                        Hidden: left.Hidden
-                    );
+                    return left.With(date: left.Date.Value - right.Duration.Value);
                 }
             }
             else
             {
-                return new Event(
-                        dateClock: CSL.EventTypes.Date.Minus(left.Date.Value, right.Duration.Value),
-                        Subject: left.Subject,
-                        Description: left.Description,
-                        Hidden: left.Hidden
-                    );
+                return left.With(CSL.EventTypes.Date.Minus(left.Date.Value, right.Duration.Value));
             }
         }
         if (left.Clock.HasValue)
         {
-            return new Event(
-                Subject: left.Subject,
-                Description: left.Description,
-                Clock: left.Clock.Value - right.Duration.Value,
-                Hidden: left.Hidden
+            return left.With(
+                clock: left.Clock.Value - right.Duration.Value
             );
         }
 
@@ -294,12 +332,8 @@ public record Event(
         {
             if (left.Duration >= right.Duration)
             {
-                return new Event(
-                    Subject: left.Subject,
-                    Description: left.Description,
-                    Duration: left.Duration - right.Duration,
-                    Hidden: left.Hidden
-                );
+                // Doesn't call .value here, an error?
+                return left.With(duration: left.Duration - right.Duration);
             }
         }
 
@@ -309,26 +343,25 @@ public record Event(
 
     public static Event HideOperator(Event e)
     {
-        return new Event(
-            Subject: e.Subject,
-            Duration: e.Duration,
-            Description: e.Description,
-            Date: e.Date,
-            Clock: e.Clock,
-            Hidden: true
-        );
+        return e.With(hidden: true);
     }
+
+    public static Event RecurrenceOperator(Event ev, Duration interval)
+    {
+        return ev.With(repeatInterval: interval);
+    }
+    
     /// <summary>
-    /// 
+    /// Returns the event of a singleton Calendar.
     /// </summary>
-    /// <param name="c"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="c">Singleton Calendar</param>
+    /// <returns>The event of the calendar</returns>
+    /// <exception cref="InvalidCastException">Throws an exception if Calendar doesn't contain exactly one event</exception>
     public static explicit operator Event(Calendar c)
     {
         if (c.Events.Length != 1)
         {
-            throw new ArgumentException();
+            throw new InvalidCastException($"Can't cast Calendar to event, because Calendar contains '{c.Events.Length}' events");
         }
 
         return c.Events[0];
