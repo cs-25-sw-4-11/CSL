@@ -1,6 +1,7 @@
 using System.Collections;
 using Antlr4.Runtime;
 using CSL.EventTypes;
+using CSL.TypeChecker;
 
 namespace CSL.Tests;
 
@@ -11,7 +12,6 @@ public class CalendarVisitorTest
     {
         get
         {
-
             yield return new TestCaseData(
                 "1mth ++ 'abc'",
                 new Calendar([
@@ -260,7 +260,7 @@ public class CalendarVisitorTest
     public void TestCalendarOperations(string input, Calendar expectedResult)
     {
         var calendarVisitor = new CalendarVisitor();
-        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
+        var expr = calendarVisitor.Visit(Parse(input));
 
         Assert.That(expr, Is.Not.Null);
         for (int i = 0; i < expectedResult.Events.Length; i++)
@@ -276,10 +276,20 @@ public class CalendarVisitorTest
 
         Assert.Throws<ArgumentException>(() =>
         {
-            var expr = calendarVisitor.Visit(StringParser.ParseString(input));
+            var expr = calendarVisitor.Visit(Parse(input));
         });
     }
 
+    private static CSLParser.ProgContext Parse(string input)
+    {
+        var stream = CharStreams.fromString(input);
+        var lexer = new CSLLexer(stream);
+
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new CSLParser(tokens);
+
+        return parser.prog();
+    }
 
     public static IEnumerable TestPlusCases
     {
@@ -315,10 +325,15 @@ public class CalendarVisitorTest
     [TestCaseSource(nameof(TestPlusCases))]
     public void TestPlusOp(string input, Event expectedResult)
     {
-
+        var tree = Parse(input);
         var calendarVisitor = new CalendarVisitor();
 
-        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
+        // Type checking
+        var typeCheckerVisitor = new TypeCheckerVisitor();
+        typeCheckerVisitor.Visit(tree);
+
+        // Backend
+        var expr = calendarVisitor.Visit(tree);
 
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
@@ -338,10 +353,10 @@ public class CalendarVisitorTest
     [TestCaseSource(nameof(TestNotPlusCases))]
     public void TestNotPlusOp(string input, Event expectedResult)
     {
-
+        var tree = Parse(input);
         var calendarVisitor = new CalendarVisitor();
 
-        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
+        var expr = calendarVisitor.Visit(tree);
 
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.Not.EqualTo(expectedResult));
@@ -385,8 +400,14 @@ public class CalendarVisitorTest
     [TestCaseSource(nameof(TestMinusCases))]
     public void TestMinusOp(string input, Event expectedResult)
     {
+        var tree = Parse(input);
+        
+        // Type checking
+        var typeCheckerVisitor = new TypeCheckerVisitor();
+        typeCheckerVisitor.Visit(tree);
+
         var calendarVisitor = new CalendarVisitor();
-        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
+        var expr = calendarVisitor.Visit(tree);
 
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
@@ -410,7 +431,7 @@ public class CalendarVisitorTest
     {
         var calendarVisitor = new CalendarVisitor();
 
-        Assert.Throws<ArgumentException>(() => calendarVisitor.Visit(StringParser.ParseString(input)));
+        Assert.Throws<ArgumentException>(() => calendarVisitor.Visit(Parse(input)));
     }
 
     public static IEnumerable TestParentersesCases
@@ -429,21 +450,27 @@ public class CalendarVisitorTest
             yield return new TestCaseData("05/01/2000 - (3d - 3h)",
                 new Event(new DateClock(new Date(2, 1, 2000), new Clock(3, 0))));
             yield return new TestCaseData("12:00 + (3d - 3d)", new Event(Clock: new Clock(12, 0)));
-
-        }
+            
+            }
     }
     [TestCaseSource(nameof(TestParentersesCases))]
     public void TestParenterses(string input, Event expectedResult)
     {
+        var tree = Parse(input);
+        
+        // Type checking
+        var typeCheckerVisitor = new TypeCheckerVisitor();
+        typeCheckerVisitor.Visit(tree);
+        
         var calendarVisitor = new CalendarVisitor();
-        var expr = calendarVisitor.Visit(StringParser.ParseString(input));
+        var expr = calendarVisitor.Visit(tree);
 
         Assert.That(expr, Is.Not.Null);
         Assert.That(expr.Events[0], Is.EqualTo(expectedResult));
     }
 
-public static IEnumerable TildeOpCases
-{
+    public static IEnumerable TildeOpCases
+    {
         get
         {
             yield return new TestCaseData("(01/01/2000 ~ 02/02/2001)",

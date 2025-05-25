@@ -128,6 +128,31 @@ public class CalendarVisitor : CSLBaseVisitor<Calendar>
         }
     }
 
+    public override Calendar VisitRecurrenceOp(CSLParser.RecurrenceOpContext context)
+    {
+        var operand1 = Visit(context.expr(0));
+        var operand2 = Visit(context.expr(1));
+
+        if (operand1 is null || operand2 is null)
+        {
+            throw new CompilerException("Invalid operands, visit returned null");
+        }
+
+        var (interval, calendar) = (operand1, operand2) switch
+        {
+            ({ Event: { Duration: not null, Clock: null, Date: null, Description: null, Subject: null } }, _) => (
+                operand1.Event.Duration.Value, operand2),
+            _ => (operand2.Event.Duration.Value, operand1)
+        };
+
+        if (calendar.Event is Event ev)
+        {
+            return Event.RecurrenceOperator(ev, interval);
+        }
+        
+        return Calendar.RecurrenceOperator(calendar, interval);
+    }
+
     public override Calendar VisitStrictlyBeforeOp(CSLParser.StrictlyBeforeOpContext context)
     {
         var left = Visit(context.expr(0));
