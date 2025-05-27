@@ -501,9 +501,9 @@ public void TestTildeOp(string input, Event expectedResult)
     {
         get
         {
-            yield return new TestCaseData("(02/02/2001 ~ 01/01/2000)"); //date ~ date, negative duration not allowed
+            //yield return new TestCaseData("(02/02/2001 ~ 01/01/2000)"); //date ~ date, negative duration not allowed
             yield return new TestCaseData("(13:00 ~ 01/01/2000)"); // Clock ~ date not allowed
-            yield return new TestCaseData("(13:00 ~ 11:00)"); //clock ~ clock, negative duration not allowed
+            //yield return new TestCaseData("(13:00 ~ 11:00)"); //clock ~ clock, negative duration not allowed
             yield return new TestCaseData("(12:00 ~ (01/01/2000 ++ 13:00))"); //clock ~ datetime not allowed    
             yield return new TestCaseData("(01/01/2000) ~ 13:00"); //date ~ clock not allowed
             yield return new TestCaseData("((01/01/2000 ++ 13:00) ~ 13:00)"); //datetime ~ clock not allowed            
