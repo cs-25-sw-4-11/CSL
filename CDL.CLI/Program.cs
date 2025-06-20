@@ -1,4 +1,5 @@
-﻿using CDL.TypeChecker;
+﻿using CDL.Exceptions;
+using CDL.TypeChecker;
 
 namespace CDL.CLI;
 
@@ -8,7 +9,7 @@ using System.IO;
 
 class Program
 {
-    static void Main(string[] args)
+    static int Main(string[] args)
     {
         string input;
 
@@ -25,10 +26,22 @@ class Program
             Console.WriteLine("No input provided, using default: " + input);
         }
 
-        var compiler = new Compiler();
-        var result = compiler.Compile(input);
-        
         Console.WriteLine($"Input: {input}");
-        Console.WriteLine($"Result: {result}");
+        Console.WriteLine();
+
+        try
+        {
+            var compiler = new Compiler();
+            var result = compiler.Compile(input);
+            Console.WriteLine($"Result: {result}");
+        }
+        catch (CompilerException ce)
+        {
+            Console.WriteLine("Source code could not be evaluated, found the following error(s):");
+            Console.WriteLine(ce.Message);
+            return 1;
+        }
+
+        return 0;
     }
 }
