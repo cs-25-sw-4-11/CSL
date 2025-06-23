@@ -1,8 +1,14 @@
+using Antlr4.Runtime;
+
 namespace CDL.Exceptions;
 
 public class InvalidIdentifierCompilerException : CompilerException
 {
     public InvalidIdentifierCompilerException()
+    {
+    }
+
+    public InvalidIdentifierCompilerException(ParserRuleContext context) : base(context)
     {
     }
 

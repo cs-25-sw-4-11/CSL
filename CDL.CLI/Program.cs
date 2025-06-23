@@ -42,6 +42,11 @@ class Program
         {
             Console.WriteLine("Source code could not be evaluated, found the following error(s):");
             Console.WriteLine(ce.Message);
+
+            if (ce.Context is not null)
+            {
+                Console.WriteLine(ce.Context.ToString());
+            }
             return 1;
         }
 

@@ -41,12 +41,12 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
 
         if (left != EventTypes.DateTime)
         {
-            throw new InvalidTypeCompilerException([EventTypes.DateTime], left);
+            throw new InvalidTypeCompilerException([EventTypes.DateTime], left, context);
         }
 
         if (right != EventTypes.DateTime)
         {
-            throw new InvalidTypeCompilerException([EventTypes.DateTime], right);
+            throw new InvalidTypeCompilerException([EventTypes.DateTime], right, context);
         }
 
         return EventTypes.DateTime;
@@ -66,7 +66,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
                     EventTypes.DateTime |
                     EventTypes.Description |
                     EventTypes.Duration
-                ], left); // NOTE: Expected types are not exhaustive
+                ], left, context); // NOTE: Expected types are not exhaustive
             }
 
             if (left == EventTypes.Duration || right == EventTypes.Duration)
@@ -74,7 +74,9 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
                 return EventTypes.Calendar;
             }
 
-            throw new InvalidTypeCompilerException([EventTypes.Duration], left == EventTypes.Calendar ? right : left);
+            throw new InvalidTypeCompilerException(
+                [EventTypes.Duration],
+                left == EventTypes.Calendar ? right : left, context);
         }
 
         // Check for duration operand
@@ -89,7 +91,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
         }
         else
         {
-            throw new InvalidTypeCompilerException([EventTypes.Duration], left);
+            throw new InvalidTypeCompilerException([EventTypes.Duration], left, context);
         }
 
         // Check for valid other operand
@@ -103,7 +105,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             return otherOperand;
         }
 
-        throw new InvalidTypeCompilerException([EventTypes.DateTime, EventTypes.Duration], otherOperand);
+        throw new InvalidTypeCompilerException([EventTypes.DateTime, EventTypes.Duration], otherOperand, context);
     }
 
     public override EventTypes VisitSubtractOp(CSLParser.SubtractOpContext context)
@@ -118,7 +120,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
                 EventTypes.DateTime |
                 EventTypes.Description |
                 EventTypes.Duration
-            ], right); // NOTE: Expected types are not exhaustive
+            ], right, context); // NOTE: Expected types are not exhaustive
         }
 
         if (left == EventTypes.Calendar)
@@ -130,7 +132,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
 
         if (right != EventTypes.Duration)
         {
-            throw new InvalidTypeCompilerException([EventTypes.Duration], right);
+            throw new InvalidTypeCompilerException([EventTypes.Duration], right, context);
         }
 
         EventTypes otherOperand = left;
@@ -148,7 +150,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             return EventTypes.DateTime;
         }
 
-        throw new InvalidTypeCompilerException([EventTypes.DateTime, EventTypes.Duration], otherOperand);
+        throw new InvalidTypeCompilerException([EventTypes.DateTime, EventTypes.Duration], otherOperand, context);
     }
 
     public override EventTypes VisitDoublePlusOp([NotNull] CSLParser.DoublePlusOpContext context)
@@ -166,7 +168,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
                     EventTypes.DateTime |
                     EventTypes.Description |
                     EventTypes.Duration
-                ], left); // NOTE: Expected types are not exhaustive
+                ], left, context); // NOTE: Expected types are not exhaustive
             }
             else
             {
@@ -178,7 +180,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             && left != EventTypes.DateTime // Exempt DateTime, no questions asked.
             )
         {
-            throw new InvalidTypeCompilerException([~left], left); // NOTE: Expected types are not exhaustive
+            throw new InvalidTypeCompilerException([~left], left, context); // NOTE: Expected types are not exhaustive
         }
 
         return left | right;
@@ -211,7 +213,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
 
         if (!right.HasFlag(EventTypes.DateTime) || !right.HasFlag(EventTypes.Duration))
         {
-            throw new InvalidTypeCompilerException([EventTypes.DateTime | EventTypes.Duration], right);
+            throw new InvalidTypeCompilerException([EventTypes.DateTime | EventTypes.Duration], right, context);
         }
 
         return EventTypes.Calendar;
@@ -229,14 +231,14 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
                 EventTypes.Calendar |
                 EventTypes.Description |
                 EventTypes.Duration
-            ], left);
+            ], left, context);
         }
 
         if (left == EventTypes.Calendar)
         {
             if (right != EventTypes.Calendar && !right.HasFlag(EventTypes.DateTime))
             {
-                throw new InvalidTypeCompilerException([EventTypes.Calendar | EventTypes.DateTime], right);
+                throw new InvalidTypeCompilerException([EventTypes.Calendar | EventTypes.DateTime], right, context);
             }
 
             return EventTypes.Calendar;
@@ -244,7 +246,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
 
         if (!left.HasFlag(EventTypes.Duration))
         {
-            throw new InvalidTypeCompilerException([EventTypes.Duration], left);
+            throw new InvalidTypeCompilerException([EventTypes.Duration], left, context);
         }
 
         return EventTypes.Calendar;
@@ -260,7 +262,9 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             return EventTypes.Calendar;
         }
 
-        throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
+        throw new InvalidTypeCompilerException(
+            [EventTypes.Calendar],
+            left == EventTypes.Calendar ? right : left, context);
     }
 
     public override EventTypes VisitRecurrenceOp([NotNull] CSLParser.RecurrenceOpContext context)
@@ -277,7 +281,7 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
                     EventTypes.DateTime |
                     EventTypes.Description |
                     EventTypes.Duration
-                ], left); // NOTE: Expected types are not exhaustive
+                ], left, context); // NOTE: Expected types are not exhaustive
             }
 
             if (left == EventTypes.Duration || right == EventTypes.Duration)
@@ -286,19 +290,24 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             }
             else
             {
-                throw new InvalidTypeCompilerException([EventTypes.Duration],
-                    left == EventTypes.Calendar ? right : left);
+                throw new InvalidTypeCompilerException(
+                    [EventTypes.Duration],
+                    left == EventTypes.Calendar ? right : left, context);
             }
         }
 
         if (left == EventTypes.Duration && !right.HasFlag(EventTypes.DateTime))
         {
-            throw new InvalidTypeCompilerException([EventTypes.DateTime], right);
+            throw new InvalidTypeCompilerException(
+                [EventTypes.DateTime],
+                right, context);
         }
 
         if (!left.HasFlag(EventTypes.DateTime) && right == EventTypes.Duration)
         {
-            throw new InvalidTypeCompilerException([EventTypes.DateTime], left);
+            throw new InvalidTypeCompilerException(
+                [EventTypes.DateTime],
+                left, context);
         }
 
         return EventTypes.Calendar;
@@ -314,7 +323,9 @@ public class TypeCheckerVisitor : CSLBaseVisitor<EventTypes>
             return EventTypes.Calendar;
         }
 
-        throw new InvalidTypeCompilerException([EventTypes.Calendar], left == EventTypes.Calendar ? right : left);
+        throw new InvalidTypeCompilerException(
+            [EventTypes.Calendar],
+            left == EventTypes.Calendar ? right : left, context);
     }
 
     public override EventTypes VisitLiteral(CSLParser.LiteralContext context)
