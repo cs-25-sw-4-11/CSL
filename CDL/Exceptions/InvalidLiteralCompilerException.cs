@@ -1,8 +1,14 @@
+using Antlr4.Runtime;
+
 namespace CDL.Exceptions;
 
 public class InvalidLiteralCompilerException : CompilerException
 {
     public InvalidLiteralCompilerException()
+    {
+    }
+
+    public InvalidLiteralCompilerException(ParserRuleContext context) : base(context)
     {
     }
 

@@ -1,4 +1,5 @@
-﻿using CDL.TypeChecker;
+﻿using CDL.Exceptions;
+using CDL.TypeChecker;
 
 namespace CDL.CLI;
 
@@ -8,27 +9,55 @@ using System.IO;
 
 class Program
 {
-    static void Main(string[] args)
+    static int Main(string[] args)
     {
-        string input;
-
         // Check if an argument was provided
-        if (args.Length > 0)
+        if (args.Length == 0)
         {
-            // Use the first command-line argument as input
-            input = args[0];
-        }
-        else
-        {
-            // Default input if no arguments provided
-            input = "11:00 ++ 11/11/2011 ++ 'Caspers kagespisning'";
-            Console.WriteLine("No input provided, using default: " + input);
+            Console.WriteLine("No input provided");
+            return 1;
         }
 
-        var compiler = new Compiler();
-        var result = compiler.Compile(input);
-        
-        Console.WriteLine($"Input: {input}");
-        Console.WriteLine($"Result: {result}");
+        // Use the first command-line argument as input
+        var inputFilename = args[0];
+
+        if (!File.Exists(inputFilename))
+        {
+            Console.WriteLine($"Could not find file: {inputFilename}");
+            return 1;
+        }
+
+        var input = File.ReadAllText(args[0]);
+
+        Console.WriteLine("====================================");
+        Console.WriteLine($"============== Input ==============");
+        Console.WriteLine("====================================");
+        Console.WriteLine();
+        Console.WriteLine(input);
+
+        Console.WriteLine("====================================");
+        Console.WriteLine($"============== Result ==============");
+        Console.WriteLine("====================================");
+        Console.WriteLine();
+
+        try
+        {
+            var compiler = new Compiler();
+            var result = compiler.Compile(input);
+            Console.WriteLine(result);
+        }
+        catch (CompilerException ce)
+        {
+            Console.WriteLine("Source code could not be evaluated, found the following error(s):");
+            Console.WriteLine(ce.ToString());
+
+            if (ce.Context is not null)
+            {
+                Console.WriteLine($"Start - {ce.Context.Start.Line}:{ce.Context.Start.Column}, end - {ce.Context.Stop.Line}:{ce.Context.Stop.Column}");
+            }
+            return 1;
+        }
+
+        return 0;
     }
 }
