@@ -25,6 +25,7 @@ public class CompilerTests
         {
             if (actualLines[i].StartsWith("DTSTAMP") ||
                 actualLines[i].StartsWith("UID") ||
+                actualLines[i].StartsWith("PRODID") ||
                 (actualLines[i] == ""))
             {
                 continue;

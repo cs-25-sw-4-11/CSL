@@ -4,6 +4,7 @@ using CDL.TypeChecker;
 using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
+using Duration = CDL.EventTypes.Duration;
 
 namespace CDL;
 
