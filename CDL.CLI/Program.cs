@@ -19,7 +19,15 @@ class Program
         }
 
         // Use the first command-line argument as input
-        string input = args[0];
+        var inputFilename = args[0];
+
+        if (!File.Exists(inputFilename))
+        {
+            Console.WriteLine($"Could not find file: {inputFilename}");
+            return 1;
+        }
+
+        var input = File.ReadAllText(args[0]);
 
         Console.WriteLine($"Input: {input}");
         Console.WriteLine();
