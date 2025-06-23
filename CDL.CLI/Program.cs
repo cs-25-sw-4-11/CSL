@@ -29,23 +29,31 @@ class Program
 
         var input = File.ReadAllText(args[0]);
 
-        Console.WriteLine($"Input: {input}");
+        Console.WriteLine("====================================");
+        Console.WriteLine($"============== Input ==============");
+        Console.WriteLine("====================================");
+        Console.WriteLine();
+        Console.WriteLine(input);
+
+        Console.WriteLine("====================================");
+        Console.WriteLine($"============== Result ==============");
+        Console.WriteLine("====================================");
         Console.WriteLine();
 
         try
         {
             var compiler = new Compiler();
             var result = compiler.Compile(input);
-            Console.WriteLine($"Result: {result}");
+            Console.WriteLine(result);
         }
         catch (CompilerException ce)
         {
             Console.WriteLine("Source code could not be evaluated, found the following error(s):");
-            Console.WriteLine(ce.Message);
+            Console.WriteLine(ce.ToString());
 
             if (ce.Context is not null)
             {
-                Console.WriteLine(ce.Context.ToString());
+                Console.WriteLine($"Start - {ce.Context.Start.Line}:{ce.Context.Start.Column}, end - {ce.Context.Stop.Line}:{ce.Context.Stop.Column}");
             }
             return 1;
         }
